@@ -1,0 +1,47 @@
+{
+	"block.extrahnn.ultimate_sim_chamber": "Ultimate Simulation Chamber",
+	"block.extrahnn.ultimate_loot_fabricator": "Ultimate Loot Fabricator",
+	"block.extrahnn.merger_camera": "Merger Camera",
+
+	"item.extrahnn.extra_data_model": "Extra Data Model (%s, %s, %s, %s)",
+	"item.extrahnn.extra_data_model.broken": "Extra Data Model (%s)",
+	"item.extrahnn.blank_extra_data_model": "Extra Model Framework",
+
+	"extrahnn.gui.targets": "Sim Targets: ",
+
+	"itemGroup.extrahnn": "Ultimate Hostile Neural Networks",
+
+	"extrahnn.info.blank_extra_data_model": "Combine 4 %s to get a combined data model",
+	"extrahnn.info.blank_extra_data_model.shift": "Will give all types of predicate that were used in creating this model.",
+	"extrahnn.info.data_model_slot": "This slot is for Extra Data Model only.",
+	"extrahnn.info.jei": "Combining 4 %s equal to the %s digit into %s results in %s",
+
+	"extrahnn.tier.autonomous": "Autonomous",
+	"extrahnn.tier.intelligent": "Intelligent",
+	"extrahnn.tier.adaptive": "Advanced",
+	"extrahnn.tier.synthetic": "Synthetic",
+	"extrahnn.tier.omnipotent": "Omnipotent",
+
+	"extrahnn.fail.data_corruption": "Merge error: \nThese models are damaged.",
+	"extrahnn.fail.failed_load": "Merge error: \nOne or more input \nmodels were not loaded.",
+	"extrahnn.fail.fox_broken": "Merge error: \nThe merge focus was incorrect.",
+	"extrahnn.fail.high_temperature": "Merge error: \nThe mechanism overheated due to exceeding the permissible data complexity.",
+	"extrahnn.fail.fatal_error": "Merge error: \nFatal error during merge",
+	"extrahnn.fail.output": "Merge error:\nOutput buffer is busy",
+	"extrahnn.fail.energy": "Merge error:\nEnergy level is critical",
+	"extrahnn.fail.energy_mid_cycle": "Simulation progress paused\nSystem energy levels critical",
+	"extrahnn.fail.model": "Insert data models, to \nstart the merger",
+	"extrahnn.fail.input": "Unable to start merge. \nMissing:\nExtra Model Framework",
+	"extrahnn.fail.count": "Unable to start simulation\nnot enough predicate.\nRequires min 4",
+
+	"extrahnn.fail.overheat.on": "Overheat",
+	"extrahnn.fail.overheat.off": "Cooling",
+
+	"extrahnn.merger_camera.run.0": "> Launching the Merge Environment ",
+	"extrahnn.merger_camera.run.1": "> Attempt at merger",
+	"extrahnn.merger_camera.run.2": "> Focusing on fusion",
+	"extrahnn.merger_camera.run.3": "> Loading models from memory",
+	"extrahnn.merger_camera.run.4": "> Models evaluation",
+	"extrahnn.merger_camera.run.5": "> Cooling of the merger: ",
+	"extrahnn.merger_camera.run.6": "> Completion of the merger..."
+}
