@@ -96,9 +96,10 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
     public void serverTick(Level level, BlockPos pos, BlockState state) {
         if (this.inventory.getStackInSlot(0).isEmpty()) {
             this.failState = FailureState.MODEL;
+            this.runtime = 0;
             return;
         }
-        else if (this.inventory.getStackInSlot(1).isEmpty()){
+        else if (this.inventory.getStackInSlot(1).isEmpty() && this.runtime == 0){
             this.failState = FailureState.INPUT;
             return;
         }
