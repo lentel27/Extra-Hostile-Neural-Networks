@@ -5,9 +5,9 @@
 
 </div>
 
-Данный мод является дополнением к моду **[Hostile Neural Networks](https://github.com/Shadows-of-Fire/Hostile-Neural-Networks)** и разработан с использованием их технологий.
+This mod is an addition to the **[Hostile Neural Networks](https://github.com/Shadows-of-Fire/Hostile-Neural-Networks)** mod and is developed using their technologies.
 
-## Что нового?
+## What's new?
 
 ---
 #### Merger Camera
