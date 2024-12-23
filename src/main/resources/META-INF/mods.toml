@@ -20,13 +20,13 @@ description='''${mod_description}'''
 [[dependencies.${mod_id}]]
     modId="hostilenetworks"
     mandatory=true
-    versionRange="[5.3.3,)"
+    versionRange="[4.1.1,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
     modId="placebo"
     mandatory=true
-    versionRange="[8.6.2,)"
+    versionRange="[7.4.0,)"
     ordering="NONE"
     side="BOTH"
