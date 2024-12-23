@@ -16,3 +16,17 @@ description='''${mod_description}'''
     versionRange="${forge_version_range}"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="hostilenetworks"
+    mandatory=true
+    versionRange="[5.3.3,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="placebo"
+    mandatory=true
+    versionRange="[8.6.2,)"
+    ordering="NONE"
+    side="BOTH"

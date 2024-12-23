@@ -1,13 +1,13 @@
-package net.lmor.modid;
+package net.lmor.extrahnn;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod(ExampleMod.MOD_ID)
-public class ExampleMod
+@Mod(ExtraHostileNetworks.MOD_ID)
+public class ExtraHostileNetworks
 {
     public static final String MOD_ID = "modid";
-    public ExampleMod()
+    public ExtraHostileNetworks()
     {
         MinecraftForge.EVENT_BUS.register(this);
     }

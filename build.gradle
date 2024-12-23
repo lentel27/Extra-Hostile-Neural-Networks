@@ -60,10 +60,36 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+
+    maven {
+        name "Modmaven"
+        url "https://modmaven.dev/"
+        content {
+            includeGroup 'appeng'
+        }
+    }
 }
 
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    implementation fg.deobf("curse.maven:jei-238222:5846858")
+    implementation fg.deobf("curse.maven:hostile-neural-networks-552574:4654510")
+    implementation fg.deobf("curse.maven:placebo-283644:5180198")
+
+    //region For testing
+    implementation fg.deobf("curse.maven:observable-509575:4193014")
+    implementation fg.deobf("curse.maven:architectury-api-419699:5137942")
+    implementation fg.deobf("curse.maven:kotlin-for-forge-351264:4513187")
+    implementation fg.deobf("curse.maven:ftb-library-forge-404465:4661834")
+    implementation fg.deobf("curse.maven:mekanism-268560:4644795")
+    //endregion
 }
 
 tasks.named('processResources', ProcessResources).configure {
