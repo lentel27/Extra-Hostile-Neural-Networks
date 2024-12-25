@@ -7,7 +7,7 @@
   ],
   "key": {
     "A": {
-      "item": "hostilenetworks:prediction_matrix"
+      "item": "hostilenetworks:empty_prediction"
     },
     "B": {
       "item": "minecraft:diamond"
