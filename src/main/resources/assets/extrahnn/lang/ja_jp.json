@@ -1,0 +1,47 @@
+{
+	"block.extrahnn.ultimate_sim_chamber": "究極型解析室",
+	"block.extrahnn.ultimate_loot_fabricator": "究極型戦利品作成機",
+	"block.extrahnn.merger_camera": "合成カメラ",
+
+	"item.extrahnn.extra_data_model": "エクストラデータモデル (%s, %s, %s, %s)",
+	"item.extrahnn.extra_data_model.broken": "エクストラデータモデル (%s)",
+	"item.extrahnn.blank_extra_data_model": "エクストラ基礎モデル",
+
+	"extrahnn.gui.targets": "解析対象: ",
+
+	"itemGroup.extrahnn": "Ultimate Hostile Neural Networks",
+
+	"extrahnn.info.blank_extra_data_model": "4つの%sデータモデルを組み合わせて合成データモデルを作成します",
+	"extrahnn.info.blank_extra_data_model.shift": "このモデルを作成する際に使用された全ての種類の予測素材を作成できます",
+	"extrahnn.info.data_model_slot": "このスロットはエクストラデータモデル専用です。",
+	"extrahnn.info.jei": "4つの%s(%s)を%sで合成すると、%sになります",
+
+	"extrahnn.tier.autonomous": "自律",
+	"extrahnn.tier.intelligent": "知的",
+	"extrahnn.tier.adaptive": "適応",
+	"extrahnn.tier.synthetic": "人工的",
+	"extrahnn.tier.omnipotent": "全能",
+
+	"extrahnn.fail.data_corruption": "合成エラー: \nこれらのモデルは損傷しています。",
+	"extrahnn.fail.failed_load": "合成エラー: \n1つ以上の入力モデルが\n正しくロードされませんでした。",
+	"extrahnn.fail.fox_broken": "合成エラー: \n合成のフォーカスが正しくありませんでした。",
+	"extrahnn.fail.high_temperature": "合成エラー: \n許容されるデータの複雑さを超えたために機構が過熱しました。",
+	"extrahnn.fail.fatal_error": "合成エラー: \n合成中に致命的なエラーが発生しました。",
+	"extrahnn.fail.output": "合成エラー:\n出力バッファに空きがありません。",
+	"extrahnn.fail.energy": "合成エラー:\n電力が不足しています。",
+	"extrahnn.fail.energy_mid_cycle": "解析の進行が一時停止しました\nシステムの電力が不足しています",
+	"extrahnn.fail.model": "データモデルを挿入して、\n合成を開始します",
+	"extrahnn.fail.input": "合成を開始できません。\n不足:\nエクストラ基礎モデル",
+	"extrahnn.fail.count": "解析を開始できません。\n予測素材が足りません。\n最小4必要です",
+
+	"extrahnn.fail.overheat.on": "オーバーヒート",
+	"extrahnn.fail.overheat.off": "冷却中",
+
+	"extrahnn.merger_camera.run.0": "> 合成環境の起動 ",
+	"extrahnn.merger_camera.run.1": "> 合成を試行",
+	"extrahnn.merger_camera.run.2": "> 融合に注力",
+	"extrahnn.merger_camera.run.3": "> メモリからのモデルのロード",
+	"extrahnn.merger_camera.run.4": "> モデル評価",
+	"extrahnn.merger_camera.run.5": "> 合成機の冷却: ",
+	"extrahnn.merger_camera.run.6": "> 合成の完了..."
+}
