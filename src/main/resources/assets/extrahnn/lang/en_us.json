@@ -26,7 +26,7 @@
 	"extrahnn.info.progress_sim": "Progress: %s",
 	"extrahnn.info.iter_count": "Amount Iteration: %s",
 	"extrahnn.info.item_tooltip.upgrade_speed": "Increases speed by %s%%, but energy consumption increases by %s times",
-	"extrahnn.info.item_tooltip.upgrade_module_stack": "Allows you to instantly upgrade a model to the next tier, but requires %s FE",
+	"extrahnn.info.item_tooltip.upgrade_module_stack": "Allows you to instantly upgrade to the next model tier, but the energy consumption increases to %s FE/T",
 	"extrahnn.info.item_tooltip.upgrade_data_kill": "Increases the amount of data received per simulation by %s times",
 
 	"extrahnn.tier.autonomous": "Autonomous",

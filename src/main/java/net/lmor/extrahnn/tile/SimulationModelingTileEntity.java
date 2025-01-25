@@ -99,15 +99,19 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
             if (upgrade == ExtraHostile.Items.UPGRADE_DATA_KILL.get()) upgradeDataKill = true;
         }
 
+        if (upgradeModuleStack){
+            energyCost = Math.min(ExtraHostileConfig.simulationModelingPowerCap, ExtraHostileConfig.upgradeModuleStackCost);
+        }
 
         if (upgradeSpeed){
             runtimeUpgrade = (int) Math.max(0, ExtraHostileConfig.simulationModelingPowerDuration * (1 - (float) ExtraHostileConfig.upgradeSpeed / 100));
-            energyCost = (int) Math.min(ExtraHostileConfig.simulationModelingPowerCap, ExtraHostileConfig.simulationModelingPowerCost * ExtraHostileConfig.upgradeSpeedEnergy);
+            energyCost = (int) Math.min(ExtraHostileConfig.simulationModelingPowerCap, energyCost * ExtraHostileConfig.upgradeSpeedEnergy);
 
             if (runtimeUpgrade < runtime){
                 runtime = runtimeUpgrade;
             }
         }
+
     }
 
     @Override
