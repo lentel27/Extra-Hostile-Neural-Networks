@@ -43,7 +43,9 @@ public class ExtraHostileNetworks {
             LootSystem.defaultBlockTable(Blocks.ULTIMATE_LOOT_FABRICATOR.get());
             LootSystem.defaultBlockTable(Blocks.ULTIMATE_SIM_CHAMBER.get());
             LootSystem.defaultBlockTable(Blocks.MERGER_CAMERA.get());
-            TabFillingRegistry.register(Tabs.HNN_TAB_KEY, Items.ULTIMATE_LOOT_FABRICATOR, Items.ULTIMATE_SIM_CHAMBER, Items.MERGER_CAMERA, Items.BLANK_EXTRA_DATA_MODEL);
+            LootSystem.defaultBlockTable(Blocks.SIMULATOR_MODELING.get());
+            TabFillingRegistry.register(Tabs.HNN_TAB_KEY, Items.ULTIMATE_LOOT_FABRICATOR, Items.ULTIMATE_SIM_CHAMBER,
+                    Items.MERGER_CAMERA, Items.BLANK_EXTRA_DATA_MODEL, Items.SIMULATOR_MODELING, Items.UPGRADE_SPEED, Items.UPGRADE_MODULE_STACK, Items.UPGRADE_DATA_KILL);
         });
     }
 

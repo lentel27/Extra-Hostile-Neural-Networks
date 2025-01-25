@@ -2,10 +2,14 @@
 	"block.extrahnn.ultimate_sim_chamber": "Ultimate Simulation Chamber",
 	"block.extrahnn.ultimate_loot_fabricator": "Ultimate Loot Fabricator",
 	"block.extrahnn.merger_camera": "Merger Camera",
+	"block.extrahnn.simulator_modeling": "Simulator Modeling",
 
 	"item.extrahnn.extra_data_model": "Extra Data Model (%s, %s, %s, %s)",
 	"item.extrahnn.extra_data_model.broken": "Extra Data Model (%s)",
 	"item.extrahnn.blank_extra_data_model": "Extra Model Framework",
+	"item.extrahnn.upgrade_speed": "Upgrade: Speed",
+	"item.extrahnn.upgrade_module_stack": "Upgrade: Tier",
+	"item.extrahnn.upgrade_data_kill": "Upgrade: Data",
 
 	"extrahnn.gui.targets": "Sim Targets: ",
 
@@ -15,6 +19,15 @@
 	"extrahnn.info.blank_extra_data_model.shift": "Will give all types of predicate that were used in creating this model.",
 	"extrahnn.info.data_model_slot": "This slot is for Extra Data Model only.",
 	"extrahnn.info.jei": "Combining 4 %s equal to the %s digit into %s results in %s",
+	"extrahnn.info.cost_sim": "Energy cost per 1 simulation: %s FE/T",
+	"extrahnn.info.data_model.name": "Data Model",
+	"extrahnn.info.extra_data_model.name": "Extra Data Model",
+	"extrahnn.info.dpk": "Data Per Simulation: %s",
+	"extrahnn.info.progress_sim": "Progress: %s",
+	"extrahnn.info.iter_count": "Amount Iteration: %s",
+	"extrahnn.info.item_tooltip.upgrade_speed": "Increases speed by %s%%, but energy consumption increases by %s times",
+	"extrahnn.info.item_tooltip.upgrade_module_stack": "Allows you to instantly upgrade a model to the next tier, but requires %s FE",
+	"extrahnn.info.item_tooltip.upgrade_data_kill": "Increases the amount of data received per simulation by %s times",
 
 	"extrahnn.tier.autonomous": "Autonomous",
 	"extrahnn.tier.intelligent": "Intelligent",

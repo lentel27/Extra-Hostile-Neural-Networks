@@ -19,6 +19,15 @@ public class ExtraHostileConfig {
     public static int mergerCameraPowerCost;
     public static int mergerCameraPowerDuration;
 
+    public static int simulationModelingPowerCap;
+    public static int simulationModelingPowerCost;
+    public static int simulationModelingPowerDuration;
+
+    public static int upgradeSpeed;
+    public static float upgradeSpeedEnergy;
+    public static int upgradeModuleStackCost;
+    public static int upgradeDataKill;
+
     public ExtraHostileConfig() {
     }
 
@@ -37,18 +46,33 @@ public class ExtraHostileConfig {
         mergerCameraPowerCost = cfg.getInt("Merger Camera Power Cost", "power", 25000, 0, Integer.MAX_VALUE, "Total RF required to fuse data models in a Merger Camera.");
         mergerCameraPowerDuration = cfg.getInt("Merger Camera Power Duration", "power", 500, 1, Integer.MAX_VALUE, "Merger Camera duration in ticks.");
 
+        simulationModelingPowerCap = cfg.getInt("Simulation Modeling Power Cap", "power", 100000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Simulation Modeling.");
+        simulationModelingPowerCost = cfg.getInt("Simulation Modeling Power Cost", "power", 100000, 0, Integer.MAX_VALUE, "The FE/t cost of the Ultimate Simulation Modeling.");
+        simulationModelingPowerDuration = cfg.getInt("Simulation Modeling Power Duration", "power", 100, 1, Integer.MAX_VALUE, "Simulation Modeling duration in ticks.");
+
+        upgradeSpeed = cfg.getInt("Upgrade Speed", "upgrade", 50, 1, 100, "Acceleration of mechanisms with a speed map");
+        upgradeSpeedEnergy = cfg.getFloat("Upgrade Speed Energy", "upgrade", 2.0f, 0.0f, Float.MAX_VALUE, "How many times will energy consumption increase?");
+
+        upgradeModuleStackCost = cfg.getInt("Upgrade Module Stack Cost", "upgrade", 10000000, 0, Integer.MAX_VALUE, "How much energy is needed to move to the next tier?");
+
+        upgradeDataKill = cfg.getInt("Upgrade Data Kill", "upgrade", 2, 0, Integer.MAX_VALUE, "How many times more data?");
 
         if (cfg.hasChanged()) {
             cfg.save();
         }
     }
 
-    static record ConfigMessage(int ultimateSimPowerCap, int ultimateSimPowerDuration, int ultimateFabPowerCap, int ultimateFabPowerCost, int ultimateFabPowerDuration, int mergerCameraPowerCap, int mergerCameraPowerCost, int mergerCameraPowerDuration) {
+    static record ConfigMessage(int ultimateSimPowerCap, int ultimateSimPowerDuration, int ultimateFabPowerCap, int ultimateFabPowerCost, int ultimateFabPowerDuration, int mergerCameraPowerCap,
+                                int mergerCameraPowerCost, int mergerCameraPowerDuration, int simulationModelingPowerCap, int simulationModelingPowerCost, int simulationModelingPowerDuration,
+                                int upgradeSpeed, float upgradeSpeedEnergy, int upgradeModuleStackCost, int upgradeDataKill) {
         public ConfigMessage() {
-            this(ExtraHostileConfig.ultimateSimPowerCap, ExtraHostileConfig.ultimateSimPowerDuration, ExtraHostileConfig.ultimateFabPowerCap, ExtraHostileConfig.ultimateFabPowerCost, ExtraHostileConfig.ultimateFabPowerDuration, ExtraHostileConfig.mergerCameraPowerCap, ExtraHostileConfig.mergerCameraPowerCost, ExtraHostileConfig.mergerCameraPowerDuration);
+            this(ExtraHostileConfig.ultimateSimPowerCap, ExtraHostileConfig.ultimateSimPowerDuration, ExtraHostileConfig.ultimateFabPowerCap, ExtraHostileConfig.ultimateFabPowerCost, ExtraHostileConfig.ultimateFabPowerDuration,
+                    ExtraHostileConfig.mergerCameraPowerCap, ExtraHostileConfig.mergerCameraPowerCost, ExtraHostileConfig.mergerCameraPowerDuration, ExtraHostileConfig.simulationModelingPowerCap, ExtraHostileConfig.simulationModelingPowerCost,
+                    ExtraHostileConfig.simulationModelingPowerDuration, ExtraHostileConfig.upgradeSpeed, ExtraHostileConfig.upgradeSpeedEnergy, ExtraHostileConfig.upgradeModuleStackCost, ExtraHostileConfig.upgradeDataKill);
         }
 
-        ConfigMessage(int ultimateSimPowerCap, int ultimateSimPowerDuration, int ultimateFabPowerCap, int ultimateFabPowerCost, int ultimateFabPowerDuration, int mergerCameraPowerCap, int mergerCameraPowerCost, int mergerCameraPowerDuration ) {
+        ConfigMessage(int ultimateSimPowerCap, int ultimateSimPowerDuration, int ultimateFabPowerCap, int ultimateFabPowerCost, int ultimateFabPowerDuration, int mergerCameraPowerCap, int mergerCameraPowerCost, int mergerCameraPowerDuration,
+                      int simulationModelingPowerCap, int simulationModelingPowerCost, int simulationModelingPowerDuration, int upgradeSpeed, float upgradeSpeedEnergy, int upgradeModuleStackCost, int upgradeDataKill) {
             this.ultimateSimPowerCap = ultimateSimPowerCap;
             this.ultimateSimPowerDuration = ultimateSimPowerDuration;
             this.ultimateFabPowerCap = ultimateFabPowerCap;
@@ -57,6 +81,13 @@ public class ExtraHostileConfig {
             this.mergerCameraPowerCap = mergerCameraPowerCap;
             this.mergerCameraPowerCost = mergerCameraPowerCost;
             this.mergerCameraPowerDuration = mergerCameraPowerDuration;
+            this.simulationModelingPowerCap = simulationModelingPowerCap;
+            this.simulationModelingPowerCost = simulationModelingPowerCost;
+            this.simulationModelingPowerDuration = simulationModelingPowerDuration;
+            this.upgradeSpeed = upgradeSpeed;
+            this.upgradeSpeedEnergy = upgradeSpeedEnergy;
+            this.upgradeModuleStackCost = upgradeModuleStackCost;
+            this.upgradeDataKill = upgradeDataKill;
         }
 
         public int ultimateSimPowerCap() {
@@ -83,6 +114,29 @@ public class ExtraHostileConfig {
         public int mergerCameraPowerDuration() {
             return this.mergerCameraPowerDuration;
         }
+        public int simulationModelingPowerCap() {
+            return this.simulationModelingPowerCap;
+        }
+        public int simulationModelingPowerCost() {
+            return this.simulationModelingPowerCost;
+        }
+        public int simulationModelingPowerDuration() {
+            return this.simulationModelingPowerDuration;
+        }
+        public int upgradeSpeed() {
+            return this.upgradeSpeed;
+        }
+        public float upgradeSpeedEnergy() {
+            return this.upgradeSpeedEnergy;
+        }
+        public int upgradeModuleStackCost() {
+            return this.upgradeModuleStackCost;
+        }
+        public int upgradeDataKill() {
+            return this.upgradeDataKill;
+        }
+
+
 
         public static class Provider implements MessageProvider<ConfigMessage> {
             public Provider() {
@@ -101,10 +155,18 @@ public class ExtraHostileConfig {
                 buf.writeInt(msg.mergerCameraPowerCap);
                 buf.writeInt(msg.mergerCameraPowerCost);
                 buf.writeInt(msg.mergerCameraPowerDuration);
+                buf.writeInt(msg.simulationModelingPowerCap);
+                buf.writeInt(msg.simulationModelingPowerCost);
+                buf.writeInt(msg.simulationModelingPowerDuration);
+                buf.writeInt(msg.upgradeSpeed);
+                buf.writeFloat(msg.upgradeSpeedEnergy);
+                buf.writeInt(msg.upgradeModuleStackCost);
+                buf.writeInt(msg.upgradeDataKill);
             }
 
             public ConfigMessage read(FriendlyByteBuf buf) {
-                return new ConfigMessage(buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt(),  buf.readInt(),  buf.readInt(),  buf.readInt());
+                return new ConfigMessage(buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt(),  buf.readInt(),  buf.readInt(),  buf.readInt(),  buf.readInt(),
+                        buf.readInt(),  buf.readInt(), buf.readInt(), buf.readFloat(), buf.readInt(), buf.readInt());
             }
 
             public void handle(ConfigMessage msg, Supplier<NetworkEvent.Context> ctx) {
@@ -117,6 +179,13 @@ public class ExtraHostileConfig {
                     ExtraHostileConfig.mergerCameraPowerCap = msg.mergerCameraPowerCap;
                     ExtraHostileConfig.mergerCameraPowerCost = msg.mergerCameraPowerCost;
                     ExtraHostileConfig.mergerCameraPowerDuration = msg.mergerCameraPowerDuration;
+                    ExtraHostileConfig.simulationModelingPowerCap = msg.simulationModelingPowerCap;
+                    ExtraHostileConfig.simulationModelingPowerCost = msg.simulationModelingPowerCost;
+                    ExtraHostileConfig.simulationModelingPowerDuration = msg.simulationModelingPowerDuration;
+                    ExtraHostileConfig.upgradeSpeed = msg.upgradeSpeed;
+                    ExtraHostileConfig.upgradeSpeedEnergy = msg.upgradeSpeedEnergy;
+                    ExtraHostileConfig.upgradeModuleStackCost = msg.upgradeModuleStackCost;
+                    ExtraHostileConfig.upgradeDataKill = msg.upgradeDataKill;
                 }, ctx);
             }
 

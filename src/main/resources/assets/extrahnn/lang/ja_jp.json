@@ -2,10 +2,14 @@
 	"block.extrahnn.ultimate_sim_chamber": "究極型解析室",
 	"block.extrahnn.ultimate_loot_fabricator": "究極型戦利品作成機",
 	"block.extrahnn.merger_camera": "合成カメラ",
+	"block.extrahnn.simulator_modeling": "Simulator Modeling",
 
 	"item.extrahnn.extra_data_model": "エクストラデータモデル (%s, %s, %s, %s)",
 	"item.extrahnn.extra_data_model.broken": "エクストラデータモデル (%s)",
 	"item.extrahnn.blank_extra_data_model": "エクストラ基礎モデル",
+	"item.extrahnn.upgrade_speed": "Upgrade: Speed",
+	"item.extrahnn.upgrade_module_stack": "Upgrade: Tier",
+	"item.extrahnn.upgrade_data_kill": "Upgrade: Data",
 
 	"extrahnn.gui.targets": "解析対象: ",
 
@@ -15,6 +19,15 @@
 	"extrahnn.info.blank_extra_data_model.shift": "このモデルを作成する際に使用された全ての種類の予測素材を作成できます",
 	"extrahnn.info.data_model_slot": "このスロットはエクストラデータモデル専用です。",
 	"extrahnn.info.jei": "4つの%s(%s)を%sで合成すると、%sになります",
+	"extrahnn.info.cost_sim": "Energy cost per 1 simulation: %s FE/T",
+	"extrahnn.info.data_model.name": "Data Model",
+	"extrahnn.info.extra_data_model.name": "Extra Data Model",
+	"extrahnn.info.dpk": "Data Per Simulation: %s",
+	"extrahnn.info.progress_sim": "Progress: %s",
+	"extrahnn.info.iter_count": "Amount Iteration: %s",
+	"extrahnn.info.item_tooltip.upgrade_speed": "Increases speed by %s%%, but energy consumption increases by %s times",
+	"extrahnn.info.item_tooltip.upgrade_module_stack": "Allows you to instantly upgrade a model to the next tier, but requires %s FE",
+	"extrahnn.info.item_tooltip.upgrade_data_kill": "Increases the amount of data received per simulation by %s times",
 
 	"extrahnn.tier.autonomous": "自律",
 	"extrahnn.tier.intelligent": "知的",

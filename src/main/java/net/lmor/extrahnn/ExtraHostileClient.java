@@ -1,8 +1,6 @@
 package net.lmor.extrahnn;
 
-import net.lmor.extrahnn.gui.MergerCameraScreen;
-import net.lmor.extrahnn.gui.UltimateLootFabScreen;
-import net.lmor.extrahnn.gui.UltimateSimChamberScreen;
+import net.lmor.extrahnn.gui.*;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -26,6 +24,7 @@ public class ExtraHostileClient {
             MenuScreens.register(ExtraHostile.Containers.ULTIMATE_SIM_CHAMBER.get(), UltimateSimChamberScreen::new);
             MenuScreens.register(ExtraHostile.Containers.ULTIMATE_LOOT_FABRICATOR.get(), UltimateLootFabScreen::new);
             MenuScreens.register(ExtraHostile.Containers.MERGER_CAMERA.get(), MergerCameraScreen::new);
+            MenuScreens.register(ExtraHostile.Containers.SIMULATOR_MODELING.get(), SimulationModelingScreen::new);
         });
     }
 
