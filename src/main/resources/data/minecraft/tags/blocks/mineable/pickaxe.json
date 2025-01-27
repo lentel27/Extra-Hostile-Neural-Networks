@@ -3,6 +3,7 @@
 	"values": [
 		"extrahnn:ultimate_sim_chamber",
 		"extrahnn:ultimate_loot_fabricator",
-		"extrahnn:merger_camera"
+		"extrahnn:merger_camera",
+		"extrahnn:simulator_modeling"
 	]
 }

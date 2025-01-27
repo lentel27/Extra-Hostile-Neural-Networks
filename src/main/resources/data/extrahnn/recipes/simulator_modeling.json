@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ABA",
+    "BCB",
+    "DED"
+  ],
+  "key": {
+    "A": {
+      "item": "minecraft:netherite_sword"
+    },
+    "B": {
+      "item": "extrahnn:ultimate_sim_chamber"
+    },
+    "C": {
+      "item": "extrahnn:merger_camera"
+    },
+    "D": {
+      "item": "extrahnn:upgrade_speed"
+    },
+    "E": {
+      "item": "minecraft:redstone_block"
+    }
+  },
+  "result": {
+    "item": "extrahnn:simulator_modeling"
+  }
+}

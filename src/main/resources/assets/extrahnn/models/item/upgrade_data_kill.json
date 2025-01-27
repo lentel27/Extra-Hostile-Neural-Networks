@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "extrahnn:item/upgrade_data_kill"
+  }
+}

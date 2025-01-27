@@ -75,6 +75,7 @@ public class ExtraHostileNetworks {
             LootSystem.defaultBlockTable(Blocks.ULTIMATE_LOOT_FABRICATOR.get());
             LootSystem.defaultBlockTable(Blocks.ULTIMATE_SIM_CHAMBER.get());
             LootSystem.defaultBlockTable(Blocks.MERGER_CAMERA.get());
+            LootSystem.defaultBlockTable(Blocks.SIMULATOR_MODELING.get());
         });
     }
 

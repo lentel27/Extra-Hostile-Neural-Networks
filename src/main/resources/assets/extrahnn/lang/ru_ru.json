@@ -2,10 +2,14 @@
 	"block.extrahnn.ultimate_sim_chamber": "Совершенная камера моделирования",
 	"block.extrahnn.ultimate_loot_fabricator": "Совершенный производитель добычи",
 	"block.extrahnn.merger_camera": "Камера слияния",
+	"block.extrahnn.simulator_modeling": "Симуляция моделирования",
 
 	"item.extrahnn.extra_data_model": "Совершенная модель данных (%s, %s, %s, %s)",
 	"item.extrahnn.extra_data_model.broken": "Совершенная модель данных (%s)",
 	"item.extrahnn.blank_extra_data_model": "Совершенная структура модели",
+	"item.extrahnn.upgrade_speed": "Улучшение: Скорость",
+	"item.extrahnn.upgrade_module_stack": "Улучшение: Уровень",
+	"item.extrahnn.upgrade_data_kill": "Улучшение: Данные",
 
 	"extrahnn.gui.targets": "Цели модели: ",
 
@@ -15,6 +19,15 @@
 	"extrahnn.info.blank_extra_data_model.shift": "Будет давать все типы предвычислений, которые были использованы в создание данной модели",
 	"extrahnn.info.data_model_slot": "Данный слот только для совершенной модели данных.",
 	"extrahnn.info.jei": "Объединив 4 %s, равным тиру %s в %s, получится %s",
+	"extrahnn.info.cost_sim": "Стоимость энергии за 1 симуляцию: %s FE/T",
+	"extrahnn.info.data_model.name": "Модель данных",
+	"extrahnn.info.extra_data_model.name": "Совершенная модель данных",
+	"extrahnn.info.dpk": "Данных за симуляцию: %s",
+	"extrahnn.info.progress_sim": "Прогресс: %s",
+	"extrahnn.info.iter_count": "Количество итераций: %s",
+	"extrahnn.info.item_tooltip.upgrade_speed": "Увеличивает скорость на %s%%, но потребление энергии увеличивается в %s раз.",
+	"extrahnn.info.item_tooltip.upgrade_module_stack": "Позволяет мгновенно прокачать до следующего уровня модели, но потребление энергии увеличивается до %s FE/T",
+	"extrahnn.info.item_tooltip.upgrade_data_kill": "Увеличивает количество получаемых данных за симуляцию в %s раз",
 
 	"extrahnn.tier.autonomous": "Автономная",
 	"extrahnn.tier.intelligent": "Разумная",

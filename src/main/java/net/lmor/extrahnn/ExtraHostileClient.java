@@ -1,6 +1,7 @@
 package net.lmor.extrahnn;
 
 import net.lmor.extrahnn.gui.MergerCameraScreen;
+import net.lmor.extrahnn.gui.SimulatorModelingScreen;
 import net.lmor.extrahnn.gui.UltimateLootFabScreen;
 import net.lmor.extrahnn.gui.UltimateSimChamberScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -27,6 +28,7 @@ public class ExtraHostileClient {
             MenuScreens.register(ExtraHostile.Containers.ULTIMATE_SIM_CHAMBER.get(), UltimateSimChamberScreen::new);
             MenuScreens.register(ExtraHostile.Containers.ULTIMATE_LOOT_FABRICATOR.get(), UltimateLootFabScreen::new);
             MenuScreens.register(ExtraHostile.Containers.MERGER_CAMERA.get(), MergerCameraScreen::new);
+            MenuScreens.register(ExtraHostile.Containers.SIMULATOR_MODELING.get(), SimulatorModelingScreen::new);
         });
         MinecraftForge.EVENT_BUS.addListener(HostileClient::tick);
     }
