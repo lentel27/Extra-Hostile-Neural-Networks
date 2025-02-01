@@ -40,8 +40,8 @@ public class MergerCameraContainer extends BlockEntityContainer<MergerCameraTile
 
         this.addPlayerSlots(pInv, 28, 161);
         this.mover.registerRule((stack, slot) -> {
-            return slot == 5;
-        }, 5, 6);
+            return slot < 6;
+        }, 6, this.slots.size());
         this.mover.registerRule((stack, slot) -> {
             return stack.getItem() instanceof DataModelItem;
         }, 0, 4);

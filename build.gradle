@@ -66,14 +66,6 @@ repositories {
             includeGroup "curse.maven"
         }
     }
-
-    maven {
-        name "Modmaven"
-        url "https://modmaven.dev/"
-        content {
-            includeGroup 'appeng'
-        }
-    }
 }
 
 dependencies {
