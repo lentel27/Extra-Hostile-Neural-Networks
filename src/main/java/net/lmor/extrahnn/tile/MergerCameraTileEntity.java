@@ -86,7 +86,7 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
             tag.putString("model_" + i, !this.currentModels.get(i).isValid() ? "null" : Objects.requireNonNull(DataModelRegistry.INSTANCE.getKey(this.currentModels.get(i).getModel())).toString());
         }
 
-        if (runtime != 0){
+        if (craftModel != ExtraCachedModel.EMPTY){
             for (int i = 0; i < SIZE_SLOTS_MODEL; i++){
                 tag.putString("craftModel_" + i, Objects.requireNonNull(DataModelRegistry.INSTANCE.getKey(craftModel.getModels().get(i).get())).toString());
             }
