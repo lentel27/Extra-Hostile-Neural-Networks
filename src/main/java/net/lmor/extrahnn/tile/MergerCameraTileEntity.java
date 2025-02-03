@@ -77,6 +77,12 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
         tag.putBoolean("checkModel", this.checkModel);
         tag.putBoolean("isOverheat", this.isOverheat);
 
+        for (int i = 0; i < SIZE_SLOTS_MODEL; i++){
+            if (this.currentModels.size() == 0 || i >= this.currentModels.size()) break;
+
+            tag.putString("model_" + i, !this.currentModels.get(i).isValid() ? "null" : String.valueOf(DataModelManager.INSTANCE.getValue(this.currentModels.get(i).getModel().getId()).getId()));
+        }
+
         if (craftModel != ExtraCachedModel.EMPTY){
             for (int i = 0; i < SIZE_SLOTS_MODEL; i++){
                 tag.putString("craftModel_" + i, String.valueOf(DataModelManager.INSTANCE.getValue(craftModel.getModels().get(i).getId()).getId()));
@@ -101,7 +107,9 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
             if (model.isEmpty()) continue;
 
             CachedModel cModel = new CachedModel(model, i);
-            if (cModel.isValid()) {
+            ResourceLocation modelId = new ResourceLocation(tag.getString("model_" + i));
+
+            if (cModel.isValid() && DataModelManager.INSTANCE.getValue(cModel.getModel().getId()).equals(modelId)) {
                 models.add(cModel);
             }
         }
