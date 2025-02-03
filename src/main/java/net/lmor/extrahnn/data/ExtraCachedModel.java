@@ -31,6 +31,14 @@ public class ExtraCachedModel {
         return this.models;
     }
 
+    public void setModels(DataModel model, int slot){
+        if (slot >= this.models.size()){
+            this.models.add(model);
+        }
+        else this.models.set(slot, model);
+
+    }
+
     public int simCost() {
         int cost = 0;
         for (DataModel model: models){
