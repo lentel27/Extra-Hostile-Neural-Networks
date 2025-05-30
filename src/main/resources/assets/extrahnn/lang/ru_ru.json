@@ -10,6 +10,7 @@
 	"item.extrahnn.upgrade_speed": "Улучшение: Скорость",
 	"item.extrahnn.upgrade_module_stack": "Улучшение: Уровень",
 	"item.extrahnn.upgrade_data_kill": "Улучшение: Данные",
+	"item.extrahnn.setting_card": "Карта настройки",
 
 	"extrahnn.gui.targets": "Цели модели: ",
 
@@ -38,7 +39,6 @@
 	"extrahnn.fail.data_corruption": "Ошибка слияния: \nДанные модели повреждены.",
 	"extrahnn.fail.failed_load": "Ошибка слияния: \nОдна или несколько входных \nмоделей не были загружены.",
 	"extrahnn.fail.fox_broken": "Ошибка слияния: \nФокус слияния был некорректен.",
-	"extrahnn.fail.high_temperature": "Ошибка слияния: \nМеханизм перегрелся из-за превышения \nдопустимой сложности данных.",
 	"extrahnn.fail.fatal_error": "Ошибка слияния: \nФатальная ошибка во время слияния",
 	"extrahnn.fail.output": "Ошибка слияния:\nВыходной буфер занят",
 	"extrahnn.fail.energy": "Ошибка слияния:\nУровень энергии критический",
@@ -55,6 +55,10 @@
 	"extrahnn.merger_camera.run.2": "> Фокусировка слияния",
 	"extrahnn.merger_camera.run.3": "> Загрузка моделей из памяти",
 	"extrahnn.merger_camera.run.4": "> Оценка моделей",
-	"extrahnn.merger_camera.run.5": "> Охлаждение слияния: ",
-	"extrahnn.merger_camera.run.6": "> Завершение слияния..."
+	"extrahnn.merger_camera.run.5": "> Завершение слияния...",
+
+	"extrahnn.player_message.setting_clear": "Настройки очищены",
+	"extrahnn.player_message.setting_load": "Настройки загружены",
+	"extrahnn.player_message.setting_save": "Настройки сохранены",
+	"extrahnn.player_message.setting_invalid": "Не удалось загрузить настройку"
 }

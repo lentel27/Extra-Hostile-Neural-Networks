@@ -9,10 +9,8 @@ import dev.shadowsoffire.placebo.block_entity.TickingBlockEntity;
 import dev.shadowsoffire.placebo.cap.InternalItemHandler;
 import dev.shadowsoffire.placebo.cap.ModifiableEnergyStorage;
 import dev.shadowsoffire.placebo.menu.SimpleDataSlots;
-import dev.shadowsoffire.placebo.reload.DynamicHolder;
 import net.lmor.extrahnn.ExtraHostile;
 import net.lmor.extrahnn.ExtraHostileConfig;
-import net.lmor.extrahnn.data.ExtraCachedModel;
 import net.lmor.extrahnn.item.ExtraDataModelItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -39,10 +37,8 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
     protected final ModifiableEnergyStorage energy;
     protected final SimpleDataSlots data;
     protected List<CachedModel> currentModels = new ArrayList<>();
-    protected ExtraCachedModel craftModel = ExtraCachedModel.EMPTY;
     protected FailureState failState;
     protected int runtime;
-    protected boolean isOverheat;
 
     protected boolean checkModel = false;
 
@@ -52,8 +48,6 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
         this.data = new SimpleDataSlots();
         this.currentModels.addAll(List.of(CachedModel.EMPTY, CachedModel.EMPTY, CachedModel.EMPTY, CachedModel.EMPTY));
         this.failState = MergerCameraTileEntity.FailureState.NONE;
-
-        this.isOverheat = false;
 
         this.data.addData(() -> {
             return this.runtime;
@@ -78,18 +72,11 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
         tag.put("inventory", this.inventory.serializeNBT());
         tag.putInt("energy", this.energy.getEnergyStored());
         tag.putBoolean("checkModel", this.checkModel);
-        tag.putBoolean("isOverheat", this.isOverheat);
 
         for (int i = 0; i < SIZE_SLOTS_MODEL; i++){
             if (i >= this.currentModels.size()) break;
 
             tag.putString("model_" + i, !this.currentModels.get(i).isValid() ? "null" : Objects.requireNonNull(DataModelRegistry.INSTANCE.getKey(this.currentModels.get(i).getModel())).toString());
-        }
-
-        if (craftModel != ExtraCachedModel.EMPTY){
-            for (int i = 0; i < SIZE_SLOTS_MODEL; i++){
-                tag.putString("craftModel_" + i, Objects.requireNonNull(DataModelRegistry.INSTANCE.getKey(craftModel.getModels().get(i).get())).toString());
-            }
         }
 
         tag.putInt("runtime", this.runtime);
@@ -101,8 +88,6 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
         this.inventory.deserializeNBT(tag.getCompound("inventory"));
         this.energy.setEnergy(tag.getInt("energy"));
         this.checkModel = tag.getBoolean("checkModel");
-        this.isOverheat = tag.getBoolean("isOverheat");
-        this.runtime = tag.getInt("runtime");
 
         List<CachedModel> models = new ArrayList<>();
         for (int i = 0; i < SIZE_SLOTS_MODEL; i++){
@@ -115,34 +100,21 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
             }
         }
 
-        if (this.runtime != 0){
-            craftModel = new ExtraCachedModel(ItemStack.EMPTY, 5);
-            for (int i = 0; i < SIZE_SLOTS_MODEL; i++){
-                ResourceLocation modelId = new ResourceLocation(tag.getString("craftModel_" + i));
-                craftModel.setModels(DataModelRegistry.INSTANCE.holder(modelId), i);
-            }
-        } else {
-            craftModel = ExtraCachedModel.EMPTY;
-        }
-
         this.currentModels = models;
+        this.runtime = tag.getInt("runtime");
         this.failState = MergerCameraTileEntity.FailureState.values()[tag.getInt("failState")];
     }
 
     public void serverTick(Level level, BlockPos pos, BlockState state) {
         if (this.runtime == 0) checkSlotModels();
 
-        if (currentModels.size() == SIZE_SLOTS_MODEL || craftModel != ExtraCachedModel.EMPTY){
+        if (currentModels.size() == SIZE_SLOTS_MODEL){
             if (this.runtime == 0) {
                 if (this.canStartSimulation()){
                     this.runtime = ExtraHostileConfig.mergerCameraPowerDuration;
                     assert this.level != null;
-                    this.isOverheat = this.level.random.nextFloat() <= 0.05;
-                    if (this.isOverheat) this.failState = FailureState.HIGH_TEMP;
 
-                    craftModel = new ExtraCachedModel(ItemStack.EMPTY, 5);
                     for (int i = 0; i < SIZE_SLOTS_MODEL; i++){
-                        craftModel.setModels(new CachedModel(this.getInventory().getStackInSlot(i), i).getModel(), i);
                         this.getInventory().getStackInSlot(i).shrink(1);
                     }
                     this.inventory.getStackInSlot(4).shrink(1);
@@ -152,8 +124,7 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
             else if (this.getEnergyStored() >= ExtraHostileConfig.mergerCameraPowerCost){
                 this.failState = FailureState.NONE;
                 if (--this.runtime == 0){
-                    if (!this.isOverheat) createNewModelData();
-                    this.isOverheat = false;
+                    createNewModelData();
                 } else {
                     this.energy.setEnergy(this.energy.getEnergyStored() - ExtraHostileConfig.mergerCameraPowerCost);
                 }
@@ -170,18 +141,18 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
     }
 
     public void createNewModelData(){
+        List<CachedModel> models = this.currentModels;
         this.currentModels = new ArrayList<>();
 
         List<DataModel> dataModels = new ArrayList<>();
 
-        for (DynamicHolder<DataModel> model: craftModel.getModels()){
-            dataModels.add(model.get());
+        for (CachedModel model: models){
+            dataModels.add(model.getModel());
         }
 
         ItemStack modelStack = new ItemStack(ExtraHostile.Items.EXTRA_DATA_MODEL.get());
         ExtraDataModelItem.setStoredModels(modelStack, dataModels);
 
-        craftModel = ExtraCachedModel.EMPTY;
         this.inventory.setStackInSlot(5, modelStack);
     }
 
@@ -252,10 +223,6 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
     public int getRuntime() {
         return this.runtime;
     }
-    public boolean getOverheat() {
-        return this.isOverheat;
-    }
-
 
     public FailureState getFailState() {
         return this.failState;
@@ -291,7 +258,6 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
 
     public static enum FailureState {
         NONE("none"),
-        HIGH_TEMP("high_temperature"),
         OUTPUT("output"),
         ENERGY("energy"),
         MODEL("model"),

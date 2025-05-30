@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_17",
+  "package": "net.lmor.extrahnn.mixin",
+  "refmap": "mixins.extrahnn.refmap.json",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "SettingLootFabTileEntity",
+    "SettingSimChamberTileEntity"
+  ],
+  "client": [
+  ]
+}

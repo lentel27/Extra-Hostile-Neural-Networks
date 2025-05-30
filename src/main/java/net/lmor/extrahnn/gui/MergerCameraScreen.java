@@ -150,17 +150,12 @@ public class MergerCameraScreen extends PlaceboContainerScreen<MergerCameraConta
             this.body.clear();
             int iters = DataModelItem.getIters(this.menu.getSlot(0).getItem());
 
-            for(i = 0; i < 7; ++i) {
+            for(i = 0; i < 6; ++i) {
                 TickableText txt = new TickableText(I18n.get("extrahnn.merger_camera.run." + i, iters), 16777215, i != 0 && i != 5, speed);
                 this.body.add(txt.setTicks(ticks));
                 ticks = Math.max(0, ticks - txt.getMaxUsefulTicks());
                 if (i == 0) {
                     txt = new TickableText("v" + ExtraHostileNetworks.VERSION, ChatFormatting.GOLD.getColor(), true, speed);
-                    this.body.add(txt.setTicks(ticks));
-                    ticks = Math.max(0, ticks - txt.getMaxUsefulTicks());
-                } else if (i == 5) {
-                    key = Component.translatable("extrahnn.fail.overheat." + (this.menu.getOverheat() ? "on" : "off")).getString();
-                    txt = new TickableText(I18n.get(key), (this.menu.getOverheat() ? ChatFormatting.RED : ChatFormatting.AQUA).getColor(), true, speed);
                     this.body.add(txt.setTicks(ticks));
                     ticks = Math.max(0, ticks - txt.getMaxUsefulTicks());
                 }

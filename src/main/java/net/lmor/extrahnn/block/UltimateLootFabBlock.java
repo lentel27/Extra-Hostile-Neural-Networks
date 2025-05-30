@@ -1,9 +1,14 @@
 package net.lmor.extrahnn.block;
 
 import dev.shadowsoffire.placebo.block_entity.TickingEntityBlock;
+import dev.shadowsoffire.placebo.menu.MenuUtil;
 import dev.shadowsoffire.placebo.menu.SimplerMenuProvider;
+import net.lmor.extrahnn.api.SettingCardMessage;
 import net.lmor.extrahnn.gui.UltimateLootFabContainer;
+import net.lmor.extrahnn.gui.UltimateSimChamberContainer;
+import net.lmor.extrahnn.item.SettingCard;
 import net.lmor.extrahnn.tile.UltimateLootFabTileEntity;
+import net.lmor.extrahnn.tile.UltimateSimChamberTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,6 +17,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -23,6 +29,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.items.wrapper.RecipeWrapper;
 import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
 
 public class UltimateLootFabBlock extends HorizontalDirectionalBlock implements TickingEntityBlock {
     public UltimateLootFabBlock(BlockBehaviour.Properties props) {
@@ -42,13 +49,9 @@ public class UltimateLootFabBlock extends HorizontalDirectionalBlock implements 
         return new UltimateLootFabTileEntity(pPos, pState);
     }
 
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
-        if (pLevel.isClientSide) {
-            return InteractionResult.SUCCESS;
-        } else {
-            NetworkHooks.openScreen((ServerPlayer)pPlayer, this.getMenuProvider(pState, pLevel, pPos), pPos);
-            return InteractionResult.CONSUME;
-        }
+    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos,
+                                          @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
+        return MenuUtil.openGui(player, pos, UltimateLootFabContainer::new);
     }
 
     /** @deprecated */

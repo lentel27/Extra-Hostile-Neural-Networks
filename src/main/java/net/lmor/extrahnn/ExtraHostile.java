@@ -14,6 +14,7 @@ import net.lmor.extrahnn.gui.UltimateLootFabContainer;
 import net.lmor.extrahnn.gui.UltimateSimChamberContainer;
 import net.lmor.extrahnn.item.BlankExtraDataModelItem;
 import net.lmor.extrahnn.item.ExtraDataModelItem;
+import net.lmor.extrahnn.item.SettingCard;
 import net.lmor.extrahnn.item.UpgradeMachine;
 import net.lmor.extrahnn.tile.MergerCameraTileEntity;
 import net.lmor.extrahnn.tile.SimulationModelingTileEntity;
@@ -63,6 +64,7 @@ public class ExtraHostile {
         public static final RegistryObject<BlockItem> SIMULATOR_MODELING = ExtraHostile.R.item("simulator_modeling", () -> { return new BlockItem(Blocks.SIMULATOR_MODELING.get(), new Item.Properties()); });;
         public static final RegistryObject<ExtraDataModelItem> EXTRA_DATA_MODEL = ExtraHostile.R.item("extra_data_model", () -> { return new ExtraDataModelItem((new Item.Properties()).stacksTo(1)); });;
         public static final RegistryObject<Item> BLANK_EXTRA_DATA_MODEL = ExtraHostile.R.item("blank_extra_data_model", () -> { return new BlankExtraDataModelItem((new Item.Properties())); });;
+        public static final RegistryObject<Item> SETTING_CARD = ExtraHostile.R.item("setting_card", () -> { return new SettingCard((new Item.Properties().stacksTo(1))); });;
         public static final RegistryObject<UpgradeMachine> UPGRADE_SPEED = ExtraHostile.R.item("upgrade_speed", () -> { return new UpgradeMachine(new Item.Properties(), Component.translatable("extrahnn.info.item_tooltip.upgrade_speed", ExtraHostileConfig.upgradeSpeed, ExtraHostileConfig.upgradeSpeedEnergy ).withStyle(ChatFormatting.GRAY)); });
         public static final RegistryObject<UpgradeMachine> UPGRADE_MODULE_STACK = ExtraHostile.R.item("upgrade_module_stack", () -> { return new UpgradeMachine(new Item.Properties(), Component.translatable("extrahnn.info.item_tooltip.upgrade_module_stack", ExtraHostileConfig.upgradeModuleStackCost).withStyle(ChatFormatting.GRAY)); });
         public static final RegistryObject<UpgradeMachine> UPGRADE_DATA_KILL = ExtraHostile.R.item("upgrade_data_kill", () -> { return new UpgradeMachine(new Item.Properties(), Component.translatable("extrahnn.info.item_tooltip.upgrade_data_kill", ExtraHostileConfig.upgradeDataKill).withStyle(ChatFormatting.GRAY)); });

@@ -1,15 +1,12 @@
 package net.lmor.extrahnn.data;
 
 import dev.shadowsoffire.hostilenetworks.data.DataModel;
-import dev.shadowsoffire.hostilenetworks.data.DataModelRegistry;
 import dev.shadowsoffire.placebo.reload.DynamicHolder;
 import net.lmor.extrahnn.item.ExtraDataModelItem;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class ExtraCachedModel {
     public static final ExtraCachedModel EMPTY;
@@ -33,16 +30,6 @@ public class ExtraCachedModel {
 
     public List<DynamicHolder<DataModel>> getModels(){
         return this.models;
-    }
-
-    public void setModels(DataModel model, int slot){
-        DynamicHolder<DataModel> dh = DataModelRegistry.INSTANCE.holder(new ResourceLocation(Objects.requireNonNull(DataModelRegistry.INSTANCE.getKey(model)).toString()));
-
-        this.models.set(slot, dh);
-    }
-
-    public void setModels(DynamicHolder<DataModel> model, int slot){
-        this.models.set(slot, model);
     }
 
     public int simCost() {

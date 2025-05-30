@@ -10,6 +10,7 @@
 	"item.extrahnn.upgrade_speed": "Upgrade: Speed",
 	"item.extrahnn.upgrade_module_stack": "Upgrade: Tier",
 	"item.extrahnn.upgrade_data_kill": "Upgrade: Data",
+	"item.extrahnn.setting_card": "Setting Card",
 
 	"extrahnn.gui.targets": "Sim Targets: ",
 
@@ -38,7 +39,6 @@
 	"extrahnn.fail.data_corruption": "Merge error: \nThese models are damaged.",
 	"extrahnn.fail.failed_load": "Merge error: \nOne or more input \nmodels were not loaded.",
 	"extrahnn.fail.fox_broken": "Merge error: \nThe merge focus was incorrect.",
-	"extrahnn.fail.high_temperature": "Merge error: \nThe mechanism overheated due to exceeding the permissible data complexity.",
 	"extrahnn.fail.fatal_error": "Merge error: \nFatal error during merge",
 	"extrahnn.fail.output": "Merge error:\nOutput buffer is busy",
 	"extrahnn.fail.energy": "Merge error:\nEnergy level is critical",
@@ -55,6 +55,10 @@
 	"extrahnn.merger_camera.run.2": "> Focusing on fusion",
 	"extrahnn.merger_camera.run.3": "> Loading models from memory",
 	"extrahnn.merger_camera.run.4": "> Models evaluation",
-	"extrahnn.merger_camera.run.5": "> Cooling of the merger: ",
-	"extrahnn.merger_camera.run.6": "> Completion of the merger..."
+	"extrahnn.merger_camera.run.5": "> Completion of the merger...",
+
+	"extrahnn.player_message.setting_clear": "Setting cleared",
+	"extrahnn.player_message.setting_load": "Setting saved",
+	"extrahnn.player_message.setting_save": "Setting loaded",
+	"extrahnn.player_message.setting_invalid": "Couldn't load the setting"
 }

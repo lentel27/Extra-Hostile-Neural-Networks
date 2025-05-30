@@ -14,6 +14,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.lmor.extrahnn.ExtraHostile;
 import net.lmor.extrahnn.ExtraHostileConfig;
+import net.lmor.extrahnn.api.ISettingCard;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -21,6 +22,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -32,7 +34,7 @@ import net.minecraftforge.common.util.LazyOptional;
 
 import java.util.function.Consumer;
 
-public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlockEntity, SimpleDataSlots.IDataAutoRegister {
+public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlockEntity, SimpleDataSlots.IDataAutoRegister, ISettingCard {
     protected final FabItemHandler inventory = new FabItemHandler();
     protected final ModifiableEnergyStorage energy;
     protected final Object2IntMap<DynamicHolder<DataModel>> savedSelections;
@@ -188,22 +190,26 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
     }
 
     private CompoundTag writeSelections(CompoundTag tag) {
+        CompoundTag saveTag = new CompoundTag();
 
         for (Object2IntMap.Entry<DynamicHolder<DataModel>> e : this.savedSelections.object2IntEntrySet()) {
-            tag.putInt((e.getKey()).getId().toString(), e.getIntValue());
+            saveTag.putInt((e.getKey()).getId().toString(), e.getIntValue());
         }
+
+        tag.put("selections", saveTag);
 
         return tag;
     }
 
     private void readSelections(CompoundTag tag) {
+        if (!tag.contains("selections")) return;
+
         this.savedSelections.clear();
 
-        for (String s : tag.getAllKeys()) {
+        for (String s : tag.getCompound("selections").getAllKeys()) {
             DynamicHolder<DataModel> dm = DataModelRegistry.INSTANCE.holder(new ResourceLocation(s));
             this.savedSelections.put(dm, tag.getInt(s));
         }
-
     }
 
     public int getEnergyStored() {
@@ -221,6 +227,21 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
             int index = this.savedSelections.getInt(DataModelRegistry.INSTANCE.holder(model));
             return index >= model.fabDrops().size() ? -1 : index;
         }
+    }
+
+    @Override
+    public CompoundTag saveSetting() {
+        CompoundTag tag = new CompoundTag();
+
+        return writeSelections(tag);
+    }
+
+    @Override
+    public boolean loadSetting(CompoundTag tag, Player player) {
+        readSelections(tag);
+        VanillaPacketDispatcher.dispatchTEToNearbyPlayers(this);
+        this.setChanged();
+        return true;
     }
 
     public class FabItemHandler extends InternalItemHandler {

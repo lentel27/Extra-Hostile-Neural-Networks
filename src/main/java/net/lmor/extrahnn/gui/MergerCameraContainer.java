@@ -63,9 +63,6 @@ public class MergerCameraContainer extends BlockEntityMenu<MergerCameraTileEntit
     public int getRuntime() {
         return this.tile.getRuntime();
     }
-    public boolean getOverheat() {
-        return this.tile.getOverheat();
-    }
 
     public MergerCameraTileEntity.FailureState getFailState() {
         return this.tile.getFailState();
