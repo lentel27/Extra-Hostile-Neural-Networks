@@ -157,9 +157,8 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
                 }
                 else {
                     int newData = model.getData() + model.getDataPerKill() * (upgradeDataKill ? ExtraHostileConfig.upgradeDataKill : 1);
-                    if (newData <= model.getNextTierData()) {
-                        model.setData(newData);
-                    }
+                    int resData = Math.min(newData, model.getNextTierData());
+                    model.setData(resData);
                 }
             }
 
@@ -175,9 +174,8 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
                     model.setData(model.getNextTierData());
                 } else {
                     int newData = model.getData() + model.getDataPerKill() * (upgradeDataKill ? ExtraHostileConfig.upgradeDataKill : 1);
-                    if (newData <= model.getNextTierData()) {
-                        model.setData(newData);
-                    }
+                    int resData = Math.min(newData, model.getNextTierData());
+                    model.setData(resData);
                 }
             }
 

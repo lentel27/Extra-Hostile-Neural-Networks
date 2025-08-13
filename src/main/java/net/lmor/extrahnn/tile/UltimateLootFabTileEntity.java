@@ -138,15 +138,9 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
     }
 
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return LazyOptional.of(() -> {
-                return this.inventory;
-            }).cast();
-        } else {
-            return cap == ForgeCapabilities.ENERGY ? LazyOptional.of(() -> {
-                return this.energy;
-            }).cast() : super.getCapability(cap, side);
-        }
+        if (cap == ForgeCapabilities.ITEM_HANDLER) return LazyOptional.of(() -> this.inventory).cast();
+        if (cap == ForgeCapabilities.ENERGY) return LazyOptional.of(() -> this.energy).cast();
+        return super.getCapability(cap, side);
     }
 
     public void saveAdditional(CompoundTag tag) {
@@ -168,9 +162,7 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
     }
 
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this, (t) -> {
-            return ((UltimateLootFabTileEntity)t).writeSync();
-        });
+        return ClientboundBlockEntityDataPacket.create(this, t -> ((UltimateLootFabTileEntity) t).writeSync());
     }
 
     private CompoundTag writeSync() {
@@ -190,23 +182,16 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
     }
 
     private CompoundTag writeSelections(CompoundTag tag) {
-        CompoundTag saveTag = new CompoundTag();
-
         for (Object2IntMap.Entry<DynamicHolder<DataModel>> e : this.savedSelections.object2IntEntrySet()) {
-            saveTag.putInt((e.getKey()).getId().toString(), e.getIntValue());
+            tag.putInt((e.getKey()).getId().toString(), e.getIntValue());
         }
-
-        tag.put("selections", saveTag);
-
         return tag;
     }
 
     private void readSelections(CompoundTag tag) {
-        if (!tag.contains("selections")) return;
-
         this.savedSelections.clear();
 
-        for (String s : tag.getCompound("selections").getAllKeys()) {
+        for (String s : tag.getAllKeys()) {
             DynamicHolder<DataModel> dm = DataModelRegistry.INSTANCE.holder(new ResourceLocation(s));
             this.savedSelections.put(dm, tag.getInt(s));
         }
@@ -233,12 +218,18 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
     public CompoundTag saveSetting() {
         CompoundTag tag = new CompoundTag();
 
-        return writeSelections(tag);
+        CompoundTag saveTag = new CompoundTag();
+        this.writeSelections(saveTag);
+        tag.put("selections", saveTag);
+
+        return tag;
     }
 
     @Override
     public boolean loadSetting(CompoundTag tag, Player player) {
-        readSelections(tag);
+        if (!tag.contains("selections")) return false;
+
+        this.readSelections(tag.getCompound("selections"));
         VanillaPacketDispatcher.dispatchTEToNearbyPlayers(this);
         this.setChanged();
         return true;
