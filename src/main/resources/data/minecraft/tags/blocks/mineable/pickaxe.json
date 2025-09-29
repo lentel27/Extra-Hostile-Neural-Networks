@@ -1,8 +1,14 @@
 {
 	"replace": false,
 	"values": [
-		"extrahnn:ultimate_sim_chamber",
-		"extrahnn:ultimate_loot_fabricator",
+		"extrahnn:ultimate_sim_chamber_v1",
+		"extrahnn:ultimate_sim_chamber_v2",
+		"extrahnn:ultimate_sim_chamber_v3",
+		"extrahnn:ultimate_sim_chamber_v4",
+		"extrahnn:ultimate_loot_fabricator_v1",
+		"extrahnn:ultimate_loot_fabricator_v2",
+		"extrahnn:ultimate_loot_fabricator_v3",
+		"extrahnn:ultimate_loot_fabricator_v4",
 		"extrahnn:merger_camera",
 		"extrahnn:simulator_modeling"
 	]
