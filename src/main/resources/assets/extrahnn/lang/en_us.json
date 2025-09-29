@@ -1,6 +1,12 @@
 {
-	"block.extrahnn.ultimate_sim_chamber": "Ultimate Simulation Chamber",
-	"block.extrahnn.ultimate_loot_fabricator": "Ultimate Loot Fabricator",
+	"block.extrahnn.ultimate_sim_chamber_v1": "Ultimate Simulation Chamber V1",
+	"block.extrahnn.ultimate_sim_chamber_v2": "Ultimate Simulation Chamber V2",
+	"block.extrahnn.ultimate_sim_chamber_v3": "Ultimate Simulation Chamber V3",
+	"block.extrahnn.ultimate_sim_chamber_v4": "Ultimate Simulation Chamber V4",
+	"block.extrahnn.ultimate_loot_fabricator_v1": "Ultimate Loot Fabricator V1",
+	"block.extrahnn.ultimate_loot_fabricator_v2": "Ultimate Loot Fabricator V2",
+	"block.extrahnn.ultimate_loot_fabricator_v3": "Ultimate Loot Fabricator V3",
+	"block.extrahnn.ultimate_loot_fabricator_v4": "Ultimate Loot Fabricator V4",
 	"block.extrahnn.merger_camera": "Merger Camera",
 	"block.extrahnn.simulator_modeling": "Simulator Modeling",
 

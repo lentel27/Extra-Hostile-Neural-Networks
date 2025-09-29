@@ -1,18 +1,24 @@
 package net.lmor.extrahnn.gui;
 
-import dev.shadowsoffire.hostilenetworks.item.DataModelItem;
 import dev.shadowsoffire.placebo.menu.BlockEntityMenu;
 import dev.shadowsoffire.placebo.menu.FilteredSlot;
-import net.lmor.extrahnn.ExtraHostile;
 import net.lmor.extrahnn.item.ExtraDataModelItem;
 import net.lmor.extrahnn.tile.UltimateSimChamberTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.block.Block;
 
 public class UltimateSimChamberContainer extends BlockEntityMenu<UltimateSimChamberTileEntity> {
-    public UltimateSimChamberContainer(int id, Inventory pInv, BlockPos pos) {
-        super(ExtraHostile.Containers.ULTIMATE_SIM_CHAMBER.get(), id, pInv, pos);
+
+    private final Block block;
+
+    public UltimateSimChamberContainer(int id, Inventory pInv, BlockPos pos, MenuType<?> type, Block block) {
+        super(type, id, pInv, pos);
+
+        this.block = block;
+
         UltimateSimChamberTileEntity.SimItemHandler inventory = this.tile.getInventory();
         this.addSlot(new FilteredSlot(inventory, 0, -13, 1, (s) -> {
             return s.getItem() instanceof ExtraDataModelItem;
@@ -62,7 +68,7 @@ public class UltimateSimChamberContainer extends BlockEntityMenu<UltimateSimCham
     }
 
     public boolean stillValid(Player pPlayer) {
-        return pPlayer.level().getBlockState(this.pos).getBlock() == ExtraHostile.Blocks.ULTIMATE_SIM_CHAMBER.get();
+        return pPlayer.level().getBlockState(this.pos).getBlock() == block;
     }
 
     public int getEnergyStored() {

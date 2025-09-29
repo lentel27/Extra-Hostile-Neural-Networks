@@ -21,8 +21,14 @@ public class ExtraHostileClient {
     @SubscribeEvent
     public static void init(FMLClientSetupEvent e) {
         e.enqueueWork(() -> {
-            MenuScreens.register(ExtraHostile.Containers.ULTIMATE_SIM_CHAMBER.get(), UltimateSimChamberScreen::new);
-            MenuScreens.register(ExtraHostile.Containers.ULTIMATE_LOOT_FABRICATOR.get(), UltimateLootFabScreen::new);
+            MenuScreens.register(ExtraHostile.Containers.ULTIMATE_SIM_CHAMBER_V1.get(), UltimateSimChamberScreen::new);
+            MenuScreens.register(ExtraHostile.Containers.ULTIMATE_SIM_CHAMBER_V2.get(), UltimateSimChamberScreen::new);
+            MenuScreens.register(ExtraHostile.Containers.ULTIMATE_SIM_CHAMBER_V3.get(), UltimateSimChamberScreen::new);
+            MenuScreens.register(ExtraHostile.Containers.ULTIMATE_SIM_CHAMBER_V4.get(), UltimateSimChamberScreen::new);
+            MenuScreens.register(ExtraHostile.Containers.ULTIMATE_LOOT_FABRICATOR_V1.get(), UltimateLootFabScreen::new);
+            MenuScreens.register(ExtraHostile.Containers.ULTIMATE_LOOT_FABRICATOR_V2.get(), UltimateLootFabScreen::new);
+            MenuScreens.register(ExtraHostile.Containers.ULTIMATE_LOOT_FABRICATOR_V3.get(), UltimateLootFabScreen::new);
+            MenuScreens.register(ExtraHostile.Containers.ULTIMATE_LOOT_FABRICATOR_V4.get(), UltimateLootFabScreen::new);
             MenuScreens.register(ExtraHostile.Containers.MERGER_CAMERA.get(), MergerCameraScreen::new);
             MenuScreens.register(ExtraHostile.Containers.SIMULATOR_MODELING.get(), SimulationModelingScreen::new);
         });

@@ -1,6 +1,12 @@
 {
-	"block.extrahnn.ultimate_sim_chamber": "Совершенная камера моделирования",
-	"block.extrahnn.ultimate_loot_fabricator": "Совершенный производитель добычи",
+	"block.extrahnn.ultimate_sim_chamber_v1": "Совершенная камера моделирования V1",
+	"block.extrahnn.ultimate_sim_chamber_v2": "Совершенная камера моделирования V2",
+	"block.extrahnn.ultimate_sim_chamber_v3": "Совершенная камера моделирования V3",
+	"block.extrahnn.ultimate_sim_chamber_v4": "Совершенная камера моделирования V4",
+	"block.extrahnn.ultimate_loot_fabricator_v1": "Совершенный производитель добычи V1",
+	"block.extrahnn.ultimate_loot_fabricator_v2": "Совершенный производитель добычи V2",
+	"block.extrahnn.ultimate_loot_fabricator_v3": "Совершенный производитель добычи V3",
+	"block.extrahnn.ultimate_loot_fabricator_v4": "Совершенный производитель добычи V4",
 	"block.extrahnn.merger_camera": "Камера слияния",
 	"block.extrahnn.simulator_modeling": "Симуляция моделирования",
 

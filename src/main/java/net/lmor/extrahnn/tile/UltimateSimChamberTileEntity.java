@@ -6,9 +6,9 @@ import dev.shadowsoffire.placebo.cap.InternalItemHandler;
 import dev.shadowsoffire.placebo.cap.ModifiableEnergyStorage;
 import dev.shadowsoffire.placebo.menu.SimpleDataSlots;
 import dev.shadowsoffire.placebo.reload.DynamicHolder;
-import net.lmor.extrahnn.ExtraHostile;
 import net.lmor.extrahnn.ExtraHostileConfig;
 import net.lmor.extrahnn.api.ISettingCard;
+import net.lmor.extrahnn.api.Version;
 import net.lmor.extrahnn.data.ExtraCachedModel;
 import net.lmor.extrahnn.data.ExtraModelTier;
 import net.lmor.extrahnn.item.ExtraDataModelItem;
@@ -18,10 +18,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.DataSlot;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -41,8 +41,12 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
     protected FailureState failState;
     private boolean checkOutput = true;
 
-    public UltimateSimChamberTileEntity(BlockPos pos, BlockState state) {
-        super(ExtraHostile.TileEntities.ULTIMATE_SIM_CHAMBER.get(), pos, state);
+    private Version version;
+
+    public UltimateSimChamberTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type, Version version) {
+        super(type, pos, state);
+        this.version = version;
+
         this.energy = new ModifiableEnergyStorage(ExtraHostileConfig.ultimateSimPowerCap, ExtraHostileConfig.ultimateSimPowerCap);
 
         this.data = new SimpleDataSlots();
@@ -81,6 +85,8 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         tag.putInt("runtime", this.runtime);
         tag.putBoolean("predSuccess", this.predictionSuccess);
         tag.putInt("failState", this.failState.ordinal());
+
+        tag.putString("versionBlockEntity", this.version.getId());
     }
 
     public void load(CompoundTag tag) {
@@ -95,6 +101,8 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         this.runtime = tag.getInt("runtime");
         this.predictionSuccess = tag.getBoolean("predSuccess");
         this.failState = FailureState.values()[tag.getInt("failState")];
+
+        this.version = Version.getVersion(tag.getString("versionBlockEntity"));
     }
 
     public void serverTick(Level level, BlockPos pos, BlockState state) {
@@ -121,7 +129,7 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
                     if (this.canStartSimulation()) {
                         this.runtime = ExtraHostileConfig.ultimateSimPowerDuration;
                         this.predictionSuccess = this.level.random.nextFloat() <= this.currentModel.getAccuracy();
-                        this.inventory.getStackInSlot(1).shrink(4);
+                        this.inventory.getStackInSlot(1).shrink(version.getMultiplier() * 4);
                         this.setChanged();
                     }
                 } else if (this.energy.getEnergyStored() >= this.currentModel.simCost()) {
@@ -147,8 +155,13 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         List<ItemStack> predicateDrop = new ArrayList<>();
         List<ItemStack> baseDrop = new ArrayList<>();
         for (DynamicHolder<DataModel> model: this.currentModel.getModels()){
-            predicateDrop.add(model.get().getPredictionDrop());
-            baseDrop.add(model.get().baseDrop());
+            var predDrop = model.get().getPredictionDrop();
+            predDrop.setCount(version.getMultiplier());
+            predicateDrop.add(predDrop);
+
+            var base = model.get().baseDrop();
+            base.setCount(version.getMultiplier());
+            baseDrop.add(base);
         }
 
         setItem(baseDrop, 2, 6);

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(SimChamberTileEntity.class)
 public class SettingSimChamberTileEntity implements ISettingCard {
-    @Shadow @Final protected SimChamberTileEntity.SimItemHandler inventory;
+    @Shadow(remap = false) @Final protected SimChamberTileEntity.SimItemHandler inventory;
 
     @Override
     public CompoundTag saveSetting() {

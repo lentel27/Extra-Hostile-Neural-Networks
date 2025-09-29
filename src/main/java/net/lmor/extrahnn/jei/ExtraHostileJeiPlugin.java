@@ -29,7 +29,10 @@ public class ExtraHostileJeiPlugin implements IModPlugin {
     }
 
     public void registerRecipeCatalysts(IRecipeCatalystRegistration reg) {
-        reg.addRecipeCatalyst(new ItemStack(Blocks.ULTIMATE_LOOT_FABRICATOR.get()), LootFabCategory.TYPE);
+        reg.addRecipeCatalyst(new ItemStack(Blocks.ULTIMATE_LOOT_FABRICATOR_V1.get()), LootFabCategory.TYPE);
+        reg.addRecipeCatalyst(new ItemStack(Blocks.ULTIMATE_LOOT_FABRICATOR_V2.get()), LootFabCategory.TYPE);
+        reg.addRecipeCatalyst(new ItemStack(Blocks.ULTIMATE_LOOT_FABRICATOR_V3.get()), LootFabCategory.TYPE);
+        reg.addRecipeCatalyst(new ItemStack(Blocks.ULTIMATE_LOOT_FABRICATOR_V4.get()), LootFabCategory.TYPE);
     }
 
     public ResourceLocation getPluginUid() {

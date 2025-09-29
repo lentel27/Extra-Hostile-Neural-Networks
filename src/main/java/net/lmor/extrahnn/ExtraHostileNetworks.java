@@ -40,11 +40,19 @@ public class ExtraHostileNetworks {
     @SubscribeEvent
     public void setup(FMLCommonSetupEvent e) {
         e.enqueueWork(() -> {
-            LootSystem.defaultBlockTable(Blocks.ULTIMATE_LOOT_FABRICATOR.get());
-            LootSystem.defaultBlockTable(Blocks.ULTIMATE_SIM_CHAMBER.get());
+            LootSystem.defaultBlockTable(Blocks.ULTIMATE_LOOT_FABRICATOR_V1.get());
+            LootSystem.defaultBlockTable(Blocks.ULTIMATE_LOOT_FABRICATOR_V2.get());
+            LootSystem.defaultBlockTable(Blocks.ULTIMATE_LOOT_FABRICATOR_V3.get());
+            LootSystem.defaultBlockTable(Blocks.ULTIMATE_LOOT_FABRICATOR_V4.get());
+            LootSystem.defaultBlockTable(Blocks.ULTIMATE_SIM_CHAMBER_V1.get());
+            LootSystem.defaultBlockTable(Blocks.ULTIMATE_SIM_CHAMBER_V2.get());
+            LootSystem.defaultBlockTable(Blocks.ULTIMATE_SIM_CHAMBER_V3.get());
+            LootSystem.defaultBlockTable(Blocks.ULTIMATE_SIM_CHAMBER_V4.get());
             LootSystem.defaultBlockTable(Blocks.MERGER_CAMERA.get());
             LootSystem.defaultBlockTable(Blocks.SIMULATOR_MODELING.get());
-            TabFillingRegistry.register(Tabs.HNN_TAB_KEY, Items.ULTIMATE_LOOT_FABRICATOR, Items.ULTIMATE_SIM_CHAMBER,
+            TabFillingRegistry.register(Tabs.HNN_TAB_KEY, Items.ULTIMATE_LOOT_FABRICATOR_V1, Items.ULTIMATE_LOOT_FABRICATOR_V2,
+                    Items.ULTIMATE_LOOT_FABRICATOR_V3, Items.ULTIMATE_LOOT_FABRICATOR_V4, Items.ULTIMATE_SIM_CHAMBER_V1,
+                    Items.ULTIMATE_SIM_CHAMBER_V2, Items.ULTIMATE_SIM_CHAMBER_V3, Items.ULTIMATE_SIM_CHAMBER_V4,
                     Items.MERGER_CAMERA, Items.BLANK_EXTRA_DATA_MODEL, Items.SIMULATOR_MODELING, Items.UPGRADE_SPEED,
                     Items.UPGRADE_MODULE_STACK, Items.UPGRADE_DATA_KILL, Items.SETTING_CARD);
         });

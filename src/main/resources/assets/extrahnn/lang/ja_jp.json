@@ -1,6 +1,13 @@
 {
-	"block.extrahnn.ultimate_sim_chamber": "究極型解析室",
-	"block.extrahnn.ultimate_loot_fabricator": "究極型戦利品作成機",
+	"block.extrahnn.ultimate_sim_chamber_v1": "究極型解析室 V1",
+	"block.extrahnn.ultimate_sim_chamber_v2": "究極型解析室 V2",
+	"block.extrahnn.ultimate_sim_chamber_v3": "究極型解析室 V3",
+	"block.extrahnn.ultimate_sim_chamber_v4": "究極型解析室 V4",
+	"block.extrahnn.ultimate_loot_fabricator_v1": "究極型戦利品作成機 V1",
+	"block.extrahnn.ultimate_loot_fabricator_v2": "究極型戦利品作成機 V2",
+	"block.extrahnn.ultimate_loot_fabricator_v3": "究極型戦利品作成機 V3",
+	"block.extrahnn.ultimate_loot_fabricator_v4": "究極型戦利品作成機 V4",
+
 	"block.extrahnn.merger_camera": "合成カメラ",
 	"block.extrahnn.simulator_modeling": "Simulator Modeling",
 

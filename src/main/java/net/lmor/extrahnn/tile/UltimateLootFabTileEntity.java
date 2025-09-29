@@ -12,9 +12,9 @@ import dev.shadowsoffire.placebo.recipe.VanillaPacketDispatcher;
 import dev.shadowsoffire.placebo.reload.DynamicHolder;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.lmor.extrahnn.ExtraHostile;
 import net.lmor.extrahnn.ExtraHostileConfig;
 import net.lmor.extrahnn.api.ISettingCard;
+import net.lmor.extrahnn.api.Version;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -27,6 +27,7 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
@@ -43,9 +44,14 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
     protected int currentSel;
     private boolean checkOutput = true;
 
-    public UltimateLootFabTileEntity(BlockPos pos, BlockState state) {
-        super(ExtraHostile.TileEntities.ULTIMATE_LOOT_FABRICATOR.get(), pos, state);
+    private Version version;
+
+    public UltimateLootFabTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type, Version version) {
+        super(type, pos, state);
         this.energy = new ModifiableEnergyStorage(ExtraHostileConfig.ultimateFabPowerCap, ExtraHostileConfig.ultimateFabPowerCap);
+
+        this.version = version;
+
         this.savedSelections = new Object2IntOpenHashMap<>();
         this.data = new SimpleDataSlots();
         this.runtime = 0;
@@ -80,13 +86,13 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
                     if (checkOutput){
                         checkOutput = false;
                         for (int i = 0; i < 4; i++){
-                            if (this.inventory.getStackInSlot(0).getCount() == 0) break;
+                            if (this.inventory.getStackInSlot(0).getCount() < version.getMultiplier()) break;
                             ItemStack out = (dm.get().fabDrops().get(selection)).copy();
 
                             if (this.insertInOutput(out, true)) {
                                 this.runtime = 0;
                                 this.insertInOutput(out, false);
-                                this.inventory.getStackInSlot(0).shrink(1);
+                                this.inventory.getStackInSlot(0).shrink(version.getMultiplier());
                                 this.setChanged();
                             }
                         }
@@ -112,9 +118,26 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
     }
 
     protected boolean insertInOutput(ItemStack stack, boolean sim) {
+        int amount = stack.getCount() * version.getMultiplier();
         for(int i = 1; i < 17; ++i) {
-            stack = this.inventory.insertItemInternal(i, stack, sim);
-            if (stack.isEmpty()) {
+            ItemStack slotStack = this.inventory.getStackInSlot(i);
+            if (slotStack.isEmpty()){
+                ItemStack insertItem = stack.copy();
+
+                int setCount = Math.min(amount, insertItem.getMaxStackSize());
+                insertItem.setCount(setCount);
+                amount -= setCount;
+                this.inventory.insertItemInternal(i, insertItem, sim);
+            } else if (slotStack.is(stack.getItem()) && slotStack.getMaxStackSize() != slotStack.getCount()) {
+                ItemStack insertItem = stack.copy();
+
+                int setCount = slotStack.getMaxStackSize() - slotStack.getCount();
+                insertItem.setCount(setCount);
+                amount -= setCount;
+                this.inventory.insertItemInternal(i, insertItem, sim);
+            }
+
+            if (amount <= 0) {
                 return true;
             }
         }
@@ -150,6 +173,8 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
         tag.putInt("energy", this.energy.getEnergyStored());
         tag.putInt("runtime", this.runtime);
         tag.putInt("selection", this.currentSel);
+
+        tag.putString("versionBlockEntity", this.version.getId());
     }
 
     public void load(CompoundTag tag) {
@@ -159,6 +184,8 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
         this.energy.setEnergy(tag.getInt("energy"));
         this.runtime = tag.getInt("runtime");
         this.currentSel = tag.getInt("selection");
+
+        this.version = Version.getVersion(tag.getString("versionBlockEntity"));
     }
 
     public ClientboundBlockEntityDataPacket getUpdatePacket() {

@@ -12,10 +12,18 @@ import net.lmor.extrahnn.tile.UltimateLootFabTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.block.Block;
 
 public class UltimateLootFabContainer extends BlockEntityMenu<UltimateLootFabTileEntity> {
-    public UltimateLootFabContainer(int id, Inventory pInv, BlockPos pos) {
-        super(ExtraHostile.Containers.ULTIMATE_LOOT_FABRICATOR.get(), id, pInv, pos);
+
+    private final Block block;
+
+    public UltimateLootFabContainer(int id, Inventory pInv, BlockPos pos, MenuType<?> type, Block block) {
+        super(type, id, pInv, pos);
+
+        this.block = block;
+
         UltimateLootFabTileEntity.FabItemHandler inv = this.tile.getInventory();
         this.addSlot(new FilteredSlot(inv, 0, 79, 62, (s) -> {
             return s.getItem() == Hostile.Items.PREDICTION.get();
@@ -43,7 +51,7 @@ public class UltimateLootFabContainer extends BlockEntityMenu<UltimateLootFabTil
     }
 
     public boolean stillValid(Player pPlayer) {
-        return pPlayer.level().getBlockState(this.pos).getBlock() == ExtraHostile.Blocks.ULTIMATE_LOOT_FABRICATOR.get();
+        return pPlayer.level().getBlockState(this.pos).getBlock() == block;
     }
 
     public boolean clickMenuButton(Player pPlayer, int pId) {
