@@ -14,8 +14,6 @@ base {
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
-println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
 minecraft {
     mappings channel: mapping_channel, version: mapping_version
 
@@ -39,16 +37,10 @@ minecraft {
         }
 
         client {
-            property 'forge.enabledGameTestNamespaces', mod_id
         }
 
         server {
-            property 'forge.enabledGameTestNamespaces', mod_id
             args '--nogui'
-        }
-
-        gameTestServer {
-            property 'forge.enabledGameTestNamespaces', mod_id
         }
 
         data {
@@ -79,14 +71,14 @@ dependencies {
 
     implementation fg.deobf("curse.maven:jei-238222:5846810")
     implementation fg.deobf("curse.maven:hostile-neural-networks-552574:5895036")
-    implementation fg.deobf("curse.maven:placebo-283644:5414631")
+    implementation fg.deobf("curse.maven:placebo-283644:6274231")
 
     //region For testing
-    implementation fg.deobf("curse.maven:observable-509575:5643037")
-    implementation fg.deobf("curse.maven:architectury-api-419699:5137938")
-    implementation fg.deobf("curse.maven:kotlin-for-forge-351264:5402061")
-    implementation fg.deobf("curse.maven:ftb-library-forge-404465:5925398")
-    implementation fg.deobf("curse.maven:mekanism-268560:5919382")
+    runtimeOnly fg.deobf("curse.maven:observable-509575:5643037")
+    runtimeOnly fg.deobf("curse.maven:architectury-api-419699:5137938")
+    runtimeOnly fg.deobf("curse.maven:kotlin-for-forge-351264:5402061")
+    runtimeOnly fg.deobf("curse.maven:ftb-library-forge-404465:5925398")
+    runtimeOnly fg.deobf("curse.maven:mekanism-268560:5919382")
     //endregion
 }
 
