@@ -181,7 +181,7 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
     public boolean canStartSimulation() {
         if (!checkOutput && this.failState == FailureState.OUTPUT) return false;
 
-        if (this.inventory.getStackInSlot(1).getCount() < 4){
+        if (this.inventory.getStackInSlot(1).getCount() < 4 * version.getMultiplier()){
             this.failState = FailureState.COUNT;
             return false;
         } else if (this.energy.getEnergyStored() < this.currentModel.simCost()){

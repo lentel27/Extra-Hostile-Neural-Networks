@@ -85,15 +85,33 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
                 if (this.runtime >= ExtraHostileConfig.ultimateFabPowerDuration) {
                     if (checkOutput){
                         checkOutput = false;
-                        for (int i = 0; i < 4; i++){
-                            if (this.inventory.getStackInSlot(0).getCount() < version.getMultiplier()) break;
+                        int maxCount = Math.min(this.inventory.getStackInSlot(0).getCount(), 4 * version.getMultiplier());
+                        if (maxCount != 0){
                             ItemStack out = (dm.get().fabDrops().get(selection)).copy();
+                            ItemStack outCopy = out.copy();
+                            outCopy.setCount(out.getCount() * maxCount);
 
-                            if (this.insertInOutput(out, true)) {
-                                this.runtime = 0;
-                                this.insertInOutput(out, false);
-                                this.inventory.getStackInSlot(0).shrink(version.getMultiplier());
-                                this.setChanged();
+
+                            int old_maxCount = 0;
+                            int cycle = 0;
+
+                            while (maxCount > 0){
+                                if (this.insertInOutput(outCopy, true)) {
+                                    this.runtime = 0;
+                                    this.insertInOutput(outCopy, false);
+                                    this.inventory.getStackInSlot(0).shrink(maxCount);
+                                    this.setChanged();
+                                    break;
+                                }
+                                old_maxCount = maxCount;
+                                maxCount = (int) Math.ceil((double) (maxCount / 2));
+                                outCopy.setCount(out.getCount() * maxCount);
+
+                                // Just in case, protection against looping
+                                if (old_maxCount == maxCount){
+                                    if (cycle != 0) break;
+                                    cycle++;
+                                }
                             }
                         }
 
@@ -118,30 +136,24 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
     }
 
     protected boolean insertInOutput(ItemStack stack, boolean sim) {
-        int amount = stack.getCount() * version.getMultiplier();
+        int amount = stack.getCount();
         for(int i = 1; i < 17; ++i) {
             ItemStack slotStack = this.inventory.getStackInSlot(i);
+            ItemStack insertItem = stack.copy();
             if (slotStack.isEmpty()){
-                ItemStack insertItem = stack.copy();
-
                 int setCount = Math.min(amount, insertItem.getMaxStackSize());
                 insertItem.setCount(setCount);
                 amount -= setCount;
                 this.inventory.insertItemInternal(i, insertItem, sim);
             } else if (slotStack.is(stack.getItem()) && slotStack.getMaxStackSize() != slotStack.getCount()) {
-                ItemStack insertItem = stack.copy();
-
-                int setCount = slotStack.getMaxStackSize() - slotStack.getCount();
+                int setCount = Math.min(stack.getCount(), slotStack.getMaxStackSize() - slotStack.getCount());
                 insertItem.setCount(setCount);
                 amount -= setCount;
                 this.inventory.insertItemInternal(i, insertItem, sim);
             }
 
-            if (amount <= 0) {
-                return true;
-            }
+            if (amount <= 0) return true;
         }
-
         return false;
     }
 
