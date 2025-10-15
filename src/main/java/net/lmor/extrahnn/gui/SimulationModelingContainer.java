@@ -6,6 +6,7 @@ import dev.shadowsoffire.hostilenetworks.item.DataModelItem;
 import dev.shadowsoffire.hostilenetworks.item.MobPredictionItem;
 import dev.shadowsoffire.placebo.menu.BlockEntityMenu;
 import dev.shadowsoffire.placebo.menu.FilteredSlot;
+import net.lmor.extrahnn.EHNNUtils;
 import net.lmor.extrahnn.ExtraHostile;
 import net.lmor.extrahnn.data.ExtraCachedModel;
 import net.lmor.extrahnn.data.ExtraModelTier;
@@ -23,8 +24,8 @@ public class SimulationModelingContainer extends BlockEntityMenu<SimulationModel
         SimulationModelingTileEntity.SimulatorModelingItemHandler inventory = this.tile.getInventory();
 
         this.addSlot(new FilteredSlot(inventory, 0, -13, 1, (s) -> {
-            return (s.getItem() instanceof DataModelItem && new CachedModel(s, 0).getTier() != ModelTier.SELF_AWARE) ||
-                    (s.getItem() instanceof ExtraDataModelItem && new ExtraCachedModel(s, 0).getTier() != ExtraModelTier.OMNIPOTENT);
+            return EHNNUtils.allowedTier(s) && ((s.getItem() instanceof DataModelItem && new CachedModel(s, 0).getTier() != ModelTier.SELF_AWARE) ||
+                    (s.getItem() instanceof ExtraDataModelItem && new ExtraCachedModel(s, 0).getTier() != ExtraModelTier.OMNIPOTENT));
         }));
 
         this.addSlot(new FilteredSlot(inventory, 1, -13, 21, (s) -> {
@@ -41,8 +42,9 @@ public class SimulationModelingContainer extends BlockEntityMenu<SimulationModel
             return slot < 3;
         }, 3, this.slots.size());
         this.mover.registerRule((stack, slot) -> {
-            return (stack.getItem() instanceof DataModelItem && new CachedModel(stack, 0).getTier() != ModelTier.SELF_AWARE) ||
-                    (stack.getItem() instanceof ExtraDataModelItem && new ExtraCachedModel(stack, 0).getTier() != ExtraModelTier.OMNIPOTENT);
+            return EHNNUtils.allowedTier(stack) &&
+                    ((stack.getItem() instanceof DataModelItem && new CachedModel(stack, 0).getTier() != ModelTier.SELF_AWARE) ||
+                    (stack.getItem() instanceof ExtraDataModelItem && new ExtraCachedModel(stack, 0).getTier() != ExtraModelTier.OMNIPOTENT));
         }, 0, 1);
         this.mover.registerRule((stack, slot) -> {
             return stack.getItem() instanceof UpgradeMachine;

@@ -35,6 +35,8 @@
 	"extrahnn.info.item_tooltip.upgrade_speed": "Increases speed by %s%%, but energy consumption increases by %s times",
 	"extrahnn.info.item_tooltip.upgrade_module_stack": "Allows you to instantly upgrade to the next model tier, but the energy consumption increases to %s FE/T",
 	"extrahnn.info.item_tooltip.upgrade_data_kill": "Increases the amount of data received per simulation by %s times",
+	"extrahnn.info.minimum_tier_hnn": "Min. level to upgrade (Standard): %s",
+	"extrahnn.info.minimum_tier_ehnn": "Min. level to upgrade (Custom): %s",
 
 	"extrahnn.tier.autonomous": "Autonomous",
 	"extrahnn.tier.intelligent": "Intelligent",

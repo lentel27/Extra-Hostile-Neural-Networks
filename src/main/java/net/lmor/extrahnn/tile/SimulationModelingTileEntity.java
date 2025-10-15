@@ -26,7 +26,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 
-import javax.xml.crypto.Data;
 import java.util.function.Consumer;
 
 public class SimulationModelingTileEntity extends BlockEntity implements TickingBlockEntity, SimpleDataSlots.IDataAutoRegister {
@@ -123,10 +122,12 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
             return;
         }
 
-        if ((this.inventory.getStackInSlot(0).getItem() instanceof DataModelItem &&
-                new CachedModel(this.inventory.getStackInSlot(0), 0).getTier() == ModelTier.SELF_AWARE) ||
-                (this.inventory.getStackInSlot(0).getItem() instanceof ExtraDataModelItem && new ExtraCachedModel(this.inventory.getStackInSlot(0), 0).getTier() == ExtraModelTier.OMNIPOTENT)) {
+        ItemStack item = this.inventory.getStackInSlot(0);
+
+        if (( item.getItem() instanceof DataModelItem && new CachedModel(item, 0).getTier() == ModelTier.SELF_AWARE) ||
+                (item.getItem() instanceof ExtraDataModelItem && new ExtraCachedModel(item, 0).getTier() == ExtraModelTier.OMNIPOTENT)) {
             startCraft = false;
+            return;
         }
 
         if (this.runtime == 0){
@@ -260,5 +261,4 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
             SimulationModelingTileEntity.this.startCraft = true;
         }
     }
-
 }

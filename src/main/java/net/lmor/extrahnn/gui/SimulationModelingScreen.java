@@ -4,14 +4,12 @@ import dev.shadowsoffire.hostilenetworks.data.CachedModel;
 import dev.shadowsoffire.hostilenetworks.data.ModelTier;
 import dev.shadowsoffire.hostilenetworks.item.DataModelItem;
 import dev.shadowsoffire.placebo.screen.PlaceboContainerScreen;
-import dev.shadowsoffire.placebo.screen.TickableText;
+import net.lmor.extrahnn.EHNNUtils;
 import net.lmor.extrahnn.ExtraHostileConfig;
 import net.lmor.extrahnn.ExtraHostileNetworks;
 import net.lmor.extrahnn.data.ExtraCachedModel;
 import net.lmor.extrahnn.data.ExtraModelTier;
 import net.lmor.extrahnn.item.ExtraDataModelItem;
-import net.lmor.extrahnn.tile.UltimateSimChamberTileEntity;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -19,21 +17,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class SimulationModelingScreen extends PlaceboContainerScreen<SimulationModelingContainer> {
     public static final int WIDTH = 216;
     public static final int HEIGHT = 188;
     private static final ResourceLocation BASE = ExtraHostileNetworks.local("textures/gui/simulation_modeling.png");
     private static final ResourceLocation PLAYER = ExtraHostileNetworks.local("textures/gui/inventory.png");
-    private boolean runtimeTextLoaded;
 
     public SimulationModelingScreen(SimulationModelingContainer pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-        this.runtimeTextLoaded = false;
         this.imageWidth = WIDTH;
         this.imageHeight = HEIGHT;
     }
@@ -45,6 +39,9 @@ public class SimulationModelingScreen extends PlaceboContainerScreen<SimulationM
             txt.add(Component.translatable("extrahnn.info.cost_sim", this.menu.getEnergyCost()));
 
             gfx.renderComponentTooltip(this.font, txt, pX, pY);
+        }
+        else if (this.isHovering(-13, 1, 18, 18, pX, pY)){
+            gfx.renderComponentTooltip(this.font, EHNNUtils.translateTier(), pX, pY);
         } else {
             super.renderTooltip(gfx, pX, pY);
         }
@@ -143,8 +140,5 @@ public class SimulationModelingScreen extends PlaceboContainerScreen<SimulationM
     }
 
     public void containerTick() {
-
     }
-
-
 }

@@ -35,6 +35,8 @@
 	"extrahnn.info.item_tooltip.upgrade_speed": "Increases speed by %s%%, but energy consumption increases by %s times",
 	"extrahnn.info.item_tooltip.upgrade_module_stack": "Allows you to instantly upgrade to the next model tier, but the energy consumption increases to %s FE/T",
 	"extrahnn.info.item_tooltip.upgrade_data_kill": "Increases the amount of data received per simulation by %s times",
+	"extrahnn.info.minimum_tier_hnn": "Min. level to upgrade (Standard): %s",
+	"extrahnn.info.minimum_tier_ehnn": "Min. level to upgrade (Custom): %s",
 
 	"extrahnn.tier.autonomous": "自律",
 	"extrahnn.tier.intelligent": "知的",
@@ -45,7 +47,6 @@
 	"extrahnn.fail.data_corruption": "合成エラー: \nこれらのモデルは損傷しています。",
 	"extrahnn.fail.failed_load": "合成エラー: \n1つ以上の入力モデルが\n正しくロードされませんでした。",
 	"extrahnn.fail.fox_broken": "合成エラー: \n合成のフォーカスが正しくありませんでした。",
-	"extrahnn.fail.high_temperature": "合成エラー: \n許容されるデータの複雑さを超えたために機構が過熱しました。",
 	"extrahnn.fail.fatal_error": "合成エラー: \n合成中に致命的なエラーが発生しました。",
 	"extrahnn.fail.output": "合成エラー:\n出力バッファに空きがありません。",
 	"extrahnn.fail.energy": "合成エラー:\n電力が不足しています。",
@@ -63,5 +64,4 @@
 	"extrahnn.merger_camera.run.3": "> メモリからのモデルのロード",
 	"extrahnn.merger_camera.run.4": "> モデル評価",
 	"extrahnn.merger_camera.run.5": "> 合成機の冷却: ",
-	"extrahnn.merger_camera.run.6": "> 合成の完了..."
 }

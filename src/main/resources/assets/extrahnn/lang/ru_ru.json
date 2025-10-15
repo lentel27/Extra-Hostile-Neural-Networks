@@ -35,6 +35,8 @@
 	"extrahnn.info.item_tooltip.upgrade_speed": "Увеличивает скорость на %s%%, но потребление энергии увеличивается в %s раз.",
 	"extrahnn.info.item_tooltip.upgrade_module_stack": "Позволяет мгновенно прокачать до следующего уровня модели, но потребление энергии увеличивается до %s FE/T",
 	"extrahnn.info.item_tooltip.upgrade_data_kill": "Увеличивает количество получаемых данных за симуляцию в %s раз",
+	"extrahnn.info.minimum_tier_hnn": "Мин. уровень для улучшения (Стандартные): %s",
+	"extrahnn.info.minimum_tier_ehnn": "Мин. уровень для улучшения (Кастомные): %s",
 
 	"extrahnn.tier.autonomous": "Автономная",
 	"extrahnn.tier.intelligent": "Разумная",
