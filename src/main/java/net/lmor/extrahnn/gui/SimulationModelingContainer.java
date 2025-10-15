@@ -24,7 +24,7 @@ public class SimulationModelingContainer extends BlockEntityMenu<SimulationModel
         SimulationModelingTileEntity.SimulatorModelingItemHandler inventory = this.tile.getInventory();
 
         this.addSlot(new FilteredSlot(inventory, 0, -13, 1, (s) -> {
-            return EHNNUtils.allowedTier(s) && ((s.getItem() instanceof DataModelItem && new CachedModel(s, 0).getTier() != ModelTier.SELF_AWARE) ||
+            return EHNNUtils.allowedTier(s) && EHNNUtils.allowedBlackListModel(s) && ((s.getItem() instanceof DataModelItem && new CachedModel(s, 0).getTier() != ModelTier.SELF_AWARE) ||
                     (s.getItem() instanceof ExtraDataModelItem && new ExtraCachedModel(s, 0).getTier() != ExtraModelTier.OMNIPOTENT));
         }));
 
@@ -42,7 +42,7 @@ public class SimulationModelingContainer extends BlockEntityMenu<SimulationModel
             return slot < 3;
         }, 3, this.slots.size());
         this.mover.registerRule((stack, slot) -> {
-            return EHNNUtils.allowedTier(stack) &&
+            return EHNNUtils.allowedTier(stack) && EHNNUtils.allowedBlackListModel(stack) &&
                     ((stack.getItem() instanceof DataModelItem && new CachedModel(stack, 0).getTier() != ModelTier.SELF_AWARE) ||
                     (stack.getItem() instanceof ExtraDataModelItem && new ExtraCachedModel(stack, 0).getTier() != ExtraModelTier.OMNIPOTENT));
         }, 0, 1);

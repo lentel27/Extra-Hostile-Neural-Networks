@@ -28,8 +28,10 @@ public class ExtraHostileConfig {
     public static int upgradeModuleStackCost;
     public static int upgradeDataKill;
 
-    public static String minimumUpgradeTierHostile;
-    public static String minimumUpgradeTierExtra;
+    public static String minimumTierHostile;
+    public static String minimumTierExtra;
+
+    public static String[] blackList;
 
     public ExtraHostileConfig() {
     }
@@ -60,13 +62,15 @@ public class ExtraHostileConfig {
 
         upgradeDataKill = cfg.getInt("Upgrade Data Kill", "upgrade", 2, 0, Integer.MAX_VALUE, "How many times more data?");
 
-        minimumUpgradeTierHostile = cfg.getString("Minimum Upgrade tier - Hostile", "utils", "FAULTY", "What is the minimum entry threshold required for a model to start leveling up?\nSELF_AWARE > SUPERIOR > ADVANCED > BASIC > FAULTY");
-        minimumUpgradeTierExtra = cfg.getString("Minimum Upgrade tier - Extra Hostile", "utils", "FAULTY", "What is the minimum entry threshold required for a model to start leveling up?\nOMNIPOTENT > SYNTHETIC > ADAPTIVE > INTELLIGENT > AUTONOMOUS");
+        minimumTierHostile = cfg.getString("Minimum Upgrade tier - Hostile", "utils", "FAULTY", "What is the minimum entry threshold required for a model to start leveling up?\nSELF_AWARE > SUPERIOR > ADVANCED > BASIC > FAULTY");
+        minimumTierExtra = cfg.getString("Minimum Upgrade tier - Extra Hostile", "utils", "FAULTY", "What is the minimum entry threshold required for a model to start leveling up?\nOMNIPOTENT > SYNTHETIC > ADAPTIVE > INTELLIGENT > AUTONOMOUS");
 
-        String tierLowerHostile = minimumUpgradeTierHostile.toLowerCase();
-        String tierLowerExtra = minimumUpgradeTierExtra.toLowerCase();
-        minimumUpgradeTierHostile = !EHNNUtils.validTiersHostile.contains(tierLowerHostile) ? "faulty": tierLowerHostile;
-        minimumUpgradeTierExtra = !EHNNUtils.validTiersExtra.contains(tierLowerExtra) ? "autonomous": tierLowerExtra;
+        blackList = cfg.getStringList("Black list for Simulation Modeling", "utils", new String[0], "Blacklist of models that cannot be improved during simulation modeling. Please note that you need to write the Hostile Network model identifier, for example: hostilenetworks:blaze etc.");
+
+        String tierLowerHostile = minimumTierHostile.toLowerCase();
+        String tierLowerExtra = minimumTierExtra.toLowerCase();
+        minimumTierHostile = !EHNNUtils.validTiersHostile.contains(tierLowerHostile) ? "faulty": tierLowerHostile;
+        minimumTierExtra = !EHNNUtils.validTiersExtra.contains(tierLowerExtra) ? "autonomous": tierLowerExtra;
 
         if (cfg.hasChanged()) {
             cfg.save();
@@ -75,15 +79,15 @@ public class ExtraHostileConfig {
 
     static record ConfigMessage(int ultimateSimPowerCap, int ultimateSimPowerDuration, int ultimateFabPowerCap, int ultimateFabPowerCost, int ultimateFabPowerDuration, int mergerCameraPowerCap,
                                 int mergerCameraPowerCost, int mergerCameraPowerDuration, int simulationModelingPowerCap, int simulationModelingPowerCost, int simulationModelingPowerDuration,
-                                int upgradeSpeed, float upgradeSpeedEnergy, int upgradeModuleStackCost, int upgradeDataKill, String minimumUpgradeTierHostile, String minimumUpgradeTierExtra) {
+                                int upgradeSpeed, float upgradeSpeedEnergy, int upgradeModuleStackCost, int upgradeDataKill, String minimumUpgradeTierHostile, String minimumUpgradeTierExtra, String[] blackList) {
         public ConfigMessage() {
             this(ExtraHostileConfig.ultimateSimPowerCap, ExtraHostileConfig.ultimateSimPowerDuration, ExtraHostileConfig.ultimateFabPowerCap, ExtraHostileConfig.ultimateFabPowerCost, ExtraHostileConfig.ultimateFabPowerDuration,
                     ExtraHostileConfig.mergerCameraPowerCap, ExtraHostileConfig.mergerCameraPowerCost, ExtraHostileConfig.mergerCameraPowerDuration, ExtraHostileConfig.simulationModelingPowerCap, ExtraHostileConfig.simulationModelingPowerCost,
-                    ExtraHostileConfig.simulationModelingPowerDuration, ExtraHostileConfig.upgradeSpeed, ExtraHostileConfig.upgradeSpeedEnergy, ExtraHostileConfig.upgradeModuleStackCost, ExtraHostileConfig.upgradeDataKill, ExtraHostileConfig.minimumUpgradeTierHostile, ExtraHostileConfig.minimumUpgradeTierExtra);
+                    ExtraHostileConfig.simulationModelingPowerDuration, ExtraHostileConfig.upgradeSpeed, ExtraHostileConfig.upgradeSpeedEnergy, ExtraHostileConfig.upgradeModuleStackCost, ExtraHostileConfig.upgradeDataKill, ExtraHostileConfig.minimumTierHostile, ExtraHostileConfig.minimumTierExtra, ExtraHostileConfig.blackList);
         }
 
         ConfigMessage(int ultimateSimPowerCap, int ultimateSimPowerDuration, int ultimateFabPowerCap, int ultimateFabPowerCost, int ultimateFabPowerDuration, int mergerCameraPowerCap, int mergerCameraPowerCost, int mergerCameraPowerDuration,
-                      int simulationModelingPowerCap, int simulationModelingPowerCost, int simulationModelingPowerDuration, int upgradeSpeed, float upgradeSpeedEnergy, int upgradeModuleStackCost, int upgradeDataKill, String minimumUpgradeTierHostile, String minimumUpgradeTierExtra) {
+                      int simulationModelingPowerCap, int simulationModelingPowerCost, int simulationModelingPowerDuration, int upgradeSpeed, float upgradeSpeedEnergy, int upgradeModuleStackCost, int upgradeDataKill, String minimumUpgradeTierHostile, String minimumUpgradeTierExtra, String[] blackList) {
             this.ultimateSimPowerCap = ultimateSimPowerCap;
             this.ultimateSimPowerDuration = ultimateSimPowerDuration;
             this.ultimateFabPowerCap = ultimateFabPowerCap;
@@ -101,6 +105,7 @@ public class ExtraHostileConfig {
             this.upgradeDataKill = upgradeDataKill;
             this.minimumUpgradeTierHostile = minimumUpgradeTierHostile;
             this.minimumUpgradeTierExtra = minimumUpgradeTierExtra;
+            this.blackList = blackList;
         }
 
         public int ultimateSimPowerCap() {
@@ -150,6 +155,7 @@ public class ExtraHostileConfig {
         }
         public String minimumUpgradeTierHostile() { return this.minimumUpgradeTierHostile; }
         public String minimumUpgradeTierExtra() { return this.minimumUpgradeTierExtra; }
+        public String[] blackList() { return this.blackList; }
 
         public static class Provider implements MessageProvider<ConfigMessage> {
             public Provider() {
@@ -160,6 +166,11 @@ public class ExtraHostileConfig {
             }
 
             public void write(ConfigMessage msg, FriendlyByteBuf buf) {
+                buf.writeInt(msg.blackList.length);
+                for (String s : msg.blackList) {
+                    buf.writeUtf(s);
+                }
+
                 buf.writeInt(msg.ultimateSimPowerCap);
                 buf.writeInt(msg.ultimateSimPowerDuration);
                 buf.writeInt(msg.ultimateFabPowerCap);
@@ -180,8 +191,14 @@ public class ExtraHostileConfig {
             }
 
             public ConfigMessage read(FriendlyByteBuf buf) {
+                int blackListLength = buf.readInt();
+                String[] blackList = new String[blackListLength];
+                for (int i = 0; i < blackListLength; i++) {
+                    blackList[i] = buf.readUtf();
+                }
+
                 return new ConfigMessage(buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt(), buf.readInt(),  buf.readInt(),  buf.readInt(),  buf.readInt(),  buf.readInt(),
-                        buf.readInt(),  buf.readInt(), buf.readInt(), buf.readFloat(), buf.readInt(), buf.readInt(), buf.readUtf(), buf.readUtf());
+                        buf.readInt(),  buf.readInt(), buf.readInt(), buf.readFloat(), buf.readInt(), buf.readInt(), buf.readUtf(), buf.readUtf(), blackList);
             }
 
             public void handle(ConfigMessage msg, Supplier<NetworkEvent.Context> ctx) {
@@ -201,8 +218,9 @@ public class ExtraHostileConfig {
                     ExtraHostileConfig.upgradeSpeedEnergy = msg.upgradeSpeedEnergy;
                     ExtraHostileConfig.upgradeModuleStackCost = msg.upgradeModuleStackCost;
                     ExtraHostileConfig.upgradeDataKill = msg.upgradeDataKill;
-                    ExtraHostileConfig.minimumUpgradeTierHostile = msg.minimumUpgradeTierHostile;
-                    ExtraHostileConfig.minimumUpgradeTierExtra = msg.minimumUpgradeTierExtra;
+                    ExtraHostileConfig.minimumTierHostile = msg.minimumUpgradeTierHostile;
+                    ExtraHostileConfig.minimumTierExtra = msg.minimumUpgradeTierExtra;
+                    ExtraHostileConfig.blackList = msg.blackList;
                 }, ctx);
             }
 
