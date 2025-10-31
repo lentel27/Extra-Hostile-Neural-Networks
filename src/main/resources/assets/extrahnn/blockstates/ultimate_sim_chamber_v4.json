@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "extrahnn:block/ultimate_sim_chamber_v4",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "extrahnn:block/ultimate_sim_chamber_v4"
+    },
+    "facing=south": {
+      "model": "extrahnn:block/ultimate_sim_chamber_v4",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "extrahnn:block/ultimate_sim_chamber_v4",
+      "y": 270
+    }
+  }
+}

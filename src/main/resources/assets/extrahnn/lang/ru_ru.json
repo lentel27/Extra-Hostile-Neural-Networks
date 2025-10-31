@@ -1,6 +1,12 @@
 {
-	"block.extrahnn.ultimate_sim_chamber": "Совершенная камера моделирования",
-	"block.extrahnn.ultimate_loot_fabricator": "Совершенный производитель добычи",
+	"block.extrahnn.ultimate_sim_chamber_v1": "Совершенная камера моделирования V1",
+	"block.extrahnn.ultimate_sim_chamber_v2": "Совершенная камера моделирования V2",
+	"block.extrahnn.ultimate_sim_chamber_v3": "Совершенная камера моделирования V3",
+	"block.extrahnn.ultimate_sim_chamber_v4": "Совершенная камера моделирования V4",
+	"block.extrahnn.ultimate_loot_fabricator_v1": "Совершенный производитель добычи V1",
+	"block.extrahnn.ultimate_loot_fabricator_v2": "Совершенный производитель добычи V2",
+	"block.extrahnn.ultimate_loot_fabricator_v3": "Совершенный производитель добычи V3",
+	"block.extrahnn.ultimate_loot_fabricator_v4": "Совершенный производитель добычи V4",
 	"block.extrahnn.merger_camera": "Камера слияния",
 	"block.extrahnn.simulator_modeling": "Симуляция моделирования",
 
@@ -10,6 +16,7 @@
 	"item.extrahnn.upgrade_speed": "Улучшение: Скорость",
 	"item.extrahnn.upgrade_module_stack": "Улучшение: Уровень",
 	"item.extrahnn.upgrade_data_kill": "Улучшение: Данные",
+	"item.extrahnn.setting_card": "Карта настройки",
 
 	"extrahnn.gui.targets": "Цели модели: ",
 
@@ -28,6 +35,8 @@
 	"extrahnn.info.item_tooltip.upgrade_speed": "Увеличивает скорость на %s%%, но потребление энергии увеличивается в %s раз.",
 	"extrahnn.info.item_tooltip.upgrade_module_stack": "Позволяет мгновенно прокачать до следующего уровня модели, но потребление энергии увеличивается до %s FE/T",
 	"extrahnn.info.item_tooltip.upgrade_data_kill": "Увеличивает количество получаемых данных за симуляцию в %s раз",
+	"extrahnn.info.minimum_tier_hnn": "Мин. уровень для улучшения (Стандартные): %s",
+	"extrahnn.info.minimum_tier_ehnn": "Мин. уровень для улучшения (Кастомные): %s",
 
 	"extrahnn.tier.autonomous": "Автономная",
 	"extrahnn.tier.intelligent": "Разумная",
@@ -38,23 +47,30 @@
 	"extrahnn.fail.data_corruption": "Ошибка слияния: \nДанные модели повреждены.",
 	"extrahnn.fail.failed_load": "Ошибка слияния: \nОдна или несколько входных \nмоделей не были загружены.",
 	"extrahnn.fail.fox_broken": "Ошибка слияния: \nФокус слияния был некорректен.",
-	"extrahnn.fail.high_temperature": "Ошибка слияния: \nМеханизм перегрелся из-за превышения \nдопустимой сложности данных.",
 	"extrahnn.fail.fatal_error": "Ошибка слияния: \nФатальная ошибка во время слияния",
 	"extrahnn.fail.output": "Ошибка слияния:\nВыходной буфер занят",
 	"extrahnn.fail.energy": "Ошибка слияния:\nУровень энергии критический",
 	"extrahnn.fail.energy_mid_cycle": "Процесс приостановлен:\nУровень энергии критический",
 	"extrahnn.fail.model": "Вставьте модели данных, чтобы \nначать слияние",
-	"extrahnn.fail.input": "Невозможно начать слияние. \nОтсутствует: \nСовершенная камера моделирования",
+	"extrahnn.fail.input": "Невозможно начать слияние. \nОтсутствует: \nСовершенная структура модели",
 	"extrahnn.fail.count": "Невозможно начать моделирование,\nнедостаточно матрицы.\nТребуется мин. 4",
 
 	"extrahnn.fail.overheat.on": "Перегрев",
 	"extrahnn.fail.overheat.off": "Охлаждено",
 
-	"extrahnn.merger_camera.run.0": "> Запуск среды слияния ",
-	"extrahnn.merger_camera.run.1": "> Попытка слияния",
-	"extrahnn.merger_camera.run.2": "> Фокусировка слияния",
-	"extrahnn.merger_camera.run.3": "> Загрузка моделей из памяти",
-	"extrahnn.merger_camera.run.4": "> Оценка моделей",
-	"extrahnn.merger_camera.run.5": "> Охлаждение слияния: ",
-	"extrahnn.merger_camera.run.6": "> Завершение слияния..."
+	"extrahnn.merger_camera.run.0": "> Запуск среды слияния\n",
+	"extrahnn.merger_camera.run.1": "> Попытка слияния\n",
+	"extrahnn.merger_camera.run.2": "> Фокусировка слияния\n",
+	"extrahnn.merger_camera.run.3": "> Загрузка моделей из памяти\n",
+	"extrahnn.merger_camera.run.4": "> Оценка моделей\n",
+	"extrahnn.merger_camera.run.5": "> Завершение слияния...",
+
+	"extrahnn.player_message.setting_clear": "Настройки очищены",
+	"extrahnn.player_message.setting_load": "Настройки загружены",
+	"extrahnn.player_message.setting_save": "Настройки сохранены",
+	"extrahnn.player_message.setting_invalid": "Не удалось загрузить настройку",
+
+	"extrahnn.info.setting_card": "Настройки сохранены",
+
+	"extrahnn.info.error": "Ошибка: %s"
 }

@@ -1,6 +1,12 @@
 {
-	"block.extrahnn.ultimate_sim_chamber": "Ultimate Simulation Chamber",
-	"block.extrahnn.ultimate_loot_fabricator": "Ultimate Loot Fabricator",
+	"block.extrahnn.ultimate_sim_chamber_v1": "Ultimate Simulation Chamber V1",
+	"block.extrahnn.ultimate_sim_chamber_v2": "Ultimate Simulation Chamber V2",
+	"block.extrahnn.ultimate_sim_chamber_v3": "Ultimate Simulation Chamber V3",
+	"block.extrahnn.ultimate_sim_chamber_v4": "Ultimate Simulation Chamber V4",
+	"block.extrahnn.ultimate_loot_fabricator_v1": "Ultimate Loot Fabricator V1",
+	"block.extrahnn.ultimate_loot_fabricator_v2": "Ultimate Loot Fabricator V2",
+	"block.extrahnn.ultimate_loot_fabricator_v3": "Ultimate Loot Fabricator V3",
+	"block.extrahnn.ultimate_loot_fabricator_v4": "Ultimate Loot Fabricator V4",
 	"block.extrahnn.merger_camera": "Merger Camera",
 	"block.extrahnn.simulator_modeling": "Simulator Modeling",
 
@@ -10,6 +16,7 @@
 	"item.extrahnn.upgrade_speed": "Upgrade: Speed",
 	"item.extrahnn.upgrade_module_stack": "Upgrade: Tier",
 	"item.extrahnn.upgrade_data_kill": "Upgrade: Data",
+	"item.extrahnn.setting_card": "Setting Card",
 
 	"extrahnn.gui.targets": "Sim Targets: ",
 
@@ -28,6 +35,8 @@
 	"extrahnn.info.item_tooltip.upgrade_speed": "Increases speed by %s%%, but energy consumption increases by %s times",
 	"extrahnn.info.item_tooltip.upgrade_module_stack": "Allows you to instantly upgrade to the next model tier, but the energy consumption increases to %s FE/T",
 	"extrahnn.info.item_tooltip.upgrade_data_kill": "Increases the amount of data received per simulation by %s times",
+	"extrahnn.info.minimum_tier_hnn": "Min. level to upgrade (Standard): %s",
+	"extrahnn.info.minimum_tier_ehnn": "Min. level to upgrade (Custom): %s",
 
 	"extrahnn.tier.autonomous": "Autonomous",
 	"extrahnn.tier.intelligent": "Intelligent",
@@ -38,7 +47,6 @@
 	"extrahnn.fail.data_corruption": "Merge error: \nThese models are damaged.",
 	"extrahnn.fail.failed_load": "Merge error: \nOne or more input \nmodels were not loaded.",
 	"extrahnn.fail.fox_broken": "Merge error: \nThe merge focus was incorrect.",
-	"extrahnn.fail.high_temperature": "Merge error: \nThe mechanism overheated due to exceeding the permissible data complexity.",
 	"extrahnn.fail.fatal_error": "Merge error: \nFatal error during merge",
 	"extrahnn.fail.output": "Merge error:\nOutput buffer is busy",
 	"extrahnn.fail.energy": "Merge error:\nEnergy level is critical",
@@ -50,11 +58,19 @@
 	"extrahnn.fail.overheat.on": "Overheat",
 	"extrahnn.fail.overheat.off": "Cooling",
 
-	"extrahnn.merger_camera.run.0": "> Launching the Merge Environment ",
-	"extrahnn.merger_camera.run.1": "> Attempt at merger",
-	"extrahnn.merger_camera.run.2": "> Focusing on fusion",
-	"extrahnn.merger_camera.run.3": "> Loading models from memory",
-	"extrahnn.merger_camera.run.4": "> Models evaluation",
-	"extrahnn.merger_camera.run.5": "> Cooling of the merger: ",
-	"extrahnn.merger_camera.run.6": "> Completion of the merger..."
+	"extrahnn.merger_camera.run.0": "> Launching the Merge Environment \n",
+	"extrahnn.merger_camera.run.1": "> Attempt at merger\n",
+	"extrahnn.merger_camera.run.2": "> Focusing on fusion\n",
+	"extrahnn.merger_camera.run.3": "> Loading models from memory\n",
+	"extrahnn.merger_camera.run.4": "> Models evaluation\n",
+	"extrahnn.merger_camera.run.5": "> Completion of the merger...",
+
+	"extrahnn.player_message.setting_clear": "Setting cleared",
+	"extrahnn.player_message.setting_load": "Setting saved",
+	"extrahnn.player_message.setting_save": "Setting loaded",
+	"extrahnn.player_message.setting_invalid": "Couldn't load the setting",
+
+	"extrahnn.info.setting_card": "Settings saved",
+
+	"extrahnn.info.error": "Error: %s"
 }
