@@ -85,6 +85,7 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
     }
 
     public void checkUpgrade(){
+        this.runtime = 0;
         upgradeSpeed = false;
         upgradeModuleStack = false;
         upgradeDataKill = false;
