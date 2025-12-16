@@ -29,8 +29,8 @@ import java.util.Objects;
 
 public class UltimateLootFabScreen extends PlaceboContainerScreen<UltimateLootFabContainer> {
 
-    public static final int WIDTH = 176;
-    public static final int HEIGHT = 178;
+    public static final int WIDTH = 212;
+    public static final int HEIGHT = 210;
     public static final ResourceLocation BASE = ExtraHostileNetworks.local("textures/gui/ultimate_loot_fabricator.png");
     public static final ResourceLocation PLAYER = ExtraHostileNetworks.local("textures/gui/inventory.png");
     public static final WidgetSprites LEFT_BUTTON = DeepLearnerScreen.makeSprites("widget/fab_left", "widget/fab_left_hovered");
@@ -65,11 +65,11 @@ public class UltimateLootFabScreen extends PlaceboContainerScreen<UltimateLootFa
     @Override
     public void init() {
         super.init();
-        this.btnLeft = this.addRenderableWidget(new ImageButton(this.getGuiLeft() + 13, this.getGuiTop() + 68, 29, 12, LEFT_BUTTON, btn -> {
+        this.btnLeft = this.addRenderableWidget(new ImageButton(this.getGuiLeft() + 13, this.getGuiTop() + 90, 29, 12, LEFT_BUTTON, btn -> {
             if (this.model.isBound() && this.currentPage > 0) this.currentPage--;
         }));
 
-        this.btnRight = this.addRenderableWidget(new ImageButton(this.getGuiLeft() + 46, this.getGuiTop() + 68, 29, 12, RIGHT_BUTTON, btn -> {
+        this.btnRight = this.addRenderableWidget(new ImageButton(this.getGuiLeft() + 46, this.getGuiTop() + 90, 29, 12, RIGHT_BUTTON, btn -> {
             if (this.model.isBound() && this.currentPage < this.model.get().fabDrops().size() / 9) this.currentPage++;
         }));
     }
@@ -81,7 +81,7 @@ public class UltimateLootFabScreen extends PlaceboContainerScreen<UltimateLootFa
 
     @Override
     protected void renderTooltip(@NotNull GuiGraphics graphics, int x, int y) {
-        if (this.isHovering(6, 10, 7, 53, x, y)) {
+        if (this.isHovering(6, 33, 7, 53, x, y)) {
             List<Component> txt = new ArrayList<>(2);
             txt.add(Component.translatable("hostilenetworks.gui.energy", this.menu.getEnergyStored(), ExtraHostileConfig.ultimateFabPowerCap));
             txt.add(Component.translatable("hostilenetworks.gui.fab_cost", ExtraHostileConfig.ultimateFabPowerCost));
@@ -89,15 +89,15 @@ public class UltimateLootFabScreen extends PlaceboContainerScreen<UltimateLootFa
         }
         if (this.model.isBound()) {
             int selection = this.menu.getSelectedDrop(this.model.get());
-            if (selection != -1 && this.isHovering(79, 5, 16, 16, x, y)) {
+            if (selection != -1 && this.isHovering(79, 15, 16, 16, x, y)) {
                 graphics.renderComponentTooltip(this.font, List.of(Component.translatable("hostilenetworks.gui.clear")), x, y);
             }
 
             List<ItemStack> drops = this.model.get().fabDrops();
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    if (i * 3 + j < Math.min(drops.size() - this.currentPage * 9, 9) && this.isHovering(18 + 18 * j, 10 + 18 * i, 16, 16, x, y)) {
-                        this.drawOnLeft(graphics, getTooltipFromItem(Objects.requireNonNull(this.minecraft), drops.get(this.currentPage * 9 + i * 3 + j)), this.getGuiTop() + 15);
+                    if (i * 3 + j < Math.min(drops.size() - this.currentPage * 9, 9) && this.isHovering(18 + 18 * j, 28 + 18 * i, 16, 16, x, y)) {
+                        this.drawOnLeft(graphics, getTooltipFromItem(Objects.requireNonNull(this.minecraft), drops.get(this.currentPage * 9 + i * 3 + j)), this.getGuiTop() + 33);
                     }
                 }
             }
@@ -113,14 +113,14 @@ public class UltimateLootFabScreen extends PlaceboContainerScreen<UltimateLootFa
             int selection = this.menu.getSelectedDrop(this.model.get());
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    if (i * 3 + j < drops.size() && this.isHovering(18 + 18 * j, 10 + 18 * i, 16, 16, x, y) && selection != i * 3 + j) {
+                    if (i * 3 + j < drops.size() && this.isHovering(18 + 18 * j, 28 + 18 * i, 16, 16, x, y) && selection != i * 3 + j) {
                         Objects.requireNonNull(Minecraft.getInstance().gameMode).handleInventoryButtonClick(this.menu.containerId, this.currentPage * 9 + i * 3 + j);
                         Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
                     }
                 }
             }
 
-            if (selection != -1 && this.isHovering(79, 5, 16, 16, x, y)) {
+            if (selection != -1 && this.isHovering(79, 15, 16, 16, x, y)) {
                 Objects.requireNonNull(Minecraft.getInstance().gameMode).handleInventoryButtonClick(this.menu.containerId, -1);
                 Minecraft.getInstance().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_BUTTON_CLICK, 1.0F));
             }
@@ -134,22 +134,22 @@ public class UltimateLootFabScreen extends PlaceboContainerScreen<UltimateLootFa
         int left = this.getGuiLeft();
         int top = this.getGuiTop();
 
-        graphics.blit(BASE, left, top, 0.0F, 0.0F, 176, 83, 256, 256);
+        graphics.blit(BASE, left, top, 0.0F, 0.0F, 212, 119, 256, 256);
 
         int energyHeight = Mth.floor(53.0F * ((float)this.menu.getEnergyStored() / (float)ExtraHostileConfig.ultimateFabPowerCap));
-        graphics.blit(BASE, left + 6, top + 10 + 53 - energyHeight, 0.0F, 83.0F, 7, energyHeight, 256, 256);
+        graphics.blit(BASE, left + 6, top + 33 + 53 - energyHeight, 0.0F, 119, 7, energyHeight, 256, 256);
 
         int progHeight = Mth.floor(35.0F * (float)this.menu.getRuntime() / ExtraHostileConfig.ultimateFabPowerDuration);
-        graphics.blit(BASE, left + 84, top + 23 + 35 - progHeight, 7.0F, 83.0F, 6, progHeight, 256, 256);
+        graphics.blit(BASE, left + 84, top + 35 + 35 - progHeight, 7.0F, 119, 6, progHeight, 256, 256);
 
-        graphics.blit(PLAYER, left, top + 84, 0.0F, 0.0F, 176, 90, 256, 256);
+        graphics.blit(PLAYER, left + 18, top + 120, 0.0F, 0.0F, 176, 90, 256, 256);
 
         if (this.model.isBound()) {
             List<ItemStack> drops = this.model.get().fabDrops();
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    if (i * 3 + j < Math.min(drops.size() - this.currentPage * 9, 9) && this.isHovering(18 + 18 * j, 10 + 18 * i, 16, 16, x, y)) {
-                        graphics.blit(BASE, left + 16 + 19 * j, top + 8 + 19 * i, 13, 83, 18, 18, 256, 256);
+                    if (i * 3 + j < Math.min(drops.size() - this.currentPage * 9, 9) && this.isHovering(18 + 18 * j, 31 + 18 * i, 16, 16, x, y)) {
+                        graphics.blit(BASE, left + 16 + 19 * j, top + 31 + 19 * i, 13, 119, 18, 18, 256, 256);
                     }
                 }
             }
@@ -158,12 +158,12 @@ public class UltimateLootFabScreen extends PlaceboContainerScreen<UltimateLootFa
 
             if (selection != -1 && selection / 9 == this.currentPage) {
                 int selIdx = selection - this.currentPage * 9;
-                graphics.blit(BASE, left + 16 + 19 * (selIdx % 3), top + 8 + 19 * (selIdx / 3), 31, 83, 18, 18, 256, 256);
+                graphics.blit(BASE, left + 16 + 19 * (selIdx % 3), top + 31 + 19 * (selIdx / 3), 31, 119, 18, 18, 256, 256);
             }
 
             if (selection != -1) {
-                graphics.renderItem(drops.get(selection), left + 79, top + 5);
-                graphics.renderItemDecorations(this.font, drops.get(selection), left + 79 - 1, top + 5 - 1);
+                graphics.renderItem(drops.get(selection), left + 79, top + 15);
+                graphics.renderItemDecorations(this.font, drops.get(selection), left + 79 - 1, top + 15 - 1);
             }
 
             left += 17;
@@ -171,8 +171,8 @@ public class UltimateLootFabScreen extends PlaceboContainerScreen<UltimateLootFa
             int xItem = 0;
             int yItem = 0;
             for (int i = 0; i < Math.min(drops.size() - this.currentPage * 9, 9); i++) {
-                graphics.renderItem(drops.get(i + this.currentPage * 9), left + xItem * 19, top + yItem * 19);
-                graphics.renderItemDecorations(this.font, drops.get(i + this.currentPage * 9), left + xItem * 19 - 1, top + yItem * 19 - 1);
+                graphics.renderItem(drops.get(i + this.currentPage * 9), left + xItem * 19, top + 23 + yItem * 19);
+                graphics.renderItemDecorations(this.font, drops.get(i + this.currentPage * 9), left + xItem * 19 - 1, top + 23 + yItem * 19 - 1);
                 if (++xItem == 3) {
                     yItem++;
                     xItem = 0;
