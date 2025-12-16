@@ -82,6 +82,7 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
 
     public void checkUpgrade(){
         boolean upgradeSpeed = false;
+        this.runtime = 0;
         upgradeModuleStack = false;
         upgradeDataKill = false;
         energyCost = ExtraHostileConfig.simulationModelingPowerCost;

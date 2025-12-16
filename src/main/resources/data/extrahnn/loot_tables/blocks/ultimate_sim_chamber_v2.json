@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "bonus_rolls": 0.0,
+      "conditions": [
+        { "condition": "minecraft:survives_explosion" }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "extrahnn:ultimate_sim_chamber_v2"
+        }
+      ]
+    }
+  ],
+  "random_sequence": "extrahnn:blocks/ultimate_sim_chamber_v2"
+}
