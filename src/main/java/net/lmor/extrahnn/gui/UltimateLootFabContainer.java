@@ -25,28 +25,28 @@ public class UltimateLootFabContainer extends BlockEntityMenu<UltimateLootFabTil
         this.block = block;
 
         UltimateLootFabTileEntity.FabItemHandler inv = this.tile.getInventory();
-        this.addSlot(new FilteredSlot(inv, 0, 79, 62, (s) -> {
+        this.addSlot(new FilteredSlot(inv, 0, 79, 74, (s) -> {
             return s.getItem() == Hostile.Items.PREDICTION.get();
         }));
 
-        for(int y = 0; y < 4; ++y) {
-            for(int x = 0; x < 4; ++x) {
-                this.addSlot(new FilteredSlot(inv, 1 + y * 4 + x, 100 + x * 18, 7 + y * 18, (s) -> {
+        for(int y = 0; y < 6; ++y) {
+            for(int x = 0; x < 6; ++x) {
+                this.addSlot(new FilteredSlot(inv, 1 + y * 6 + x, 100 + x * 18, 7 + y * 18, (s) -> {
                     return false;
                 }));
             }
         }
 
-        this.addPlayerSlots(pInv, 8, 92);
+        this.addPlayerSlots(pInv, 26, 128);
         this.mover.registerRule((stack, slot) -> {
             return slot == 0;
-        }, 17, this.slots.size());
+        }, 37, this.slots.size());
         this.mover.registerRule((stack, slot) -> {
             return stack.getItem() instanceof MobPredictionItem;
         }, 0, 1);
         this.mover.registerRule((stack, slot) -> {
-            return slot < 17;
-        }, 17, this.slots.size());
+            return slot < 37;
+        }, 37, this.slots.size());
         this.registerInvShuffleRules();
     }
 

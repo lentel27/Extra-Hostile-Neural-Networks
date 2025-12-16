@@ -70,6 +70,10 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
     }
 
     public void serverTick(Level level, BlockPos pos, BlockState state) {
+        // Forced inventory size update, because it causes a world crash
+        // For those updating the mod
+        if (inventory.getSlots() == 17) inventory.setSize(37);
+
         if (!checkOutput) return;
 
         DynamicHolder<DataModel> dm = DataModelItem.getStoredModel(this.inventory.getStackInSlot(0));
@@ -137,7 +141,7 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
 
     protected boolean insertInOutput(ItemStack stack, boolean sim) {
         int amount = stack.getCount();
-        for(int i = 1; i < 17; ++i) {
+        for(int i = 1; i < 37; ++i) {
             ItemStack slotStack = this.inventory.getStackInSlot(i);
             ItemStack insertItem = stack.copy();
             if (slotStack.isEmpty()){
@@ -276,7 +280,7 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
 
     public class FabItemHandler extends InternalItemHandler {
         public FabItemHandler() {
-            super(17);
+            super(37);
         }
 
         public boolean isItemValid(int slot, ItemStack stack) {
