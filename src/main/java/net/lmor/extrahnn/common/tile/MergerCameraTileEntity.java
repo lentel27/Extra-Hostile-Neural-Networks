@@ -83,6 +83,7 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
             if (this.runtime == 0) {
                 if (this.canStartSimulation()){
                     this.runtime = ExtraHostileConfig.mergerCameraPowerDuration;
+                    this.inventory.getStackInSlot(4).shrink(1);
                     this.setChanged();
                 }
             }
@@ -107,7 +108,6 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
 
     public void createNewModelData(){
         List<DataModel> dataModels = new ArrayList<>();
-        this.inventory.getStackInSlot(4).shrink(1);
 
         for (int i = 0; i < 4; i++){
             DataModelInstance instance = new DataModelInstance(inventory.getStackInSlot(i), i);
