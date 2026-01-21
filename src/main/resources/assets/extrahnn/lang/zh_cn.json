@@ -1,0 +1,76 @@
+{
+	"block.extrahnn.ultimate_sim_chamber_v1": "终极模拟室 V1",
+	"block.extrahnn.ultimate_sim_chamber_v2": "终极模拟室 V2",
+	"block.extrahnn.ultimate_sim_chamber_v3": "终极模拟室 V3",
+	"block.extrahnn.ultimate_sim_chamber_v4": "终极模拟室 V4",
+	"block.extrahnn.ultimate_loot_fabricator_v1": "终极战利品制造器 V1",
+	"block.extrahnn.ultimate_loot_fabricator_v2": "终极战利品制造器 V2",
+	"block.extrahnn.ultimate_loot_fabricator_v3": "终极战利品制造器 V3",
+	"block.extrahnn.ultimate_loot_fabricator_v4": "终极战利品制造器 V4",
+	"block.extrahnn.merger_camera": "模型融合室",
+	"block.extrahnn.simulator_modeling": "模型模拟器",
+
+	"item.extrahnn.extra_data_model": "扩展数据模型 (%s, %s, %s, %s)",
+	"item.extrahnn.extra_data_model.broken": "扩展数据模型 (%s)",
+	"item.extrahnn.blank_extra_data_model": "扩展模型框架",
+	"item.extrahnn.upgrade_speed": "升级模块：速度",
+	"item.extrahnn.upgrade_module_stack": "升级模块：等级",
+	"item.extrahnn.upgrade_data_kill": "升级模块：数据",
+	"item.extrahnn.setting_card": "设定卡",
+
+	"extrahnn.gui.targets": "模拟目标：",
+
+	"itemGroup.extrahnn": "终极敌对神经网络",
+
+	"extrahnn.info.blank_extra_data_model": "组合 4 个 %s 以获得一个组合数据模型",
+	"extrahnn.info.blank_extra_data_model.shift": "将会赋予创建此模型时所用到的所有数据模型的功能。",
+	"extrahnn.info.data_model_slot": "此槽位仅用于扩展数据模型。",
+	"extrahnn.info.jei": "将 4 个等于 %s 位的 %s 组合到 %s 中，结果得到 %s",
+	"extrahnn.info.cost_sim": "每次模拟能量消耗：%s FE/T",
+	"extrahnn.info.data_model.name": "数据模型",
+	"extrahnn.info.extra_data_model.name": "扩展数据模型",
+	"extrahnn.info.dpk": "每次模拟数据量：%s",
+	"extrahnn.info.progress_sim": "进度：%s",
+	"extrahnn.info.iter_count": "迭代次数：%s",
+	"extrahnn.info.item_tooltip.upgrade_speed": "速度提高 %s%%，但能量消耗增加 %s 倍",
+	"extrahnn.info.item_tooltip.upgrade_module_stack": "允许你即刻升级至下一模型等级，但能量消耗增加至 %s FE/T",
+	"extrahnn.info.item_tooltip.upgrade_data_kill": "每次模拟获得的数据量增加 %s 倍",
+	"extrahnn.info.minimum_tier_hnn": "升级所需最低等级（标准）：%s",
+	"extrahnn.info.minimum_tier_ehnn": "升级所需最低等级（自定义）：%s",
+
+	"extrahnn.tier.autonomous": "自主",
+	"extrahnn.tier.intelligent": "智能",
+	"extrahnn.tier.adaptive": "高级",
+	"extrahnn.tier.synthetic": "综合",
+	"extrahnn.tier.omnipotent": "全能",
+
+	"extrahnn.fail.data_corruption": "融合错误：\n这些模型已损坏。",
+	"extrahnn.fail.failed_load": "融合错误：\n一个或多个输入\n的模型未加载。",
+	"extrahnn.fail.fox_broken": "融合错误：\n融合焦点不正确。",
+	"extrahnn.fail.fatal_error": "融合错误：\n融合过程中发生致命错误",
+	"extrahnn.fail.output": "融合错误：\n输出缓冲区被堵塞",
+	"extrahnn.fail.energy": "融合错误：\n能量不足",
+	"extrahnn.fail.energy_mid_cycle": "模拟进度已暂停\n系统能量不足",
+	"extrahnn.fail.model": "请插入数据模型，\n以启动融合程序",
+	"extrahnn.fail.input": "无法启动融合程序。\n缺少：\n扩展模型框架",
+	"extrahnn.fail.count": "无法开始模拟，\n模型数量不足。\n至少需要 4 个",
+
+	"extrahnn.fail.overheat.on": "过热",
+	"extrahnn.fail.overheat.off": "冷却中",
+
+	"extrahnn.merger_camera.run.0": "> 正在加载融合环境 \n",
+	"extrahnn.merger_camera.run.1": "> 尝试融合\n",
+	"extrahnn.merger_camera.run.2": "> 融合中\n",
+	"extrahnn.merger_camera.run.3": "> 正在从内存加载模型\n",
+	"extrahnn.merger_camera.run.4": "> 正在评估模型\n",
+	"extrahnn.merger_camera.run.5": "> 融合完成……",
+
+	"extrahnn.player_message.setting_clear": "设定已清除",
+	"extrahnn.player_message.setting_load": "设定已保存",
+	"extrahnn.player_message.setting_save": "设定已加载",
+	"extrahnn.player_message.setting_invalid": "无法加载该设定",
+
+	"extrahnn.info.setting_card": "设定已保存",
+
+	"extrahnn.info.error": "错误：%s"
+}
