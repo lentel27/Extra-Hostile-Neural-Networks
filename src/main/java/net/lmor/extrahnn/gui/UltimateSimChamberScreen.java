@@ -1,11 +1,7 @@
 package net.lmor.extrahnn.gui;
 
 import dev.shadowsoffire.hostilenetworks.data.CachedModel;
-import dev.shadowsoffire.hostilenetworks.data.DataModel;
-import dev.shadowsoffire.hostilenetworks.data.ModelTier;
-import dev.shadowsoffire.hostilenetworks.gui.SimChamberContainer;
 import dev.shadowsoffire.hostilenetworks.item.DataModelItem;
-import dev.shadowsoffire.placebo.reload.DynamicHolder;
 import dev.shadowsoffire.placebo.screen.PlaceboContainerScreen;
 import dev.shadowsoffire.placebo.screen.TickableText;
 import net.lmor.extrahnn.ExtraHostileConfig;
@@ -14,7 +10,6 @@ import net.lmor.extrahnn.data.ExtraCachedModel;
 import net.lmor.extrahnn.data.ExtraModelTier;
 import net.lmor.extrahnn.tile.UltimateSimChamberTileEntity;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -48,7 +43,7 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
     protected void renderTooltip(GuiGraphics gfx, int pX, int pY) {
         if (this.isHovering(211, 73, 7, 87, pX, pY)) {
             List<Component> txt = new ArrayList<>(2);
-            txt.add(Component.translatable("hostilenetworks.gui.energy", this.menu.getEnergyStored(), ExtraHostileConfig.ultimateSimPowerCap));
+            txt.add(Component.translatable("hostilenetworks.gui.energy", this.menu.getEnergyStored(), this.menu.getMaxEnergyStored()));
             ExtraCachedModel cModel = new ExtraCachedModel(this.menu.getSlot(0).getItem(), 0);
             if (cModel.isValid()) {
                 txt.add(Component.translatable("hostilenetworks.gui.cost", cModel.simCost()));
@@ -81,7 +76,7 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
     protected void renderLabels(GuiGraphics gfx, int pX, int pY) {
         int runtime = this.menu.getRuntime();
         if (runtime > 0) {
-            int rTime = Math.min(99, Mth.ceil(100.0F * (float)(ExtraHostileConfig.ultimateSimPowerDuration - runtime) / ExtraHostileConfig.ultimateSimPowerDuration));
+            int rTime = Math.min(99, Mth.ceil(100.0F * (float)(this.menu.getDuration() - runtime) / this.menu.getDuration()));
             gfx.drawString(this.font, rTime + "%", 186, 150, 6478079, true);
         }
 
@@ -157,7 +152,7 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
         int top = this.getGuiTop();
         gfx.blit(BASE, left + 8, top, 0.0F, 0.0F, 216, 166, 256, 256);
         gfx.blit(BASE, left - 14, top, 216, 0, 18, 18, 256, 256);
-        int energyHeight = 87 - Mth.ceil(87.0F * (float)this.menu.getEnergyStored() / (float)ExtraHostileConfig.ultimateSimPowerCap);
+        int energyHeight = 87 - Mth.ceil(87.0F * (float)this.menu.getEnergyStored() / (float)this.menu.getMaxEnergyStored());
         gfx.blit(BASE, left + 211, top + 73, 234, 0, 7, energyHeight, 256, 256);
 
         int dataHeight = 87;
@@ -207,7 +202,7 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
 
             this.runtimeTextLoaded = false;
         } else if (!this.runtimeTextLoaded) {
-            int ticks = ExtraHostileConfig.ultimateSimPowerDuration - this.menu.getRuntime();
+            int ticks = this.menu.getDuration() - this.menu.getRuntime();
             float speed = 1.3f;
             this.body.clear();
             int iters = DataModelItem.getIters(this.menu.getSlot(0).getItem());
@@ -221,9 +216,9 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
                     this.body.add(txt.setTicks(ticks));
                     ticks = Math.max(0, ticks - txt.getMaxUsefulTicks());
                 } else if (i == 5) {
-                    String s = this.menu.didPredictionSucceed() ? "success" : "failed";
+                    String s = this.menu.isPredictionSucceed() ? "success" : "failed";
                     key = "hostilenetworks.color_text." + s;
-                    txt = new TickableText(I18n.get(key), (this.menu.didPredictionSucceed() ? ChatFormatting.GOLD : ChatFormatting.RED).getColor(), true, speed);
+                    txt = new TickableText(I18n.get(key), (this.menu.isPredictionSucceed() ? ChatFormatting.GOLD : ChatFormatting.RED).getColor(), true, speed);
                     this.body.add(txt.setTicks(ticks));
                     ticks = Math.max(0, ticks - txt.getMaxUsefulTicks());
                 }

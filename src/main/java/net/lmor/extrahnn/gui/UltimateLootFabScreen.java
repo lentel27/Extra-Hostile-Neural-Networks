@@ -78,8 +78,8 @@ public class UltimateLootFabScreen extends PlaceboContainerScreen<UltimateLootFa
     protected void renderTooltip(GuiGraphics gfx, int pX, int pY) {
         if (this.isHovering(6, 33, 7, 53, pX, pY)) {
             List<Component> txt = new ArrayList<>(2);
-            txt.add(Component.translatable("hostilenetworks.gui.energy", this.menu.getEnergyStored(), ExtraHostileConfig.ultimateFabPowerCap));
-            txt.add(Component.translatable("hostilenetworks.gui.fab_cost", ExtraHostileConfig.ultimateFabPowerCost));
+            txt.add(Component.translatable("hostilenetworks.gui.energy", this.menu.getEnergyStored(), this.menu.getMaxEnergyStored()));
+            txt.add(Component.translatable("hostilenetworks.gui.fab_cost", this.menu.getEnergyCost()));
             gfx.renderComponentTooltip(this.font, txt, pX, pY);
         }
 
@@ -132,10 +132,10 @@ public class UltimateLootFabScreen extends PlaceboContainerScreen<UltimateLootFa
         int top = this.getGuiTop();
         gfx.blit(BASE, left, top, 0.0F, 0.0F, 212, 119, 256, 256);
 
-        int energyHeight = Mth.floor(53.0F * ((float)this.menu.getEnergyStored() / (float)ExtraHostileConfig.ultimateFabPowerCap));
+        int energyHeight = Mth.floor(53.0F * ((float)this.menu.getEnergyStored() / (float)this.menu.getMaxEnergyStored()));
         gfx.blit(BASE, left + 6, top + 33 + 53 - energyHeight, 0.0F, 119, 7, energyHeight, 256, 256);
 
-        int progHeight = Mth.floor(35.0F * (float)this.menu.getRuntime() / ExtraHostileConfig.ultimateFabPowerDuration);
+        int progHeight = Mth.floor(35.0F * (float)this.menu.getRuntime() / this.menu.getDuration());
         gfx.blit(BASE, left + 84, top + 35 + 35 - progHeight, 7.0F, 119, 6, progHeight, 256, 256);
         gfx.blit(PLAYER, left + 18, top + 120, 0.0F, 0.0F, 176, 90, 256, 256);
 

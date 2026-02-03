@@ -40,7 +40,7 @@ public class SimulationModelingScreen extends PlaceboContainerScreen<SimulationM
 
             gfx.renderComponentTooltip(this.font, txt, pX, pY);
         }
-        else if (this.isHovering(-13, 1, 18, 18, pX, pY)){
+        else if (this.isHovering(-13, 1, 18, 18, pX, pY) && this.menu.getSlot(0).getItem().isEmpty()){
             gfx.renderComponentTooltip(this.font, EHNNUtils.translateTier(), pX, pY);
         } else {
             super.renderTooltip(gfx, pX, pY);

@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -32,15 +33,14 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
 
     private final static int SIZE_SLOTS = 3;
     protected final SimulatorModelingItemHandler inventory = new SimulatorModelingItemHandler();
-    protected final ModifiableEnergyStorage energy;
-    protected final SimpleDataSlots data;
+    protected final ModifiableEnergyStorage energy = new ModifiableEnergyStorage(ExtraHostileConfig.simulationModelingPowerCap, ExtraHostileConfig.simulationModelingPowerCap);
+    protected final SimpleDataSlots data = new SimpleDataSlots();
     protected int runtime = ExtraHostileConfig.simulationModelingPowerDuration;
 
     private int runtimeUpgrade = runtime;
 
     private int energyCost = ExtraHostileConfig.simulationModelingPowerCost;
 
-    private boolean upgradeSpeed;
     private boolean upgradeModuleStack;
     private boolean upgradeDataKill;
 
@@ -49,19 +49,12 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
     public SimulationModelingTileEntity(BlockPos pos, BlockState state) {
         super(ExtraHostile.TileEntities.SIMULATOR_MODELING.get(), pos, state);
 
-        this.energy = new ModifiableEnergyStorage(ExtraHostileConfig.simulationModelingPowerCap, ExtraHostileConfig.simulationModelingPowerCap);
-        this.data = new SimpleDataSlots();
-
-        this.data.addData(() -> {
-            return this.runtime;
-        }, (v) -> {
-            this.runtime = v;
-        });
+        this.data.addData(() -> this.runtime, v -> this.runtime = v);
         this.data.addEnergy(this.energy);
 
     }
 
-    public void load(CompoundTag tag) {
+    public void load(@NotNull CompoundTag tag) {
         super.load(tag);
         this.inventory.deserializeNBT(tag.getCompound("inventory"));
         this.energy.setEnergy(tag.getInt("energy"));
@@ -71,7 +64,7 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
         checkUpgrade();
     }
 
-    public void saveAdditional(CompoundTag tag) {
+    public void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
         tag.put("inventory", this.inventory.serializeNBT());
         tag.putInt("energy", this.energy.getEnergyStored());
@@ -86,7 +79,7 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
 
     public void checkUpgrade(){
         this.runtime = 0;
-        upgradeSpeed = false;
+        boolean upgradeSpeed = false;
         upgradeModuleStack = false;
         upgradeDataKill = false;
         energyCost = ExtraHostileConfig.simulationModelingPowerCost;
@@ -210,15 +203,11 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
         return upgradeDataKill;
     }
 
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return LazyOptional.of(() -> {
-                return this.inventory;
-            }).cast();
+            return LazyOptional.of(() -> this.inventory).cast();
         } else {
-            return cap == ForgeCapabilities.ENERGY ? LazyOptional.of(() -> {
-                return this.energy;
-            }).cast() : super.getCapability(cap, side);
+            return cap == ForgeCapabilities.ENERGY ? LazyOptional.of(() -> this.energy).cast() : super.getCapability(cap, side);
         }
     }
 
@@ -227,7 +216,7 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
             super(SIZE_SLOTS);
         }
 
-        public boolean isItemValid(int slot, ItemStack stack) {
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
             if (slot == 0){
                 return (stack.getItem() instanceof DataModelItem && new CachedModel(stack, 0).getTier() != ModelTier.SELF_AWARE) ||
                         (stack.getItem() instanceof ExtraDataModelItem && new ExtraCachedModel(stack, 0).getTier() != ExtraModelTier.OMNIPOTENT);
@@ -240,11 +229,16 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
             return false;
         }
 
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        @Override
+        public int getSlotLimit(int slot) {
+            return 1;
+        }
+
+        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
             return super.insertItem(slot, stack, simulate);
         }
 
-        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
             if (slot == 0){
                 ItemStack stack = SimulationModelingTileEntity.this.inventory.getStackInSlot(0);
 

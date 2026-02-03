@@ -32,36 +32,35 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlockEntity, SimpleDataSlots.IDataAutoRegister, ISettingCard {
     protected final FabItemHandler inventory = new FabItemHandler();
     protected final ModifiableEnergyStorage energy;
-    protected final Object2IntMap<DynamicHolder<DataModel>> savedSelections;
-    protected final SimpleDataSlots data;
-    protected int runtime;
-    protected int currentSel;
+    protected final Object2IntMap<DynamicHolder<DataModel>> savedSelections = new Object2IntOpenHashMap<>();
+    protected final SimpleDataSlots data = new SimpleDataSlots();
+    protected int runtime = 0;
+    protected int currentSel = -1;
     private boolean checkOutput = true;
 
     private Version version;
 
+    public int CAP;
+    public int COST;
+    public int DURATION;
+
     public UltimateLootFabTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type, Version version) {
         super(type, pos, state);
-        this.energy = new ModifiableEnergyStorage(ExtraHostileConfig.ultimateFabPowerCap, ExtraHostileConfig.ultimateFabPowerCap);
-
         this.version = version;
 
-        this.savedSelections = new Object2IntOpenHashMap<>();
-        this.data = new SimpleDataSlots();
-        this.runtime = 0;
-        this.currentSel = -1;
+        setConfig();
+        energy = new ModifiableEnergyStorage(CAP, CAP);
+
         this.savedSelections.defaultReturnValue(-1);
-        this.data.addData(() -> {
-            return this.runtime;
-        }, (v) -> {
-            this.runtime = v;
-        });
+        this.data.addData(() -> this.runtime, v -> this.runtime = v);
         this.data.addEnergy(this.energy);
     }
 
@@ -86,7 +85,7 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
             }
 
             if (selection != -1) {
-                if (this.runtime >= ExtraHostileConfig.ultimateFabPowerDuration) {
+                if (this.runtime >= DURATION) {
                     if (checkOutput){
                         checkOutput = false;
                         int maxCount = Math.min(this.inventory.getStackInSlot(0).getCount(), 4 * version.getMultiplier());
@@ -108,7 +107,7 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
                                     break;
                                 }
                                 old_maxCount = maxCount;
-                                maxCount = (int) Math.ceil((double) (maxCount / 2));
+                                maxCount = (int) Math.ceil(((double) maxCount / 2));
                                 outCopy.setCount(out.getCount() * maxCount);
 
                                 // Just in case, protection against looping
@@ -122,11 +121,11 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
                     }
 
                 } else {
-                    if (this.energy.getEnergyStored() < ExtraHostileConfig.ultimateFabPowerCost) {
+                    if (this.energy.getEnergyStored() < COST) {
                         return;
                     }
 
-                    this.energy.setEnergy(this.energy.getEnergyStored() - ExtraHostileConfig.ultimateFabPowerCost);
+                    this.energy.setEnergy(this.energy.getEnergyStored() - COST);
                     ++this.runtime;
                     this.setChanged();
                 }
@@ -176,13 +175,13 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
         this.setChanged();
     }
 
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER) return LazyOptional.of(() -> this.inventory).cast();
         if (cap == ForgeCapabilities.ENERGY) return LazyOptional.of(() -> this.energy).cast();
         return super.getCapability(cap, side);
     }
 
-    public void saveAdditional(CompoundTag tag) {
+    public void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
         tag.put("saved_selections", this.writeSelections(new CompoundTag()));
         tag.put("inventory", this.inventory.serializeNBT());
@@ -193,7 +192,7 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
         tag.putString("versionBlockEntity", this.version.getId());
     }
 
-    public void load(CompoundTag tag) {
+    public void load(@NotNull CompoundTag tag) {
         super.load(tag);
         this.readSelections(tag.getCompound("saved_selections"));
         this.inventory.deserializeNBT(tag.getCompound("inventory"));
@@ -215,10 +214,10 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
     }
 
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        this.readSelections(pkt.getTag().getCompound("saved_selections"));
+        this.readSelections(Objects.requireNonNull(pkt.getTag()).getCompound("saved_selections"));
     }
 
-    public CompoundTag getUpdateTag() {
+    public @NotNull CompoundTag getUpdateTag() {
         CompoundTag tag = super.getUpdateTag();
         tag.put("saved_selections", this.writeSelections(new CompoundTag()));
         return tag;
@@ -283,7 +282,7 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
             super(37);
         }
 
-        public boolean isItemValid(int slot, ItemStack stack) {
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
             if (slot == 0) {
                 return stack.getItem() == Hostile.Items.PREDICTION.get();
             } else {
@@ -291,17 +290,42 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
             }
         }
 
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
             return slot > 0 ? stack : super.insertItem(slot, stack, simulate);
         }
 
-        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
             return slot == 0 ? ItemStack.EMPTY : super.extractItem(slot, amount, simulate);
         }
 
         protected void onContentsChanged(int slot) {
             checkOutput = true;
             UltimateLootFabTileEntity.this.setChanged();
+        }
+    }
+
+    public void setConfig(){
+        switch (version.getId().toLowerCase()) {
+            case "v2" -> {
+                CAP = ExtraHostileConfig.ultimateFabV2PowerCap;
+                DURATION = ExtraHostileConfig.ultimateFabV2PowerDuration;
+                COST = ExtraHostileConfig.ultimateFabV2PowerCost;
+            }
+            case "v3" -> {
+                CAP = ExtraHostileConfig.ultimateFabV3PowerCap;
+                DURATION = ExtraHostileConfig.ultimateFabV3PowerDuration;
+                COST = ExtraHostileConfig.ultimateFabV3PowerCost;
+            }
+            case "v4" -> {
+                CAP = ExtraHostileConfig.ultimateFabV4PowerCap;
+                DURATION = ExtraHostileConfig.ultimateFabV4PowerDuration;
+                COST = ExtraHostileConfig.ultimateFabV4PowerCost;
+            }
+            default -> {
+                CAP = ExtraHostileConfig.ultimateFabV1PowerCap;
+                DURATION = ExtraHostileConfig.ultimateFabV1PowerDuration;
+                COST = ExtraHostileConfig.ultimateFabV1PowerCost;
+            }
         }
     }
 }

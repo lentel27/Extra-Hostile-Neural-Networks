@@ -7,13 +7,13 @@ import dev.shadowsoffire.hostilenetworks.item.MobPredictionItem;
 import dev.shadowsoffire.placebo.menu.BlockEntityMenu;
 import dev.shadowsoffire.placebo.menu.FilteredSlot;
 import dev.shadowsoffire.placebo.reload.DynamicHolder;
-import net.lmor.extrahnn.ExtraHostile;
 import net.lmor.extrahnn.tile.UltimateLootFabTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 public class UltimateLootFabContainer extends BlockEntityMenu<UltimateLootFabTileEntity> {
 
@@ -25,28 +25,18 @@ public class UltimateLootFabContainer extends BlockEntityMenu<UltimateLootFabTil
         this.block = block;
 
         UltimateLootFabTileEntity.FabItemHandler inv = this.tile.getInventory();
-        this.addSlot(new FilteredSlot(inv, 0, 79, 74, (s) -> {
-            return s.getItem() == Hostile.Items.PREDICTION.get();
-        }));
+        this.addSlot(new FilteredSlot(inv, 0, 79, 74, (s) -> s.getItem() == Hostile.Items.PREDICTION.get()));
 
         for(int y = 0; y < 6; ++y) {
             for(int x = 0; x < 6; ++x) {
-                this.addSlot(new FilteredSlot(inv, 1 + y * 6 + x, 100 + x * 18, 7 + y * 18, (s) -> {
-                    return false;
-                }));
+                this.addSlot(new FilteredSlot(inv, 1 + y * 6 + x, 100 + x * 18, 7 + y * 18, (s) -> false));
             }
         }
 
         this.addPlayerSlots(pInv, 26, 128);
-        this.mover.registerRule((stack, slot) -> {
-            return slot == 0;
-        }, 37, this.slots.size());
-        this.mover.registerRule((stack, slot) -> {
-            return stack.getItem() instanceof MobPredictionItem;
-        }, 0, 1);
-        this.mover.registerRule((stack, slot) -> {
-            return slot < 37;
-        }, 37, this.slots.size());
+        this.mover.registerRule((stack, slot) -> slot == 0, 37, this.slots.size());
+        this.mover.registerRule((stack, slot) -> stack.getItem() instanceof MobPredictionItem, 0, 1);
+        this.mover.registerRule((stack, slot) -> slot < 37, 37, this.slots.size());
         this.registerInvShuffleRules();
     }
 
@@ -54,7 +44,7 @@ public class UltimateLootFabContainer extends BlockEntityMenu<UltimateLootFabTil
         return pPlayer.level().getBlockState(this.pos).getBlock() == block;
     }
 
-    public boolean clickMenuButton(Player pPlayer, int pId) {
+    public boolean clickMenuButton(@NotNull Player pPlayer, int pId) {
         DynamicHolder<DataModel> model = DataModelItem.getStoredModel(this.getSlot(0).getItem());
         if (model.isBound() && pId < model.get().fabDrops().size()) {
             this.tile.setSelection(model, pId);
@@ -62,6 +52,18 @@ public class UltimateLootFabContainer extends BlockEntityMenu<UltimateLootFabTil
         } else {
             return false;
         }
+    }
+
+    public int getMaxEnergyStored(){
+        return this.tile.CAP;
+    }
+
+    public int getEnergyCost(){
+        return this.tile.COST;
+    }
+
+    public int getDuration(){
+        return this.tile.DURATION;
     }
 
     public int getEnergyStored() {

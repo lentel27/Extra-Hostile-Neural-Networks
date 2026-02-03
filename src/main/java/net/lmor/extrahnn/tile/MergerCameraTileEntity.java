@@ -2,7 +2,6 @@ package net.lmor.extrahnn.tile;
 
 import dev.shadowsoffire.hostilenetworks.data.CachedModel;
 import dev.shadowsoffire.hostilenetworks.data.DataModel;
-import dev.shadowsoffire.hostilenetworks.data.DataModelRegistry;
 import dev.shadowsoffire.hostilenetworks.data.ModelTier;
 import dev.shadowsoffire.hostilenetworks.item.DataModelItem;
 import dev.shadowsoffire.placebo.block_entity.TickingBlockEntity;
@@ -15,7 +14,6 @@ import net.lmor.extrahnn.item.ExtraDataModelItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -24,42 +22,31 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
 
 public class MergerCameraTileEntity extends BlockEntity implements TickingBlockEntity, SimpleDataSlots.IDataAutoRegister {
 
     private final static int SIZE_SLOTS_MODEL = 4;
     protected final CameraItemHandler inventory = new CameraItemHandler();
-    protected final ModifiableEnergyStorage energy;
-    protected final SimpleDataSlots data;
-    protected List<CachedModel> currentModels = new ArrayList<>();
-    protected FailureState failState;
-    protected int runtime;
+    protected final ModifiableEnergyStorage energy = new ModifiableEnergyStorage(ExtraHostileConfig.mergerCameraPowerCap, ExtraHostileConfig.mergerCameraPowerCap);
+    protected final SimpleDataSlots data = new SimpleDataSlots();
+    protected boolean validModels = false;
+    protected FailureState failState = FailureState.NONE;
+    protected int runtime = 0;
 
     protected boolean checkModel = false;
 
     public MergerCameraTileEntity(BlockPos pos, BlockState state) {
         super(ExtraHostile.TileEntities.MERGER_CAMERA.get(), pos, state);
-        this.energy = new ModifiableEnergyStorage(ExtraHostileConfig.mergerCameraPowerCap, ExtraHostileConfig.mergerCameraPowerCap);
-        this.data = new SimpleDataSlots();
-        this.currentModels.addAll(List.of(CachedModel.EMPTY, CachedModel.EMPTY, CachedModel.EMPTY, CachedModel.EMPTY));
-        this.failState = MergerCameraTileEntity.FailureState.NONE;
 
-        this.data.addData(() -> {
-            return this.runtime;
-        }, (v) -> {
-            this.runtime = v;
-        });
-        this.data.addData(() -> {
-            return this.failState.ordinal();
-        }, (v) -> {
-            this.failState = MergerCameraTileEntity.FailureState.values()[v];
-        });
+        this.data.addData(() -> this.runtime, v -> this.runtime = v);
+        this.data.addData(() -> this.failState.ordinal(), v -> this.failState = FailureState.values()[v]);
         this.data.addEnergy(this.energy);
+        this.energy.setMaxExtract(0);
     }
 
     @Override
@@ -67,57 +54,33 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
         this.data.register(consumer);
     }
 
-    public void saveAdditional(CompoundTag tag) {
+    public void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
         tag.put("inventory", this.inventory.serializeNBT());
         tag.putInt("energy", this.energy.getEnergyStored());
         tag.putBoolean("checkModel", this.checkModel);
-
-        for (int i = 0; i < SIZE_SLOTS_MODEL; i++){
-            if (i >= this.currentModels.size()) break;
-
-            tag.putString("model_" + i, !this.currentModels.get(i).isValid() ? "null" : Objects.requireNonNull(DataModelRegistry.INSTANCE.getKey(this.currentModels.get(i).getModel())).toString());
-        }
-
         tag.putInt("runtime", this.runtime);
+        tag.putBoolean("validModels", this.validModels);
         tag.putInt("failState", this.failState.ordinal());
     }
 
-    public void load(CompoundTag tag) {
+    public void load(@NotNull CompoundTag tag) {
         super.load(tag);
         this.inventory.deserializeNBT(tag.getCompound("inventory"));
         this.energy.setEnergy(tag.getInt("energy"));
         this.checkModel = tag.getBoolean("checkModel");
-
-        List<CachedModel> models = new ArrayList<>();
-        for (int i = 0; i < SIZE_SLOTS_MODEL; i++){
-            ItemStack model = this.inventory.getStackInSlot(i);
-            CachedModel cModel = this.getOrLoadModel(model, i);
-            ResourceLocation modelId = new ResourceLocation(tag.getString("model_" + i));
-
-            if (cModel.isValid() && DataModelRegistry.INSTANCE.getKey(cModel.getModel()).equals(modelId)) {
-                models.add(cModel);
-            }
-        }
-
-        this.currentModels = models;
         this.runtime = tag.getInt("runtime");
-        this.failState = MergerCameraTileEntity.FailureState.values()[tag.getInt("failState")];
+        this.validModels = tag.getBoolean("validModels");
+        this.failState = FailureState.values()[tag.getInt("failState")];
     }
 
     public void serverTick(Level level, BlockPos pos, BlockState state) {
         if (this.runtime == 0) checkSlotModels();
 
-        if (currentModels.size() == SIZE_SLOTS_MODEL){
+        if (validModels){
             if (this.runtime == 0) {
                 if (this.canStartSimulation()){
                     this.runtime = ExtraHostileConfig.mergerCameraPowerDuration;
-                    assert this.level != null;
-
-                    for (int i = 0; i < SIZE_SLOTS_MODEL; i++){
-                        this.getInventory().getStackInSlot(i).shrink(1);
-                    }
-                    this.inventory.getStackInSlot(4).shrink(1);
                     this.setChanged();
                 }
             }
@@ -141,14 +104,15 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
     }
 
     public void createNewModelData(){
-        List<CachedModel> models = this.currentModels;
-        this.currentModels = new ArrayList<>();
-
         List<DataModel> dataModels = new ArrayList<>();
 
-        for (CachedModel model: models){
-            dataModels.add(model.getModel());
+        for (int i = 0; i < 4; i++){
+            CachedModel model = new CachedModel(this.inventory.getStackInSlot(i), i);
+            if (model.isValid()) dataModels.add(model.getModel());
         }
+
+        if (dataModels.size() != 4) return;
+        for (int i = 0; i < 5; i++) inventory.getStackInSlot(i).shrink(1);
 
         ItemStack modelStack = new ItemStack(ExtraHostile.Items.EXTRA_DATA_MODEL.get());
         ExtraDataModelItem.setStoredModels(modelStack, dataModels);
@@ -158,15 +122,19 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
 
     public void checkSlotModels(){
         if (!checkModel) return;
+        validModels = true;
 
         List<CachedModel> newModels = new ArrayList<>();
         for (int i = 0; i < SIZE_SLOTS_MODEL; i++){
-            if (!this.inventory.getStackInSlot(i).isEmpty()) {
-                newModels.add(new CachedModel(this.inventory.getStackInSlot(i), i));
-            }
+            newModels.add(new CachedModel(this.inventory.getStackInSlot(i), i));
         }
 
-        this.currentModels = newModels;
+        for (CachedModel model: newModels){
+            if (!model.isValid()) {
+                validModels = false;
+                break;
+            }
+        }
         this.checkModel = false;
     }
 
@@ -187,28 +155,20 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
         }
 
         checkSlotModels();
-        if (currentModels.size() != SIZE_SLOTS_MODEL) {
-            this.failState = MergerCameraTileEntity.FailureState.NONE;
+        if (validModels) {
+            this.failState = FailureState.NONE;
             return true;
         }
 
-        this.failState = MergerCameraTileEntity.FailureState.NONE;
+        this.failState = FailureState.NONE;
         return true;
     }
 
-    protected CachedModel getOrLoadModel(ItemStack stack, int index) {
-        return this.currentModels.get(index).getSourceStack() == stack ? this.currentModels.get(index) : new CachedModel(stack, index);
-    }
-
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return LazyOptional.of(() -> {
-                return this.inventory;
-            }).cast();
+            return LazyOptional.of(() -> this.inventory).cast();
         } else {
-            return cap == ForgeCapabilities.ENERGY ? LazyOptional.of(() -> {
-                return this.energy;
-            }).cast() : super.getCapability(cap, side);
+            return cap == ForgeCapabilities.ENERGY ? LazyOptional.of(() -> this.energy).cast() : super.getCapability(cap, side);
         }
     }
 
@@ -233,7 +193,7 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
             super(6);
         }
 
-        public boolean isItemValid(int slot, ItemStack stack) {
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
             if (slot < SIZE_SLOTS_MODEL) {
                 return stack.getItem() instanceof DataModelItem && new CachedModel(stack, slot).getTier() == ModelTier.SELF_AWARE;
             } else if (slot == SIZE_SLOTS_MODEL) {
@@ -242,17 +202,18 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
             return true;
         }
 
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
             return slot == 5 ? stack : super.insertItem(slot, stack, simulate);
         }
 
-        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
             return slot < SIZE_SLOTS_MODEL + 1 ? ItemStack.EMPTY : super.extractItem(slot, amount, simulate);
         }
 
         protected void onContentsChanged(int slot) {
             MergerCameraTileEntity.this.setChanged();
             MergerCameraTileEntity.this.checkModel = true;
+            MergerCameraTileEntity.this.runtime = 0;
         }
     }
 
@@ -266,7 +227,7 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
 
         private final String name;
 
-        private FailureState(String name) {
+        FailureState(String name) {
             this.name = name;
         }
 

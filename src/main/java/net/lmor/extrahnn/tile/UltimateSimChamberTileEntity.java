@@ -26,51 +26,42 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class UltimateSimChamberTileEntity extends BlockEntity implements TickingBlockEntity, SimpleDataSlots.IDataAutoRegister, ISettingCard {
     protected final SimItemHandler inventory = new SimItemHandler();
     protected final ModifiableEnergyStorage energy;
-    protected final SimpleDataSlots data;
-    protected ExtraCachedModel currentModel;
-    protected int runtime;
-    protected boolean predictionSuccess;
-    protected FailureState failState;
+    protected final SimpleDataSlots data = new SimpleDataSlots();
+
+    protected ExtraCachedModel currentModel = ExtraCachedModel.EMPTY;
+    protected int runtime = 0;
+    protected int predictionSuccess = 0;
+    protected FailureState failState = FailureState.NONE;
+
     private boolean checkOutput = true;
 
     private Version version;
+
+    public int CAP;
+    public int DURATION;
 
     public UltimateSimChamberTileEntity(BlockPos pos, BlockState state, BlockEntityType<?> type, Version version) {
         super(type, pos, state);
         this.version = version;
 
-        this.energy = new ModifiableEnergyStorage(ExtraHostileConfig.ultimateSimPowerCap, ExtraHostileConfig.ultimateSimPowerCap);
+        setConfig();
+        energy = new ModifiableEnergyStorage(CAP, CAP);
 
-        this.data = new SimpleDataSlots();
-        this.currentModel = ExtraCachedModel.EMPTY;
-        this.runtime = 0;
-        this.predictionSuccess = false;
-        this.failState = FailureState.NONE;
-
-        this.data.addData(() -> {
-            return this.runtime;
-        }, (v) -> {
-            this.runtime = v;
-        });
-        this.data.addData(() -> {
-            return this.predictionSuccess;
-        }, (v) -> {
-            this.predictionSuccess = v;
-        });
-        this.data.addData(() -> {
-            return this.failState.ordinal();
-        }, (v) -> {
-            this.failState = FailureState.values()[v];
-        });
+        this.data.addData(() -> this.runtime, v -> this.runtime = v);
+        this.data.addData(() -> this.predictionSuccess, v -> this.predictionSuccess = v);
+        this.data.addData(() -> this.failState.ordinal(), v -> this.failState = FailureState.values()[v]);
         this.data.addEnergy(this.energy);
+        this.energy.setMaxExtract(0);
     }
 
     public void registerSlots(Consumer<DataSlot> consumer) {
@@ -83,7 +74,7 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         tag.putInt("energy", this.energy.getEnergyStored());
 
         tag.putInt("runtime", this.runtime);
-        tag.putBoolean("predSuccess", this.predictionSuccess);
+        tag.putInt("predSuccess", this.predictionSuccess);
         tag.putInt("failState", this.failState.ordinal());
 
         tag.putString("versionBlockEntity", this.version.getId());
@@ -99,7 +90,7 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
             this.currentModel = new ExtraCachedModel(model, 0);
         }
         this.runtime = tag.getInt("runtime");
-        this.predictionSuccess = tag.getBoolean("predSuccess");
+        this.predictionSuccess = tag.getInt("predSuccess");
         this.failState = FailureState.values()[tag.getInt("failState")];
 
         this.version = Version.getVersion(tag.getString("versionBlockEntity"));
@@ -110,8 +101,7 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
             this.failState = FailureState.MODEL;
             this.runtime = 0;
             return;
-        }
-        else if (this.inventory.getStackInSlot(1).isEmpty() && this.runtime == 0){
+        } else if (this.inventory.getStackInSlot(1).isEmpty() && this.runtime == 0){
             this.failState = FailureState.INPUT;
             return;
         }
@@ -120,29 +110,26 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         if (!model.isEmpty()) {
             ExtraCachedModel oldModel = this.currentModel;
             this.currentModel = this.getOrLoadModel(model);
-            if (oldModel != this.currentModel) {
-                this.runtime = 0;
-            }
+            if (oldModel != this.currentModel) this.runtime = 0;
 
             if (this.currentModel.isValid()) {
                 if (this.runtime == 0) {
                     if (this.canStartSimulation()) {
-                        this.runtime = ExtraHostileConfig.ultimateSimPowerDuration;
-                        this.predictionSuccess = this.level.random.nextFloat() <= this.currentModel.getAccuracy();
+                        this.runtime = DURATION;
+                        float accuracy = this.currentModel.getAccuracy();
+
+                        this.predictionSuccess = (int) accuracy + (Objects.requireNonNull(this.level).random.nextFloat() <= this.currentModel.getAccuracy() % 1 ? 1 : 0);
                         this.inventory.getStackInSlot(1).shrink(version.getMultiplier() * 4);
                         this.setChanged();
                     }
                 } else if (this.energy.getEnergyStored() >= this.currentModel.simCost()) {
                     this.failState = FailureState.NONE;
-                    if (--this.runtime == 0) {
-                        setResult(model);
-                    } else {
+                    if (--this.runtime == 0) setResult(model);
+                    else {
                         this.energy.setEnergy(this.energy.getEnergyStored() - this.currentModel.simCost());
                         this.setChanged();
                     }
-                } else {
-                    this.failState = FailureState.ENERGY_MID_CYCLE;
-                }
+                } else this.failState = FailureState.ENERGY_MID_CYCLE;
                 return;
             }
         }
@@ -165,7 +152,7 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         }
 
         setItem(baseDrop, 2, 6);
-        if (this.predictionSuccess) setItem(predicateDrop, 6, 10);
+        if (isPredictionSucceed()) setItem(predicateDrop, 6, 10);
 
         ExtraModelTier tier = this.currentModel.getTier();
         if (tier != tier.next()) {
@@ -220,12 +207,12 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         for (ItemStack item : itemsToAdd) {
             int remainingCount = item.getCount();
 
-            for (int i = 0; i < slots.length; i++) {
-                if (!slots[i].isEmpty() && canStack(slots[i], item)) {
-                    int spaceLeft = slots[i].getMaxStackSize() - slots[i].getCount();
+            for (ItemStack slot : slots) {
+                if (!slot.isEmpty() && canStack(slot, item)) {
+                    int spaceLeft = slot.getMaxStackSize() - slot.getCount();
                     if (spaceLeft > 0) {
                         int toAdd = Math.min(spaceLeft, remainingCount);
-                        slots[i].grow(toAdd);
+                        slot.grow(toAdd);
                         remainingCount -= toAdd;
 
                         if (remainingCount <= 0) {
@@ -298,26 +285,19 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
     }
 
     public boolean canStack(ItemStack a, ItemStack b) {
-        if (a.isEmpty()) {
-            return true;
-        } else {
-            return ItemStack.isSameItemSameTags(a, b) && a.getCount() < a.getMaxStackSize();
-        }
+        if (a.isEmpty()) return true;
+        return ItemStack.isSameItemSameTags(a, b) && a.getCount() < a.getMaxStackSize();
     }
 
     protected ExtraCachedModel getOrLoadModel(ItemStack stack) {
         return this.currentModel.getSourceStack() == stack ? this.currentModel : new ExtraCachedModel(stack, 0);
     }
 
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, Direction side) {
         if (cap == ForgeCapabilities.ITEM_HANDLER) {
-            return LazyOptional.of(() -> {
-                return this.inventory;
-            }).cast();
+            return LazyOptional.of(() -> this.inventory).cast();
         } else {
-            return cap == ForgeCapabilities.ENERGY ? LazyOptional.of(() -> {
-                return this.energy;
-            }).cast() : super.getCapability(cap, side);
+            return cap == ForgeCapabilities.ENERGY ? LazyOptional.of(() -> this.energy).cast() : super.getCapability(cap, side);
         }
     }
 
@@ -333,8 +313,8 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         return this.runtime;
     }
 
-    public boolean didPredictionSucceed() {
-        return this.predictionSuccess;
+    public boolean isPredictionSucceed() {
+        return this.predictionSuccess > 0;
     }
 
     public FailureState getFailState() {
@@ -388,19 +368,16 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
             super(10);
         }
 
-        public boolean isItemValid(int slot, ItemStack stack) {
-            if (slot == 0) {
-                return stack.getItem() instanceof ExtraDataModelItem;
-            } else {
-                return slot != 1 || ExtraDataModelItem.matchesInput(this.getStackInSlot(0), stack);
-            }
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            if (slot == 0) return stack.getItem() instanceof ExtraDataModelItem;
+            else return slot != 1 || ExtraDataModelItem.matchesInput(this.getStackInSlot(0), stack);
         }
 
-        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
             return slot >= 2 ? stack : super.insertItem(slot, stack, simulate);
         }
 
-        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
 
             return slot <= 1 ? ItemStack.EMPTY : super.extractItem(slot, amount, simulate);
         }
@@ -422,12 +399,33 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
 
         private final String id;
 
-        private FailureState(String id) {
+        FailureState(String id) {
             this.id = id;
         }
 
         public String getKey() {
             return id;
+        }
+    }
+
+    public void setConfig(){
+        switch (version.getId().toLowerCase()) {
+            case "v2" -> {
+                CAP = ExtraHostileConfig.ultimateSimV2PowerCap;
+                DURATION = ExtraHostileConfig.ultimateSimV2PowerDuration;
+            }
+            case "v3" -> {
+                CAP = ExtraHostileConfig.ultimateSimV3PowerCap;
+                DURATION = ExtraHostileConfig.ultimateSimV3PowerDuration;
+            }
+            case "v4" -> {
+                CAP = ExtraHostileConfig.ultimateSimV4PowerCap;
+                DURATION = ExtraHostileConfig.ultimateSimV4PowerDuration;
+            }
+            default -> {
+                CAP = ExtraHostileConfig.ultimateSimV1PowerCap;
+                DURATION = ExtraHostileConfig.ultimateSimV1PowerDuration;
+            }
         }
     }
 }

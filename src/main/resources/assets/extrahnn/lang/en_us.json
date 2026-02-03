@@ -37,6 +37,8 @@
 	"extrahnn.info.item_tooltip.upgrade_data_kill": "Increases the amount of data received per simulation by %s times",
 	"extrahnn.info.minimum_tier_hnn": "Min. level to upgrade (Standard): %s",
 	"extrahnn.info.minimum_tier_ehnn": "Min. level to upgrade (Custom): %s",
+	"extrahnn.info.extract_model.on": "The model is extracted",
+	"extrahnn.info.extract_model.off": "The model is not extracted",
 
 	"extrahnn.tier.autonomous": "Autonomous",
 	"extrahnn.tier.intelligent": "Intelligent",
@@ -55,9 +57,6 @@
 	"extrahnn.fail.input": "Unable to start merge. \nMissing:\nExtra Model Framework",
 	"extrahnn.fail.count": "Unable to start simulation\nnot enough predicate.\nRequires min 4",
 
-	"extrahnn.fail.overheat.on": "Overheat",
-	"extrahnn.fail.overheat.off": "Cooling",
-
 	"extrahnn.merger_camera.run.0": "> Launching the Merge Environment ",
 	"extrahnn.merger_camera.run.1": "> Attempt at merger",
 	"extrahnn.merger_camera.run.2": "> Focusing on fusion",
@@ -68,5 +67,9 @@
 	"extrahnn.player_message.setting_clear": "Setting cleared",
 	"extrahnn.player_message.setting_load": "Setting saved",
 	"extrahnn.player_message.setting_save": "Setting loaded",
-	"extrahnn.player_message.setting_invalid": "Couldn't load the setting"
+	"extrahnn.player_message.setting_invalid": "Couldn't load the setting",
+
+	"extrahnn.info.setting_card": "Settings saved",
+
+	"extrahnn.info.error": "Error: %s"
 }
