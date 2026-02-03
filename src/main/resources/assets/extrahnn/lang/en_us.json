@@ -37,6 +37,8 @@
 	"extrahnn.info.item_tooltip.upgrade_data_kill": "Increases the amount of data received per simulation by %s times",
 	"extrahnn.info.minimum_tier_hnn": "Min. level to upgrade (Standard): %s",
 	"extrahnn.info.minimum_tier_ehnn": "Min. level to upgrade (Custom): %s",
+	"extrahnn.info.extract_model.on": "The model is extracted",
+	"extrahnn.info.extract_model.off": "The model is not extracted",
 
 	"extrahnn.tier.autonomous": "Autonomous",
 	"extrahnn.tier.intelligent": "Intelligent",
@@ -54,9 +56,6 @@
 	"extrahnn.fail.model": "Insert data models, to \nstart the merger",
 	"extrahnn.fail.input": "Unable to start merge. \nMissing:\nExtra Model Framework",
 	"extrahnn.fail.count": "Unable to start simulation\nnot enough predicate.\nRequires min 4",
-
-	"extrahnn.fail.overheat.on": "Overheat",
-	"extrahnn.fail.overheat.off": "Cooling",
 
 	"extrahnn.merger_camera.run.0": "> Launching the Merge Environment \n",
 	"extrahnn.merger_camera.run.1": "> Attempt at merger\n",

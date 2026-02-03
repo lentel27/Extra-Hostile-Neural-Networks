@@ -37,6 +37,8 @@
 	"extrahnn.info.item_tooltip.upgrade_data_kill": "每次模拟获得的数据量增加 %s 倍",
 	"extrahnn.info.minimum_tier_hnn": "升级所需最低等级（标准）：%s",
 	"extrahnn.info.minimum_tier_ehnn": "升级所需最低等级（自定义）：%s",
+	"extrahnn.info.extract_model.on": "The model is extracted",
+	"extrahnn.info.extract_model.off": "The model is not extracted",
 
 	"extrahnn.tier.autonomous": "自主",
 	"extrahnn.tier.intelligent": "智能",
@@ -54,9 +56,6 @@
 	"extrahnn.fail.model": "请插入数据模型，\n以启动融合程序",
 	"extrahnn.fail.input": "无法启动融合程序。\n缺少：\n扩展模型框架",
 	"extrahnn.fail.count": "无法开始模拟，\n模型数量不足。\n至少需要 4 个",
-
-	"extrahnn.fail.overheat.on": "过热",
-	"extrahnn.fail.overheat.off": "冷却中",
 
 	"extrahnn.merger_camera.run.0": "> 正在加载融合环境 \n",
 	"extrahnn.merger_camera.run.1": "> 尝试融合\n",

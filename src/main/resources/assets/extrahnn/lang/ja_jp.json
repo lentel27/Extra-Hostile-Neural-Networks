@@ -37,6 +37,8 @@
 	"extrahnn.info.item_tooltip.upgrade_data_kill": "Increases the amount of data received per simulation by %s times",
 	"extrahnn.info.minimum_tier_hnn": "Min. level to upgrade (Standard): %s",
 	"extrahnn.info.minimum_tier_ehnn": "Min. level to upgrade (Custom): %s",
+	"extrahnn.info.extract_model.on": "The model is extracted",
+	"extrahnn.info.extract_model.off": "The model is not extracted",
 
 	"extrahnn.tier.autonomous": "自律",
 	"extrahnn.tier.intelligent": "知的",
@@ -54,9 +56,6 @@
 	"extrahnn.fail.model": "データモデルを挿入して、\n合成を開始します",
 	"extrahnn.fail.input": "合成を開始できません。\n不足:\nエクストラ基礎モデル",
 	"extrahnn.fail.count": "解析を開始できません。\n予測素材が足りません。\n最小4必要です",
-
-	"extrahnn.fail.overheat.on": "オーバーヒート",
-	"extrahnn.fail.overheat.off": "冷却中",
 
 	"extrahnn.merger_camera.run.0": "> 合成環境の起動 \n",
 	"extrahnn.merger_camera.run.1": "> 合成を試行\n",

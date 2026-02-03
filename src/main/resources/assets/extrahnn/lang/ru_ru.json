@@ -37,6 +37,8 @@
 	"extrahnn.info.item_tooltip.upgrade_data_kill": "Увеличивает количество получаемых данных за симуляцию в %s раз",
 	"extrahnn.info.minimum_tier_hnn": "Мин. уровень для улучшения (Стандартные): %s",
 	"extrahnn.info.minimum_tier_ehnn": "Мин. уровень для улучшения (Кастомные): %s",
+	"extrahnn.info.extract_model.on": "Модель извлекается",
+	"extrahnn.info.extract_model.off": "Модель не извлекается",
 
 	"extrahnn.tier.autonomous": "Автономная",
 	"extrahnn.tier.intelligent": "Разумная",
@@ -54,9 +56,6 @@
 	"extrahnn.fail.model": "Вставьте модели данных, чтобы \nначать слияние",
 	"extrahnn.fail.input": "Невозможно начать слияние. \nОтсутствует: \nСовершенная структура модели",
 	"extrahnn.fail.count": "Невозможно начать моделирование,\nнедостаточно матрицы.\nТребуется мин. 4",
-
-	"extrahnn.fail.overheat.on": "Перегрев",
-	"extrahnn.fail.overheat.off": "Охлаждено",
 
 	"extrahnn.merger_camera.run.0": "> Запуск среды слияния\n",
 	"extrahnn.merger_camera.run.1": "> Попытка слияния\n",

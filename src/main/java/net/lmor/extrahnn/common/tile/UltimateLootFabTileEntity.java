@@ -35,11 +35,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Locale;
 import java.util.function.Consumer;
 
 public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlockEntity, IDataAutoRegister, IRegTile, ISettingCard {
     protected final FabItemHandler inventory = new FabItemHandler();
-    protected final ModifiableEnergyStorage energy = new ModifiableEnergyStorage(ExtraHostileConfig.ultimateFabPowerCap, ExtraHostileConfig.ultimateFabPowerCap);
+    protected final ModifiableEnergyStorage energy;
     protected final Object2IntMap<DynamicHolder<DataModel>> savedSelections = new Object2IntOpenHashMap<>();
     protected final SimpleDataSlots data = new SimpleDataSlots();
 
@@ -49,9 +50,16 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
     private boolean checkOutput = true;
     private Version version;
 
+    public int CAP;
+    public int COST;
+    public int DURATION;
+
     public UltimateLootFabTileEntity(BlockPos pos, BlockState state, BlockEntityType<UltimateLootFabTileEntity> type, Version version) {
         super(type, pos, state);
         this.version = version;
+
+        setConfig();
+        energy = new ModifiableEnergyStorage(CAP, CAP);
 
         this.savedSelections.defaultReturnValue(-1);
         this.data.addData(() -> this.runtime, v -> this.runtime = v);
@@ -81,7 +89,7 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
                 return;
             }
             if (selection != -1) {
-                if (this.runtime >= ExtraHostileConfig.ultimateFabPowerDuration) {
+                if (this.runtime >= DURATION) {
                     if (!checkOutput) return;
                     checkOutput = false;
 
@@ -115,8 +123,8 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
                         }
                     }
                 } else {
-                    if (this.energy.getEnergyStored() < ExtraHostileConfig.ultimateFabPowerCost) return;
-                    this.energy.setEnergy(this.energy.getEnergyStored() - ExtraHostileConfig.ultimateFabPowerCost);
+                    if (this.energy.getEnergyStored() < COST) return;
+                    this.energy.setEnergy(this.energy.getEnergyStored() - COST);
                     this.runtime++;
                     this.setChanged();
                 }
@@ -299,6 +307,31 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
 
         public NonNullList<ItemStack> getItems() {
             return this.stacks;
+        }
+    }
+
+    public void setConfig(){
+        switch (version.getId().toLowerCase()) {
+            case "v2" -> {
+                CAP = ExtraHostileConfig.ultimateFabV2PowerCap;
+                DURATION = ExtraHostileConfig.ultimateFabV2PowerDuration;
+                COST = ExtraHostileConfig.ultimateFabV2PowerCost;
+            }
+            case "v3" -> {
+                CAP = ExtraHostileConfig.ultimateFabV3PowerCap;
+                DURATION = ExtraHostileConfig.ultimateFabV3PowerDuration;
+                COST = ExtraHostileConfig.ultimateFabV3PowerCost;
+            }
+            case "v4" -> {
+                CAP = ExtraHostileConfig.ultimateFabV4PowerCap;
+                DURATION = ExtraHostileConfig.ultimateFabV4PowerDuration;
+                COST = ExtraHostileConfig.ultimateFabV4PowerCost;
+            }
+            default -> {
+                CAP = ExtraHostileConfig.ultimateFabV1PowerCap;
+                DURATION = ExtraHostileConfig.ultimateFabV1PowerDuration;
+                COST = ExtraHostileConfig.ultimateFabV1PowerCost;
+            }
         }
     }
 }

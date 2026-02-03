@@ -56,6 +56,18 @@ public class UltimateLootFabContainer extends BlockEntityMenu<UltimateLootFabTil
         return this.tile.getEnergyStored();
     }
 
+    public int getMaxEnergyStored(){
+        return this.tile.CAP;
+    }
+
+    public int getEnergyCost(){
+        return this.tile.COST;
+    }
+
+    public int getDuration(){
+        return this.tile.DURATION;
+    }
+
     public int getRuntime() {
         return this.tile.getRuntime();
     }

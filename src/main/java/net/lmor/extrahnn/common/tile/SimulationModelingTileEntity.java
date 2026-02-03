@@ -207,6 +207,11 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
             super(SIZE_SLOTS);
         }
 
+        @Override
+        public int getSlotLimit(int slot) {
+            return 1;
+        }
+
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
             if (slot == 0){
                 return (stack.getItem() instanceof DataModelItem && !new DataModelInstance(stack, 0).getTier().isMax()) ||

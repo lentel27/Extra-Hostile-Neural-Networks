@@ -113,11 +113,11 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
             DataModelInstance instance = new DataModelInstance(inventory.getStackInSlot(i), i);
             if (instance.isValid()){
                 dataModels.add(instance.getModel());
-                inventory.getStackInSlot(i).shrink(1);
             }
         }
 
         if (dataModels.size() != 4) return;
+        for (int i = 0; i < 4; i++) inventory.getStackInSlot(i).shrink(1);
 
         ItemStack modelStack = new ItemStack(ExtraHostile.Items.EXTRA_DATA_MODEL);
         ExtraDataModelItem.setStoredModel(modelStack, dataModels);

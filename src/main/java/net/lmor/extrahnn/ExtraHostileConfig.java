@@ -17,11 +17,28 @@ import java.util.List;
 import java.util.Optional;
 
 public class ExtraHostileConfig {
-    public static int ultimateSimPowerCap;
-    public static int ultimateSimPowerDuration;
-    public static int ultimateFabPowerCap;
-    public static int ultimateFabPowerCost;
-    public static int ultimateFabPowerDuration;
+    public static int ultimateSimV1PowerCap;
+    public static int ultimateSimV1PowerDuration;
+    public static int ultimateSimV2PowerCap;
+    public static int ultimateSimV2PowerDuration;
+    public static int ultimateSimV3PowerCap;
+    public static int ultimateSimV3PowerDuration;
+    public static int ultimateSimV4PowerCap;
+    public static int ultimateSimV4PowerDuration;
+
+    public static int ultimateFabV1PowerCap;
+    public static int ultimateFabV1PowerCost;
+    public static int ultimateFabV1PowerDuration;
+    public static int ultimateFabV2PowerCap;
+    public static int ultimateFabV2PowerCost;
+    public static int ultimateFabV2PowerDuration;
+    public static int ultimateFabV3PowerCap;
+    public static int ultimateFabV3PowerCost;
+    public static int ultimateFabV3PowerDuration;
+    public static int ultimateFabV4PowerCap;
+    public static int ultimateFabV4PowerCost;
+    public static int ultimateFabV4PowerDuration;
+
     public static int mergerCameraPowerCap;
     public static int mergerCameraPowerCost;
     public static int mergerCameraPowerDuration;
@@ -47,12 +64,33 @@ public class ExtraHostileConfig {
         Configuration cfg = new Configuration(ExtraHostileNetworks.MOD_ID);
         cfg.setTitle("Extra Hostile Network Config");
         cfg.setComment("All entries in this config file are synced from server to client.");
-        ultimateSimPowerCap = cfg.getInt("Ultimate Sim Chamber Power Cap", "power", 200000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber.");
-        ultimateSimPowerDuration = cfg.getInt("Ultimate Sim Chamber Power Duration", "power", 150, 1, Integer.MAX_VALUE, "Ultimate Sim Chamber duration in ticks.");
+        ultimateSimV1PowerCap = cfg.getInt("Ultimate Sim Chamber V1 Power Cap", "power", 10000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V1.");
+        ultimateSimV1PowerDuration = cfg.getInt("Ultimate Sim Chamber V1 Power Duration", "version_machines", 250, 1, Integer.MAX_VALUE, "Ultimate Sim Chamber V1 duration in ticks.");
 
-        ultimateFabPowerCap = cfg.getInt("Ultimate Loot Fab Power Cap", "power", 100000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Loot Fabricator.");
-        ultimateFabPowerCost = cfg.getInt("Ultimate Loot Fab Power Cost", "power", 4096, 0, Integer.MAX_VALUE, "The FE/t cost of the Ultimate Loot Fabricator.");
-        ultimateFabPowerDuration = cfg.getInt("Ultimate Loot Fab Power Duration", "power", 30, 1, Integer.MAX_VALUE, "Ultimate Loot Fab duration in ticks.");
+        ultimateSimV2PowerCap = cfg.getInt("Ultimate Sim Chamber V2 Power Cap", "power", 50000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V2.");
+        ultimateSimV2PowerDuration = cfg.getInt("Ultimate Sim Chamber V2 Power Duration", "version_machines", 200, 1, Integer.MAX_VALUE, "Ultimate Sim Chamber V2 duration in ticks.");
+
+        ultimateSimV3PowerCap = cfg.getInt("Ultimate Sim Chamber V3 Power Cap", "power", 100000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V3.");
+        ultimateSimV3PowerDuration = cfg.getInt("Ultimate Sim Chamber V3 Power Duration", "version_machines", 150, 1, Integer.MAX_VALUE, "Ultimate Sim Chamber V3 duration in ticks.");
+
+        ultimateSimV4PowerCap = cfg.getInt("Ultimate Sim Chamber V4 Power Cap", "power", 200000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V4.");
+        ultimateSimV4PowerDuration = cfg.getInt("Ultimate Sim Chamber V4 Power Duration", "version_machines", 100, 1, Integer.MAX_VALUE, "Ultimate Sim Chamber V4 duration in ticks.");
+
+        ultimateFabV1PowerCap = cfg.getInt("Ultimate Loot Fab V1 Power Cap", "version_machines", 10000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Loot Fabricator V1.");
+        ultimateFabV1PowerCost = cfg.getInt("Ultimate Loot Fab V1 Power Cost", "version_machines", 4096, 0, Integer.MAX_VALUE, "The FE/t cost of the Ultimate Loot Fabricator V1.");
+        ultimateFabV1PowerDuration = cfg.getInt("Ultimate Loot Fab V1 Power Duration", "version_machines", 50, 1, Integer.MAX_VALUE, "Ultimate Loot Fab V1 duration in ticks.");
+
+        ultimateFabV2PowerCap = cfg.getInt("Ultimate Loot Fab V2 Power Cap", "version_machines", 50000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Loot Fabricator V2.");
+        ultimateFabV2PowerCost = cfg.getInt("Ultimate Loot Fab V2 Power Cost", "version_machines", 16384, 0, Integer.MAX_VALUE, "The FE/t cost of the Ultimate Loot Fabricator V2.");
+        ultimateFabV2PowerDuration = cfg.getInt("Ultimate Loot Fab V2 Power Duration", "version_machines", 40, 1, Integer.MAX_VALUE, "Ultimate Loot Fab V2 duration in ticks.");
+
+        ultimateFabV3PowerCap = cfg.getInt("Ultimate Loot Fab V3 Power Cap", "version_machines", 100000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Loot Fabricator V3.");
+        ultimateFabV3PowerCost = cfg.getInt("Ultimate Loot Fab V3 Power Cost", "version_machines", 65536, 0, Integer.MAX_VALUE, "The FE/t cost of the Ultimate Loot Fabricator V3.");
+        ultimateFabV3PowerDuration = cfg.getInt("Ultimate Loot Fab V3 Power Duration", "version_machines", 30, 1, Integer.MAX_VALUE, "Ultimate Loot Fab V3 duration in ticks.");
+
+        ultimateFabV4PowerCap = cfg.getInt("Ultimate Loot Fab V4 Power Cap", "version_machines", 200000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Loot Fabricator V4.");
+        ultimateFabV4PowerCost = cfg.getInt("Ultimate Loot Fab V4 Power Cost", "version_machines", 262144, 0, Integer.MAX_VALUE, "The FE/t cost of the Ultimate Loot Fabricator V4.");
+        ultimateFabV4PowerDuration = cfg.getInt("Ultimate Loot Fab V4 Power Duration", "version_machines", 20, 1, Integer.MAX_VALUE, "Ultimate Loot Fab V4 duration in ticks.");
 
         mergerCameraPowerCap = cfg.getInt("Merger Camera Power Cap", "power", 100000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Merger Camera.");
         mergerCameraPowerCost = cfg.getInt("Merger Camera Power Cost", "power", 25000, 0, Integer.MAX_VALUE, "Total RF required to fuse data models in a Merger Camera.");
@@ -78,9 +116,20 @@ public class ExtraHostileConfig {
         return cfg;
     }
 
-    public record ConfigMessage(int ultimateSimPowerCap, int ultimateSimPowerDuration, int ultimateFabPowerCap, int ultimateFabPowerCost, int ultimateFabPowerDuration, int mergerCameraPowerCap,
-                                int mergerCameraPowerCost, int mergerCameraPowerDuration, int simulationModelingPowerCap, int simulationModelingPowerCost, int simulationModelingPowerDuration,
-                                int upgradeSpeed, float upgradeSpeedEnergy, int upgradeModuleStackCost, int upgradeDataKill, String minimumTierHostile, String minimumTierExtra, String[] blackList) implements CustomPacketPayload {
+    public record ConfigMessage(int ultimateSimV1PowerCap, int ultimateSimV1PowerDuration,
+                                int ultimateSimV2PowerCap, int ultimateSimV2PowerDuration,
+                                int ultimateSimV3PowerCap, int ultimateSimV3PowerDuration,
+                                int ultimateSimV4PowerCap, int ultimateSimV4PowerDuration,
+                                int ultimateFabV1PowerCap, int ultimateFabV1PowerCost, int ultimateFabV1PowerDuration,
+                                int ultimateFabV2PowerCap, int ultimateFabV2PowerCost, int ultimateFabV2PowerDuration,
+                                int ultimateFabV3PowerCap, int ultimateFabV3PowerCost, int ultimateFabV3PowerDuration,
+                                int ultimateFabV4PowerCap, int ultimateFabV4PowerCost, int ultimateFabV4PowerDuration,
+
+                                int mergerCameraPowerCap, int mergerCameraPowerCost, int mergerCameraPowerDuration,
+                                int simulationModelingPowerCap, int simulationModelingPowerCost, int simulationModelingPowerDuration,
+
+                                int upgradeSpeed, float upgradeSpeedEnergy, int upgradeModuleStackCost, int upgradeDataKill,
+                                String minimumTierHostile, String minimumTierExtra, String[] blackList) implements CustomPacketPayload {
 
         static StreamCodec<ByteBuf, String[]> STRING_LIST = new StreamCodec<>() {
             private static final int maxLength = 32767;
@@ -111,19 +160,45 @@ public class ExtraHostileConfig {
                     @Override
                     public @NotNull ConfigMessage decode(RegistryFriendlyByteBuf buf) {
                         return ConfigMessageSync(
-                                buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(),
-                                buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(),
-                                buf.readVarInt(), buf.readFloat(), buf.readVarInt(), buf.readVarInt(), buf.readUtf(), buf.readUtf(), STRING_LIST.decode(buf)
+                                buf.readVarInt(), buf.readVarInt(),
+                                buf.readVarInt(), buf.readVarInt(),
+                                buf.readVarInt(), buf.readVarInt(),
+                                buf.readVarInt(), buf.readVarInt(),
+
+                                buf.readVarInt(), buf.readVarInt(), buf.readVarInt(),
+                                buf.readVarInt(), buf.readVarInt(), buf.readVarInt(),
+                                buf.readVarInt(), buf.readVarInt(), buf.readVarInt(),
+                                buf.readVarInt(), buf.readVarInt(), buf.readVarInt(),
+
+                                buf.readVarInt(), buf.readVarInt(), buf.readVarInt(),
+                                buf.readVarInt(), buf.readVarInt(), buf.readVarInt(),
+                                buf.readVarInt(), buf.readFloat(), buf.readVarInt(), buf.readVarInt(), buf.readUtf(),
+                                buf.readUtf(), STRING_LIST.decode(buf)
                         );
                     }
 
                     @Override
                     public void encode(RegistryFriendlyByteBuf buf, ConfigMessage msg) {
-                        buf.writeVarInt(msg.ultimateSimPowerCap());
-                        buf.writeVarInt(msg.ultimateSimPowerDuration());
-                        buf.writeVarInt(msg.ultimateFabPowerCap());
-                        buf.writeVarInt(msg.ultimateFabPowerCost());
-                        buf.writeVarInt(msg.ultimateFabPowerDuration());
+                        buf.writeVarInt(msg.ultimateSimV1PowerCap());
+                        buf.writeVarInt(msg.ultimateSimV1PowerDuration());
+                        buf.writeVarInt(msg.ultimateSimV2PowerCap());
+                        buf.writeVarInt(msg.ultimateSimV2PowerDuration());
+                        buf.writeVarInt(msg.ultimateSimV3PowerCap());
+                        buf.writeVarInt(msg.ultimateSimV3PowerDuration());
+                        buf.writeVarInt(msg.ultimateSimV4PowerCap());
+                        buf.writeVarInt(msg.ultimateSimV4PowerDuration());
+                        buf.writeVarInt(msg.ultimateFabV1PowerCap());
+                        buf.writeVarInt(msg.ultimateFabV1PowerCost());
+                        buf.writeVarInt(msg.ultimateFabV1PowerDuration());
+                        buf.writeVarInt(msg.ultimateFabV2PowerCap());
+                        buf.writeVarInt(msg.ultimateFabV2PowerCost());
+                        buf.writeVarInt(msg.ultimateFabV2PowerDuration());
+                        buf.writeVarInt(msg.ultimateFabV3PowerCap());
+                        buf.writeVarInt(msg.ultimateFabV3PowerCost());
+                        buf.writeVarInt(msg.ultimateFabV3PowerDuration());
+                        buf.writeVarInt(msg.ultimateFabV4PowerCap());
+                        buf.writeVarInt(msg.ultimateFabV4PowerCost());
+                        buf.writeVarInt(msg.ultimateFabV4PowerDuration());
                         buf.writeVarInt(msg.mergerCameraPowerCap());
                         buf.writeVarInt(msg.mergerCameraPowerCost());
                         buf.writeVarInt(msg.mergerCameraPowerDuration());
@@ -141,16 +216,42 @@ public class ExtraHostileConfig {
                 };
 
         public ConfigMessage() {
-            this(ExtraHostileConfig.ultimateSimPowerCap, ExtraHostileConfig.ultimateSimPowerDuration, ExtraHostileConfig.ultimateFabPowerCap, ExtraHostileConfig.ultimateFabPowerCost, ExtraHostileConfig.ultimateFabPowerDuration,
+            this(ExtraHostileConfig.ultimateSimV1PowerCap, ExtraHostileConfig.ultimateSimV1PowerDuration,
+                    ExtraHostileConfig.ultimateSimV2PowerCap, ExtraHostileConfig.ultimateSimV2PowerDuration,
+                    ExtraHostileConfig.ultimateSimV3PowerCap, ExtraHostileConfig.ultimateSimV3PowerDuration,
+                    ExtraHostileConfig.ultimateSimV4PowerCap, ExtraHostileConfig.ultimateSimV4PowerDuration,
+                    ExtraHostileConfig.ultimateFabV1PowerCap, ExtraHostileConfig.ultimateFabV1PowerCost, ExtraHostileConfig.ultimateFabV1PowerDuration,
+                    ExtraHostileConfig.ultimateFabV2PowerCap, ExtraHostileConfig.ultimateFabV2PowerCost, ExtraHostileConfig.ultimateFabV2PowerDuration,
+                    ExtraHostileConfig.ultimateFabV3PowerCap, ExtraHostileConfig.ultimateFabV3PowerCost, ExtraHostileConfig.ultimateFabV3PowerDuration,
+                    ExtraHostileConfig.ultimateFabV4PowerCap, ExtraHostileConfig.ultimateFabV4PowerCost, ExtraHostileConfig.ultimateFabV4PowerDuration,
+
                     ExtraHostileConfig.mergerCameraPowerCap, ExtraHostileConfig.mergerCameraPowerCost, ExtraHostileConfig.mergerCameraPowerDuration, ExtraHostileConfig.simulationModelingPowerCap, ExtraHostileConfig.simulationModelingPowerCost,
                     ExtraHostileConfig.simulationModelingPowerDuration, ExtraHostileConfig.upgradeSpeed, ExtraHostileConfig.upgradeSpeedEnergy, ExtraHostileConfig.upgradeModuleStackCost, ExtraHostileConfig.upgradeDataKill, ExtraHostileConfig.minimumTierHostile, ExtraHostileConfig.minimumTierExtra, ExtraHostileConfig.blackList);
         }
 
-        public static ConfigMessage ConfigMessageSync(int ultimateSimPowerCap, int ultimateSimPowerDuration, int ultimateFabPowerCap, int ultimateFabPowerCost, int ultimateFabPowerDuration, int mergerCameraPowerCap,
-                                                      int mergerCameraPowerCost, int mergerCameraPowerDuration, int simulationModelingPowerCap, int simulationModelingPowerCost, int simulationModelingPowerDuration,
-                                                      int upgradeSpeed, float upgradeSpeedEnergy, int upgradeModuleStackCost, int upgradeDataKill, String minimumTierHostile, String minimumTierExtra, String[] blackList) {
-            return new ConfigMessage(ultimateSimPowerCap, ultimateSimPowerDuration, ultimateFabPowerCap, ultimateFabPowerCost, ultimateFabPowerDuration, mergerCameraPowerCap,
-                    mergerCameraPowerCost, mergerCameraPowerDuration, simulationModelingPowerCap, simulationModelingPowerCost, simulationModelingPowerDuration,
+        public static ConfigMessage ConfigMessageSync(
+                int ultimateSimV1PowerCap, int ultimateSimV1PowerDuration, int ultimateSimV2PowerCap, int ultimateSimV2PowerDuration,
+                int ultimateSimV3PowerCap, int ultimateSimV3PowerDuration, int ultimateSimV4PowerCap, int ultimateSimV4PowerDuration,
+                int ultimateFabV1PowerCap, int ultimateFabV1PowerCost, int ultimateFabV1PowerDuration,
+                int ultimateFabV2PowerCap, int ultimateFabV2PowerCost, int ultimateFabV2PowerDuration,
+                int ultimateFabV3PowerCap, int ultimateFabV3PowerCost, int ultimateFabV3PowerDuration,
+                int ultimateFabV4PowerCap, int ultimateFabV4PowerCost, int ultimateFabV4PowerDuration,
+                int mergerCameraPowerCap, int mergerCameraPowerCost,
+                int mergerCameraPowerDuration, int simulationModelingPowerCap, int simulationModelingPowerCost, int simulationModelingPowerDuration,
+                int upgradeSpeed, float upgradeSpeedEnergy, int upgradeModuleStackCost, int upgradeDataKill, String minimumTierHostile,
+                String minimumTierExtra, String[] blackList) {
+
+            return new ConfigMessage(
+                    ultimateSimV1PowerCap, ultimateSimV1PowerDuration,
+                    ultimateSimV2PowerCap, ultimateSimV2PowerDuration,
+                    ultimateSimV3PowerCap, ultimateSimV3PowerDuration,
+                    ultimateSimV4PowerCap, ultimateSimV4PowerDuration,
+                    ultimateFabV1PowerCap, ultimateFabV1PowerCost, ultimateFabV1PowerDuration,
+                    ultimateFabV2PowerCap, ultimateFabV2PowerCost, ultimateFabV2PowerDuration,
+                    ultimateFabV3PowerCap, ultimateFabV3PowerCost, ultimateFabV3PowerDuration,
+                    ultimateFabV4PowerCap, ultimateFabV4PowerCost, ultimateFabV4PowerDuration,
+                    mergerCameraPowerCap, mergerCameraPowerCost, mergerCameraPowerDuration,
+                    simulationModelingPowerCap, simulationModelingPowerCost, simulationModelingPowerDuration,
                     upgradeSpeed, upgradeSpeedEnergy, upgradeModuleStackCost, upgradeDataKill, minimumTierHostile, minimumTierExtra, blackList);
         }
 
@@ -173,11 +274,28 @@ public class ExtraHostileConfig {
 
             @Override
             public void handle(ConfigMessage msg, IPayloadContext ctx) {
-                ExtraHostileConfig.ultimateSimPowerCap = msg.ultimateSimPowerCap;
-                ExtraHostileConfig.ultimateSimPowerDuration = msg.ultimateSimPowerDuration;
-                ExtraHostileConfig.ultimateFabPowerCap = msg.ultimateFabPowerCap;
-                ExtraHostileConfig.ultimateFabPowerCost = msg.ultimateFabPowerCost;
-                ExtraHostileConfig.ultimateFabPowerDuration = msg.ultimateFabPowerDuration;
+                ExtraHostileConfig.ultimateSimV1PowerCap = msg.ultimateSimV1PowerCap;
+                ExtraHostileConfig.ultimateSimV1PowerDuration = msg.ultimateSimV1PowerDuration;
+                ExtraHostileConfig.ultimateSimV2PowerCap = msg.ultimateSimV2PowerCap;
+                ExtraHostileConfig.ultimateSimV2PowerDuration = msg.ultimateSimV2PowerDuration;
+                ExtraHostileConfig.ultimateSimV3PowerCap = msg.ultimateSimV3PowerCap;
+                ExtraHostileConfig.ultimateSimV3PowerDuration = msg.ultimateSimV3PowerDuration;
+                ExtraHostileConfig.ultimateSimV4PowerCap = msg.ultimateSimV4PowerCap;
+                ExtraHostileConfig.ultimateSimV4PowerDuration = msg.ultimateSimV4PowerDuration;
+
+                ExtraHostileConfig.ultimateFabV1PowerCap = msg.ultimateFabV1PowerCap;
+                ExtraHostileConfig.ultimateFabV1PowerCost = msg.ultimateFabV1PowerCost;
+                ExtraHostileConfig.ultimateFabV1PowerDuration = msg.ultimateFabV1PowerDuration;
+                ExtraHostileConfig.ultimateFabV2PowerCap = msg.ultimateFabV2PowerCap;
+                ExtraHostileConfig.ultimateFabV2PowerCost = msg.ultimateFabV2PowerCost;
+                ExtraHostileConfig.ultimateFabV2PowerDuration = msg.ultimateFabV2PowerDuration;
+                ExtraHostileConfig.ultimateFabV3PowerCap = msg.ultimateFabV3PowerCap;
+                ExtraHostileConfig.ultimateFabV3PowerCost = msg.ultimateFabV3PowerCost;
+                ExtraHostileConfig.ultimateFabV3PowerDuration = msg.ultimateFabV3PowerDuration;
+                ExtraHostileConfig.ultimateFabV4PowerCap = msg.ultimateFabV4PowerCap;
+                ExtraHostileConfig.ultimateFabV4PowerCost = msg.ultimateFabV4PowerCost;
+                ExtraHostileConfig.ultimateFabV4PowerDuration = msg.ultimateFabV4PowerDuration;
+
                 ExtraHostileConfig.mergerCameraPowerCap = msg.mergerCameraPowerCap;
                 ExtraHostileConfig.mergerCameraPowerCost = msg.mergerCameraPowerCost;
                 ExtraHostileConfig.mergerCameraPowerDuration = msg.mergerCameraPowerDuration;

@@ -55,6 +55,14 @@ public class UltimateSimChamberContainer extends BlockEntityMenu<UltimateSimCham
         return this.tile.getEnergyStored();
     }
 
+    public int getMaxEnergyStored() {
+        return this.tile.CAP;
+    }
+
+    public int getDuration() {
+        return this.tile.DURATION;
+    }
+
     public int getRuntime() {
         return this.tile.getRuntime();
     }
@@ -75,6 +83,10 @@ public class UltimateSimChamberContainer extends BlockEntityMenu<UltimateSimCham
         return this.tile.getRedstoneState();
     }
 
+    public boolean isExtractDataModel(){
+        return this.tile.extractDataModel;
+    }
+
     @Override
     public boolean clickMenuButton(@NotNull Player player, int id) {
         if (id >= 0 && id <= 2) {
@@ -82,6 +94,11 @@ public class UltimateSimChamberContainer extends BlockEntityMenu<UltimateSimCham
             this.setRedstoneState(state);
             return true;
         }
+        if (id == 100){
+            this.tile.extractDataModel = !this.tile.extractDataModel;
+            return true;
+        }
+
         return super.clickMenuButton(player, id);
     }
 }

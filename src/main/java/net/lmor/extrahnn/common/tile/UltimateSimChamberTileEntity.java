@@ -38,7 +38,7 @@ import java.util.function.Consumer;
 public class UltimateSimChamberTileEntity extends BlockEntity implements TickingBlockEntity, IDataAutoRegister, IRegTile, ISettingCard {
 
     protected final SimItemHandler inventory = new SimItemHandler();
-    protected final ModifiableEnergyStorage energy = new ModifiableEnergyStorage(ExtraHostileConfig.ultimateSimPowerCap, ExtraHostileConfig.ultimateSimPowerCap);
+    protected final ModifiableEnergyStorage energy;
     protected final SimpleDataSlots data = new SimpleDataSlots();
 
     protected ExtraDataModelInstance currentModel = ExtraDataModelInstance.EMPTY;
@@ -51,14 +51,23 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
 
     private Version version;
 
+    public int CAP;
+    public int DURATION;
+
+    public boolean extractDataModel = false;
+
     public UltimateSimChamberTileEntity(BlockPos pos, BlockState state, BlockEntityType<UltimateSimChamberTileEntity> type, Version version) {
         super(type, pos, state);
         this.version = version;
+
+        setConfig();
+        energy = new ModifiableEnergyStorage(CAP, CAP);
 
         this.data.addData(() -> this.runtime, v -> this.runtime = v);
         this.data.addData(() -> this.predictionSuccess, v -> this.predictionSuccess = v);
         this.data.addData(() -> this.failState.ordinal(), v -> this.failState = FailureState.values()[v]);
         this.data.addData(() -> this.redstoneState.ordinal(), v -> this.redstoneState = RedstoneState.values()[v]);
+        this.data.addData(() -> this.extractDataModel ? 1 : 0, v -> this.extractDataModel = v == 1);
         this.data.addEnergy(this.energy);
         this.energy.setMaxExtract(0);
     }
@@ -79,6 +88,8 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         tag.putInt("failState", this.failState.ordinal());
         tag.putInt("redstoneState", this.redstoneState.ordinal());
 
+        tag.putBoolean("extractModel", extractDataModel);
+
         tag.putString("versionBlockEntity", this.version.getId());
     }
 
@@ -98,6 +109,8 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         this.predictionSuccess = tag.getInt("predSuccess");
         this.failState = FailureState.values()[tag.getInt("failState")];
         this.redstoneState = RedstoneState.values()[tag.getInt("redstoneState")];
+
+        this.extractDataModel = tag.getBoolean("extractModel");
 
         this.version = Version.getVersion(tag.getString("versionBlockEntity"));
     }
@@ -130,7 +143,7 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
 
                 if (this.runtime == 0) {
                     if (this.canStartSimulation()) {
-                        this.runtime = ExtraHostileConfig.ultimateSimPowerDuration;
+                        this.runtime = DURATION;
 
                         float accuracy = this.currentModel.getAccuracy();
                         this.predictionSuccess = (int) accuracy + (Objects.requireNonNull(this.level).random.nextFloat() <= this.currentModel.getAccuracy() % 1 ? 1 : 0);
@@ -409,7 +422,8 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
 
         @Override
         public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
-            return slot <= 1 ? ItemStack.EMPTY : super.extractItem(slot, amount, simulate);
+            if (slot <= 1 && !extractDataModel) return ItemStack.EMPTY;
+            return super.extractItem(slot, amount, simulate);
         }
 
         @Override
@@ -442,6 +456,27 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
 
         public String getKey() {
             return id;
+        }
+    }
+
+    public void setConfig(){
+        switch (version.getId().toLowerCase()) {
+            case "v2" -> {
+                CAP = ExtraHostileConfig.ultimateSimV2PowerCap;
+                DURATION = ExtraHostileConfig.ultimateSimV2PowerDuration;
+            }
+            case "v3" -> {
+                CAP = ExtraHostileConfig.ultimateSimV3PowerCap;
+                DURATION = ExtraHostileConfig.ultimateSimV3PowerDuration;
+            }
+            case "v4" -> {
+                CAP = ExtraHostileConfig.ultimateSimV4PowerCap;
+                DURATION = ExtraHostileConfig.ultimateSimV4PowerDuration;
+            }
+            default -> {
+                CAP = ExtraHostileConfig.ultimateSimV1PowerCap;
+                DURATION = ExtraHostileConfig.ultimateSimV1PowerDuration;
+            }
         }
     }
 }

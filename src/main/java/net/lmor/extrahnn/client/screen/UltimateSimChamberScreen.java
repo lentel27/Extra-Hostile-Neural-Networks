@@ -1,14 +1,13 @@
 package net.lmor.extrahnn.client.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.shadowsoffire.hostilenetworks.HostileNetworks;
 import dev.shadowsoffire.hostilenetworks.data.DataModelInstance;
 import dev.shadowsoffire.hostilenetworks.item.DataModelItem;
-import dev.shadowsoffire.hostilenetworks.tile.SimChamberTileEntity;
 import dev.shadowsoffire.hostilenetworks.tile.SimChamberTileEntity.RedstoneState;
 import dev.shadowsoffire.placebo.screen.PlaceboContainerScreen;
 import dev.shadowsoffire.placebo.screen.TickableTextList;
 import net.lmor.extrahnn.EHNNUtils;
-import net.lmor.extrahnn.ExtraHostileConfig;
 import net.lmor.extrahnn.ExtraHostileNetworks;
 import net.lmor.extrahnn.common.container.UltimateSimChamberContainer;
 import net.lmor.extrahnn.common.tile.UltimateSimChamberTileEntity.FailureState;
@@ -44,6 +43,8 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
     private static final ResourceLocation BASE = ExtraHostileNetworks.local("textures/gui/ultimate_sim_chamber.png");
     private static final ResourceLocation PLAYER = ExtraHostileNetworks.local("textures/gui/inventory.png");
 
+    private static final ResourceLocation EXTRACT_MODEL = HostileNetworks.loc("textures/item/blank_data_model.png");
+
     private TickableTextList body;
     private FailureState lastFailState = FailureState.NONE;
     private boolean runtimeTextLoaded = false;
@@ -58,6 +59,7 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
     public void init() {
         super.init();
         addRenderableWidget(new RedstoneButton(this.getGuiLeft() + 228, this.getGuiTop()));
+        addRenderableWidget(new ExtractModelButton(this.getGuiLeft() + 228, this.getGuiTop() + 24));
         this.body = new TickableTextList(Objects.requireNonNull(this.minecraft).font, MAX_TEXT_WIDTH);
         this.lastFailState = FailureState.NONE;
         this.runtimeTextLoaded = false;
@@ -68,7 +70,7 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
     protected void renderTooltip(@NotNull GuiGraphics graphics, int x, int y) {
         List<Component> txt = new ArrayList<>();
         if (this.isHovering(211, 73, 7, 87, x, y)) {
-            txt.add(Component.translatable("hostilenetworks.gui.energy", this.menu.getEnergyStored(), ExtraHostileConfig.ultimateSimPowerCap));
+            txt.add(Component.translatable("hostilenetworks.gui.energy", this.menu.getEnergyStored(), this.menu.getMaxEnergyStored()));
             ExtraDataModelInstance cModel = new ExtraDataModelInstance(this.menu.getSlot(0).getItem(), 0);
             if (cModel.isValid()) {
                 txt.add(Component.translatable("hostilenetworks.gui.cost", cModel.simCost()));
@@ -86,6 +88,8 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
             txt.add(Component.translatable("extrahnn.info.data_model_slot"));
         } else if (this.isHovering(228, 1, 16, 16, x, y)){
             txt.add(Component.translatable(this.menu.getRedstoneState().getKey()));
+        } else if (this.isHovering(228, 25, 16, 16, x, y)){
+            txt.add(Component.translatable("extrahnn.info.extract_model." + (this.menu.isExtractDataModel() ? "on" : "off")));
         }
 
         graphics.renderComponentTooltip(this.font, txt, x, y);
@@ -96,7 +100,7 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
     protected void renderLabels(@NotNull GuiGraphics graphics, int x, int y) {
         int runtime = this.menu.getRuntime();
         if (runtime > 0) {
-            int rTime = Math.min(99, Mth.ceil(100.0F * (float)(ExtraHostileConfig.ultimateSimPowerDuration - runtime) / ExtraHostileConfig.ultimateSimPowerDuration));
+            int rTime = Math.min(99, Mth.ceil(100.0F * (float)(this.menu.getDuration() - runtime) / this.menu.getDuration()));
             graphics.drawString(this.font, rTime + "%", 186, 150, 6478079, true);
         }
 
@@ -166,8 +170,9 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
 
         // Redstone
         graphics.blit(BASE, left + 228, top, 216, 18, 18, 18, 256, 256);
+        graphics.blit(BASE, left + 228, top + 24, 216, 18, 18, 18, 256, 256);
 
-        int energyHeight = 87 - Mth.ceil(87.0F * (float)this.menu.getEnergyStored() / (float)ExtraHostileConfig.ultimateSimPowerCap);
+        int energyHeight = 87 - Mth.ceil(87.0F * (float)this.menu.getEnergyStored() / (float)this.menu.getMaxEnergyStored());
         graphics.blit(BASE, left + 211, top + 73, 234, 0, 7, energyHeight, 256, 256);
 
         int dataHeight = 87;
@@ -203,7 +208,7 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
             this.runtimeTextLoaded = false;
         }
         else if (!this.runtimeTextLoaded) {
-            int ticks = ExtraHostileConfig.ultimateSimPowerDuration - this.menu.getRuntime();
+            int ticks = this.menu.getDuration() - this.menu.getRuntime();
             this.body.clear();
             int iters = DataModelItem.getIters(this.menu.getSlot(0).getItem());
 
@@ -223,7 +228,7 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
             }
             int allChar = textAll.stream().mapToInt(x -> x.getString().length()).sum();
 
-            float speed = EHNNUtils.textTickRate(allChar, ExtraHostileConfig.ultimateSimPowerDuration);
+            float speed = EHNNUtils.textTickRate(allChar, this.menu.getDuration());
             for (Component text: textAll){
                 this.body.continueLine(Component.empty().append(text).append("\n"), speed);
             }
@@ -265,6 +270,33 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
             guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
             int y = UltimateSimChamberScreen.this.menu.getRedstoneState() != RedstoneState.IGNORED ? this.getY() : this.getY() + 1;
             guiGraphics.blit(UltimateSimChamberScreen.this.menu.getRedstoneState().getResourceLocation(), this.getX() + 1, y, 0, 0, 16, 16, 16, 16);
+        }
+    }
+
+    private class ExtractModelButton extends AbstractWidget {
+        public ExtractModelButton(int x, int y){
+            super(x, y, 18, 18, Component.empty());
+        }
+
+        @Override
+        public void onClick(double mouseX, double mouseY, int button) {
+            UltimateSimChamberScreen scn = UltimateSimChamberScreen.this;
+            Objects.requireNonNull(scn.getMinecraft().gameMode).handleInventoryButtonClick(scn.menu.containerId, 100);
+        }
+
+        @Override
+        protected void updateWidgetNarration(@NotNull NarrationElementOutput output) {this.defaultButtonNarrationText(output);}
+
+        @Override
+        protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+            RenderSystem.enableBlend();
+            RenderSystem.enableDepthTest();
+            boolean extract = UltimateSimChamberScreen.this.menu.isExtractDataModel();
+
+            float color = extract ? 1 : 0.5f;
+            guiGraphics.setColor(color, color, color, 1.0F);
+
+            guiGraphics.blit(EXTRACT_MODEL, this.getX() + 1, this.getY() + 1, 0, 0, 16, 16, 16, 16);
         }
     }
 
