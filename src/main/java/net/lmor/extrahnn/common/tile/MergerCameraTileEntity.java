@@ -83,7 +83,6 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
             if (this.runtime == 0) {
                 if (this.canStartSimulation()){
                     this.runtime = ExtraHostileConfig.mergerCameraPowerDuration;
-                    this.inventory.getStackInSlot(4).shrink(1);
                     this.setChanged();
                 }
             }
@@ -117,7 +116,7 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
         }
 
         if (dataModels.size() != 4) return;
-        for (int i = 0; i < 4; i++) inventory.getStackInSlot(i).shrink(1);
+        for (int i = 0; i < 5; i++) inventory.getStackInSlot(i).shrink(1);
 
         ItemStack modelStack = new ItemStack(ExtraHostile.Items.EXTRA_DATA_MODEL);
         ExtraDataModelItem.setStoredModel(modelStack, dataModels);
@@ -214,6 +213,7 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
         protected void onContentsChanged(int slot) {
             MergerCameraTileEntity.this.setChanged();
             MergerCameraTileEntity.this.checkModel = true;
+            MergerCameraTileEntity.this.runtime = 0;
         }
 
         public NonNullList<ItemStack> getItems() {
