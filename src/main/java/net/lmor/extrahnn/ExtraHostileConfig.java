@@ -64,16 +64,16 @@ public class ExtraHostileConfig {
         Configuration cfg = new Configuration(ExtraHostileNetworks.MOD_ID);
         cfg.setTitle("Extra Hostile Network Config");
         cfg.setComment("All entries in this config file are synced from server to client.");
-        ultimateSimV1PowerCap = cfg.getInt("Ultimate Sim Chamber V1 Power Cap", "power", 10000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V1.");
+        ultimateSimV1PowerCap = cfg.getInt("Ultimate Sim Chamber V1 Power Cap", "version_machines", 10000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V1.");
         ultimateSimV1PowerDuration = cfg.getInt("Ultimate Sim Chamber V1 Power Duration", "version_machines", 250, 1, Integer.MAX_VALUE, "Ultimate Sim Chamber V1 duration in ticks.");
 
-        ultimateSimV2PowerCap = cfg.getInt("Ultimate Sim Chamber V2 Power Cap", "power", 50000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V2.");
+        ultimateSimV2PowerCap = cfg.getInt("Ultimate Sim Chamber V2 Power Cap", "version_machines", 50000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V2.");
         ultimateSimV2PowerDuration = cfg.getInt("Ultimate Sim Chamber V2 Power Duration", "version_machines", 200, 1, Integer.MAX_VALUE, "Ultimate Sim Chamber V2 duration in ticks.");
 
-        ultimateSimV3PowerCap = cfg.getInt("Ultimate Sim Chamber V3 Power Cap", "power", 100000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V3.");
+        ultimateSimV3PowerCap = cfg.getInt("Ultimate Sim Chamber V3 Power Cap", "version_machines", 100000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V3.");
         ultimateSimV3PowerDuration = cfg.getInt("Ultimate Sim Chamber V3 Power Duration", "version_machines", 150, 1, Integer.MAX_VALUE, "Ultimate Sim Chamber V3 duration in ticks.");
 
-        ultimateSimV4PowerCap = cfg.getInt("Ultimate Sim Chamber V4 Power Cap", "power", 200000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V4.");
+        ultimateSimV4PowerCap = cfg.getInt("Ultimate Sim Chamber V4 Power Cap", "version_machines", 200000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V4.");
         ultimateSimV4PowerDuration = cfg.getInt("Ultimate Sim Chamber V4 Power Duration", "version_machines", 100, 1, Integer.MAX_VALUE, "Ultimate Sim Chamber V4 duration in ticks.");
 
         ultimateFabV1PowerCap = cfg.getInt("Ultimate Loot Fab V1 Power Cap", "version_machines", 10000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Loot Fabricator V1.");
