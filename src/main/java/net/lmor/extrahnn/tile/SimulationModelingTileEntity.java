@@ -7,6 +7,7 @@ import dev.shadowsoffire.placebo.block_entity.TickingBlockEntity;
 import dev.shadowsoffire.placebo.cap.InternalItemHandler;
 import dev.shadowsoffire.placebo.cap.ModifiableEnergyStorage;
 import dev.shadowsoffire.placebo.menu.SimpleDataSlots;
+import net.lmor.extrahnn.EHNNUtils;
 import net.lmor.extrahnn.ExtraHostile;
 import net.lmor.extrahnn.ExtraHostileConfig;
 import net.lmor.extrahnn.data.ExtraCachedModel;
@@ -123,6 +124,12 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
             startCraft = false;
             return;
         }
+
+        if (!EHNNUtils.allowedBlackListModel(item) || !EHNNUtils.allowedTier(item)){
+            startCraft = false;
+            return;
+        }
+
 
         if (this.runtime == 0){
             this.runtime = runtimeUpgrade;
