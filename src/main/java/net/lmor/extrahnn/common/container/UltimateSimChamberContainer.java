@@ -1,6 +1,6 @@
 package net.lmor.extrahnn.common.container;
 
-import dev.shadowsoffire.hostilenetworks.tile.SimChamberTileEntity.RedstoneState;
+import dev.shadowsoffire.hostilenetworks.util.RedstoneState;
 import dev.shadowsoffire.placebo.menu.BlockEntityMenu;
 import dev.shadowsoffire.placebo.menu.FilteredSlot;
 import net.lmor.extrahnn.common.item.ExtraDataModelItem;

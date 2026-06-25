@@ -148,7 +148,7 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
             if (!tier.isMax()) {
                 if (upgradeModuleStack) model.setData(model.getNextTierData());
                 else {
-                    int newData = model.getData() + model.getDataPerKill() * (upgradeDataKill ? ExtraHostileConfig.upgradeDataKill : 1);
+                    int newData = model.getData() + model.getDataGained() * (upgradeDataKill ? ExtraHostileConfig.upgradeDataKill : 1);
                     int resData = Math.min(newData, model.getNextTierData());
                     model.setData(resData);
                 }

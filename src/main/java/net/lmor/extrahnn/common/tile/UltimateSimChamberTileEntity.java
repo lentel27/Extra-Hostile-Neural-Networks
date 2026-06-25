@@ -1,7 +1,7 @@
 package net.lmor.extrahnn.common.tile;
 
 import dev.shadowsoffire.hostilenetworks.data.DataModel;
-import dev.shadowsoffire.hostilenetworks.tile.SimChamberTileEntity.RedstoneState;
+import dev.shadowsoffire.hostilenetworks.util.RedstoneState;
 import dev.shadowsoffire.placebo.block_entity.TickingBlockEntity;
 import dev.shadowsoffire.placebo.cap.InternalItemHandler;
 import dev.shadowsoffire.placebo.cap.ModifiableEnergyStorage;
