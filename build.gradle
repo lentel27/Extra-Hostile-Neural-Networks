@@ -8,7 +8,7 @@ tasks.named('wrapper', Wrapper).configure {
     distributionType = Wrapper.DistributionType.BIN
 }
 
-version = minecraft_version + "-" + mod_version + "-" + "NeoForge"
+version = minecraft_version + "-" + mod_version + "-" + "NeoForge-1"
 group = mod_group_id
 
 base {
@@ -68,6 +68,9 @@ dependencies {
   compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
   runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
   implementation("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+
+    //Curios
+    runtimeOnly "curse.maven:curios-continuation-1037991:5888964"
 
 
     //region For testing
