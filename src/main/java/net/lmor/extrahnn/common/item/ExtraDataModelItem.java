@@ -82,7 +82,7 @@ public class ExtraDataModelItem extends Item implements ITabFiller {
                 modelName = new ArrayList<>(List.of(Component.literal("BROKEN").withStyle(ChatFormatting.OBFUSCATED)));
                 break;
             } else {
-                modelName.add(Component.empty().append(model.get().name()).withColor(model.get().getNameColor()));
+                modelName.add(Component.empty().append(model.get().name()).withColor(model.get().nameColor().getValue()));
             }
         }
 

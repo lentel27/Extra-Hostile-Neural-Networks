@@ -44,6 +44,15 @@ configurations {
 }
 
 repositories {
+    mavenLocal()
+    maven {
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
+    maven {
+        name = "ModMaven"
+        url = "https://modmaven.dev"
+    }
     maven {
         url "https://cursemaven.com"
     }
@@ -52,11 +61,14 @@ repositories {
 dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 
-    implementation "curse.maven:jei-238222:5846880"
-    implementation "curse.maven:hostile-neural-networks-552574:6751495"
-    implementation "curse.maven:placebo-283644:6926281"
+    implementation "curse.maven:hostile-neural-networks-552574:${hostileneuralnetworks_version_id}"
+    implementation "curse.maven:placebo-283644:${placebo_version_id}"
 
-    runtimeOnly "curse.maven:curios-continuation-1037991:5888964"
+  // Just Enough Items
+  compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
+  runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+  implementation("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+
 
     //region For testing
     runtimeOnly "curse.maven:observable-509575:5733591"
@@ -78,7 +90,10 @@ tasks.withType(ProcessResources).configureEach {
             mod_license            : mod_license,
             mod_version            : mod_version,
             mod_authors            : mod_authors,
-            mod_description        : mod_description
+            mod_description        : mod_description,
+            hostileneuralnetworks_version_id: hostileneuralnetworks_version_id,
+            placebo_version_id: placebo_version_id,
+            jei_version: jei_version
     ]
     inputs.properties replaceProperties
 

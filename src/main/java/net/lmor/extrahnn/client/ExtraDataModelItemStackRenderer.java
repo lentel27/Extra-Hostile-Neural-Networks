@@ -8,6 +8,7 @@ import dev.shadowsoffire.hostilenetworks.client.WeirdRenderThings;
 import dev.shadowsoffire.hostilenetworks.client.WrappedRTBuffer;
 import dev.shadowsoffire.hostilenetworks.data.DataModel;
 import dev.shadowsoffire.hostilenetworks.util.ClientEntityCache;
+import dev.shadowsoffire.hostilenetworks.util.DisplayEntity;
 import dev.shadowsoffire.placebo.reload.DynamicHolder;
 import net.lmor.extrahnn.ExtraHostileNetworks;
 import net.lmor.extrahnn.common.item.ExtraDataModelItem;
@@ -63,7 +64,6 @@ public class ExtraDataModelItemStackRenderer extends BlockEntityWithoutLevelRend
             matrix.translate(0.775, 0.0, -0.0825);
         }
 
-        //noinspection deprecation
         iRenderer.renderModelLists(base, stack, light, overlay, matrix, ItemRenderer.getFoilBufferDirect(GHOST_ENTITY_BUF, ItemBlockRenderTypes.getRenderType(stack, true), true, false));
         GHOST_ENTITY_BUF.endBatch();
         matrix.popPose();
@@ -72,7 +72,8 @@ public class ExtraDataModelItemStackRenderer extends BlockEntityWithoutLevelRend
         int count = 0;
         for (DynamicHolder<DataModel> model: models){
             if (model.isBound()) {
-                Entity ent = ClientEntityCache.computeIfAbsent(model.get().entity(), Minecraft.getInstance().level, model.get().display().nbt());
+                DisplayEntity displayEntity = model.get().displayEntity(Minecraft.getInstance().level);
+                Entity ent = ClientEntityCache.computeIfAbsent(displayEntity, Minecraft.getInstance().level);
                 if (Minecraft.getInstance().player != null) ent.tickCount = Minecraft.getInstance().player.tickCount;
                 if (ent != null) {
                     this.renderEntityInInventory(matrix, type, ent, model.get(), count);
@@ -83,10 +84,11 @@ public class ExtraDataModelItemStackRenderer extends BlockEntityWithoutLevelRend
     }
 
     public void renderEntityInInventory(PoseStack matrix, ItemDisplayContext type, Entity entity, DataModel model, int count) {
+        DisplayEntity display = model.displayEntity(Minecraft.getInstance().level);
         matrix.pushPose();
         matrix.translate(count == 0 || count == 3 ? 0.4 : 0.6, 0.5, count == 1 || count == 3? 0.4 : 0.6);
         float rotation;
-        float scale = model.display().scale();
+        float scale = display.scale();
         if (type == ItemDisplayContext.FIXED) {
             matrix.translate(0.0, -0.5, 0.0);
             scale *= 0.3F;
@@ -121,8 +123,7 @@ public class ExtraDataModelItemStackRenderer extends BlockEntityWithoutLevelRend
         entityRendererManager.setRenderShadow(false);
         MultiBufferSource.BufferSource rtBuffer = GHOST_ENTITY_BUF;
         WeirdRenderThings.translucent = true;
-        //noinspection deprecation
-        RenderSystem.runAsFancy(() -> entityRendererManager.render(entity, model.display().xOffset(), model.display().yOffset(), model.display().zOffset(), 0.0F, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true), matrix,
+        RenderSystem.runAsFancy(() -> entityRendererManager.render(entity, display.xOffset(), display.yOffset(), display.zOffset(), 0.0F, Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true), matrix,
                 new WrappedRTBuffer(rtBuffer), 15728880)
         );
         rtBuffer.endBatch();

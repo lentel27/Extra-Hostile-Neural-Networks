@@ -29,7 +29,21 @@ config="${mod_id}.mixins.json"
 
 [[dependencies.${mod_id}]]
     modId="hostilenetworks"
-    mandatory=true
-    versionRange="[6.3.0,)"
+    type="required"
+    versionRange="${hostileneuralnetworks_version_id}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="jei"
+    type="optional"
+    versionRange="${jei_version}"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.${mod_id}]]
+    modId="placebo"
+    type="required"
+    versionRange="${placebo_version_id}"
     ordering="NONE"
     side="BOTH"

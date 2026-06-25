@@ -69,7 +69,7 @@ public class SimulationModelingScreen extends PlaceboContainerScreen<SimulationM
 
             name = Component.translatable("extrahnn.info.data_model.name").getString();
             data = Component.translatable("hostilenetworks.info.data", Component.translatable("hostilenetworks.info.dprog", progress, maxProgress)).getString();
-            dataPerSim = Component.translatable("extrahnn.info.dpk", cModel.getDataPerKill()  * (this.menu.getUpgradeDataKill() ? ExtraHostileConfig.upgradeDataKill: 1)).getString();
+            dataPerSim = Component.translatable("extrahnn.info.dpk", cModel.getDataGained()  * (this.menu.getUpgradeDataKill() ? ExtraHostileConfig.upgradeDataKill: 1)).getString();
             killIter = Component.translatable("extrahnn.info.iter_count", DataModelItem.getIters(this.menu.getSlot(0).getItem())).getString();
 
         } else if (this.menu.getSlot(0).getItem().getItem() instanceof ExtraDataModelItem){
