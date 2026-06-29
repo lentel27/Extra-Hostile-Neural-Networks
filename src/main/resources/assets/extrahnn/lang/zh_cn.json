@@ -16,6 +16,7 @@
 	"item.extrahnn.upgrade_speed": "升级模块：速度",
 	"item.extrahnn.upgrade_module_stack": "升级模块：等级",
 	"item.extrahnn.upgrade_data_kill": "升级模块：数据",
+	"item.extrahnn.setting_card": "设定卡",
 
 	"extrahnn.gui.targets": "模拟目标：",
 
@@ -62,6 +63,13 @@
 	"extrahnn.merger_camera.run.3": "> 正在从内存加载模型\n",
 	"extrahnn.merger_camera.run.4": "> 正在评估模型\n",
 	"extrahnn.merger_camera.run.5": "> 融合完成……",
+
+	"extrahnn.player_message.setting_clear": "设定已清除",
+	"extrahnn.player_message.setting_load": "设定已保存",
+	"extrahnn.player_message.setting_save": "设定已加载",
+	"extrahnn.player_message.setting_invalid": "无法加载该设定",
+
+	"extrahnn.info.setting_card": "设定已保存",
 
 	"extrahnn.info.error": "错误：%s",
 	"extrahnn.info.progress": "Progress: %s/%s",

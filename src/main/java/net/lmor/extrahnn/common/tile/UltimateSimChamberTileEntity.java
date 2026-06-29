@@ -10,8 +10,10 @@ import dev.shadowsoffire.placebo.menu.SimpleDataSlots.IDataAutoRegister;
 import dev.shadowsoffire.placebo.reload.DynamicHolder;
 import lombok.Getter;
 import lombok.Setter;
+import net.lmor.extrahnn.ExtraHostile;
 import net.lmor.extrahnn.ExtraHostileConfig;
 import net.lmor.extrahnn.api.IRegTile;
+import net.lmor.extrahnn.api.ISettingCard;
 import net.lmor.extrahnn.api.Version;
 import net.lmor.extrahnn.common.item.ExtraDataModelItem;
 import net.lmor.extrahnn.data.ExtraDataModelInstance;
@@ -20,6 +22,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -31,7 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class UltimateSimChamberTileEntity extends BlockEntity implements TickingBlockEntity, IDataAutoRegister, IRegTile {
+public class UltimateSimChamberTileEntity extends BlockEntity implements TickingBlockEntity, IDataAutoRegister, IRegTile, ISettingCard {
 
     @Getter
     protected final SimItemHandler inventory = new SimItemHandler();
@@ -115,6 +119,62 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         this.extractDataModel = tag.getBoolean("extractModel");
 
         this.version = Version.getVersion(tag.getString("versionBlockEntity"));
+    }
+
+    @Override
+    public CompoundTag saveSetting(HolderLookup.Provider regs) {
+        CompoundTag tag = new CompoundTag();
+
+        ItemStack item = this.inventory.getStackInSlot(0);
+        if (!item.isEmpty()){
+            CompoundTag saveTag = new CompoundTag();
+            tag.put("dataModel", item.save(regs, saveTag));
+        }
+        tag.putString("config", getClass().getName());
+        tag.putInt("redstoneState", this.redstoneState.ordinal());
+        tag.putBoolean("extractDataModel", extractDataModel);
+        return tag;
+    }
+
+    @Override
+    public boolean loadSetting(HolderLookup.@NotNull Provider regs, CompoundTag tag, Player player) {
+        if (!tag.contains("config") || !tag.getString("config").equals(getClass().getName())) return false;
+
+        this.redstoneState = RedstoneState.values()[tag.getInt("redstoneState")];
+        this.extractDataModel = tag.getBoolean("extractDataModel");
+
+        CompoundTag saveTag = tag.getCompound("dataModel");
+        Inventory playerInv = player.getInventory();
+
+        ItemStack item = ItemStack.parseOptional(regs, saveTag);
+        if (item.isEmpty()) return false;
+        setModelInv(item, playerInv);
+        return true;
+    }
+
+    private void setModelInv(ItemStack findItem, Inventory playerInv){
+        List<DynamicHolder<DataModel>> findModels = findItem.getOrDefault(ExtraHostile.Components.EXTRA_DATA_MODEL, List.of());
+        if (findModels.isEmpty()) return;
+
+        for(int i = 0; i < playerInv.items.size(); ++i) {
+            ItemStack itemInv = playerInv.items.get(i).copy();
+            if (itemInv.isEmpty() || !itemInv.is(findItem.getItem()) || !(itemInv.getItem() instanceof ExtraDataModelItem)) continue;
+
+            List<DynamicHolder<DataModel>> itemInvModels = itemInv.getOrDefault(ExtraHostile.Components.EXTRA_DATA_MODEL, List.of());
+            for (DynamicHolder<DataModel> holder: itemInvModels) {
+                if (findModels.contains(holder)) {
+                    playerInv.removeItem(i, 1);
+
+                    if (!this.inventory.getStackInSlot(0).isEmpty()){
+                        playerInv.add(this.inventory.getStackInSlot(0));
+                        this.inventory.setStackInSlot(0, ItemStack.EMPTY);
+                    }
+
+                    this.inventory.setStackInSlot(0, itemInv);
+                    return;
+                }
+            }
+        }
     }
 
     @Override

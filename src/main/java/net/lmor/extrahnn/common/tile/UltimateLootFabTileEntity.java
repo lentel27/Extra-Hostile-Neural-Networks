@@ -4,6 +4,7 @@ import dev.shadowsoffire.hostilenetworks.Hostile;
 import dev.shadowsoffire.hostilenetworks.data.DataModel;
 import dev.shadowsoffire.hostilenetworks.data.DataModelRegistry;
 import dev.shadowsoffire.hostilenetworks.item.DataModelItem;
+import dev.shadowsoffire.hostilenetworks.tile.LootFabTileEntity;
 import dev.shadowsoffire.hostilenetworks.util.FabSelection;
 import dev.shadowsoffire.hostilenetworks.util.FabSelection.ProductionMode;
 import dev.shadowsoffire.hostilenetworks.util.RedstoneState;
@@ -18,6 +19,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.lmor.extrahnn.ExtraHostileConfig;
 import net.lmor.extrahnn.api.IRegTile;
+import net.lmor.extrahnn.api.ISettingCard;
 import net.lmor.extrahnn.api.Version;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -30,6 +32,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -44,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlockEntity, IDataAutoRegister, IRegTile {
+public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlockEntity, IDataAutoRegister, IRegTile, ISettingCard {
     @Getter
     protected final FabItemHandler inventory = new FabItemHandler();
     @Getter
@@ -170,12 +173,6 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
         return this.energy.getEnergyStored();
     }
 
-    public void setSelections(Map<DynamicHolder<DataModel>, FabSelection> selections) {
-        this.savedSelections.clear();
-        this.savedSelections.putAll(selections);
-        this.sync();
-    }
-
     public FabSelection getSelection(DataModel model) {
         return this.savedSelections.getOrDefault(DataModelRegistry.INSTANCE.holder(model), FabSelection.EMPTY);
     }
@@ -249,6 +246,33 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
     private void sync() {
         VanillaPacketDispatcher.dispatchTEToNearbyPlayers(this);
         this.setChanged();
+    }
+
+    @Override
+    public CompoundTag saveSetting(HolderLookup.@NotNull Provider regs) {
+        CompoundTag tag = new CompoundTag();
+
+        CompoundTag selectionsTag = new CompoundTag();
+        this.writeSelections(selectionsTag);
+        tag.put("selections", selectionsTag);
+        tag.putInt("redstoneState", this.redstoneState.ordinal());
+
+        tag.putString("config", getClass().getName());
+        return tag;
+    }
+
+    @Override
+    public boolean loadSetting(HolderLookup.@NotNull Provider regs, CompoundTag tag, Player player) {
+        if (!tag.contains("config")
+                || (!tag.getString("config").equals(getClass().getName())
+                && !tag.getString("config").equals(LootFabTileEntity.class.getName()))
+        ) return false;
+
+        this.readSelections(tag.getCompound("selections"));
+        this.redstoneState = RedstoneState.values()[tag.getInt("redstoneState")];
+
+        this.sync();
+        return true;
     }
 
     @Override

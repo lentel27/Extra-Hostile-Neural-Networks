@@ -16,6 +16,7 @@
 	"item.extrahnn.upgrade_speed": "Улучшение: Скорость",
 	"item.extrahnn.upgrade_module_stack": "Улучшение: Уровень",
 	"item.extrahnn.upgrade_data_kill": "Улучшение: Данные",
+	"item.extrahnn.setting_card": "Карта настройки",
 
 	"extrahnn.gui.targets": "Цели модели: ",
 
@@ -62,6 +63,13 @@
 	"extrahnn.merger_camera.run.3": "> Загрузка моделей из памяти\n",
 	"extrahnn.merger_camera.run.4": "> Оценка моделей\n",
 	"extrahnn.merger_camera.run.5": "> Завершение слияния...",
+
+	"extrahnn.player_message.setting_clear": "Настройки очищены",
+	"extrahnn.player_message.setting_load": "Настройки загружены",
+	"extrahnn.player_message.setting_save": "Настройки сохранены",
+	"extrahnn.player_message.setting_invalid": "Не удалось загрузить настройку",
+
+	"extrahnn.info.setting_card": "Настройки сохранены",
 
 	"extrahnn.info.error": "Ошибка: %s",
 	"extrahnn.info.progress": "Прогресс: %s/%s",

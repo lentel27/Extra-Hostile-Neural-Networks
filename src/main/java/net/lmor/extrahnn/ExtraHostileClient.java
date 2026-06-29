@@ -1,12 +1,22 @@
 package net.lmor.extrahnn;
 
+import net.lmor.extrahnn.api.ISettingCard;
+import net.lmor.extrahnn.api.SettingCardMessage;
 import net.lmor.extrahnn.client.ExtraDataModelItemStackRenderer;
 import net.lmor.extrahnn.client.screen.MergerCameraScreen;
 import net.lmor.extrahnn.client.screen.SimulationModelingScreen;
 import net.lmor.extrahnn.client.screen.UltimateLootFabScreen;
 import net.lmor.extrahnn.client.screen.UltimateSimChamberScreen;
+import net.lmor.extrahnn.common.item.SettingCard;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -14,6 +24,7 @@ import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
 @EventBusSubscriber(value = Dist.CLIENT, modid = ExtraHostileNetworks.MOD_ID)
@@ -50,5 +61,42 @@ public class ExtraHostileClient {
         e.register(ExtraHostile.Containers.ULTIMATE_LOOT_FABRICATOR_V4, UltimateLootFabScreen::new);
         e.register(ExtraHostile.Containers.MERGER_CAMERA, MergerCameraScreen::new);
         e.register(ExtraHostile.Containers.SIMULATOR_MODELING, SimulationModelingScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        Player player = event.getEntity();
+        Level level = event.getLevel();
+
+        if (level.isClientSide) return;
+
+        ItemStack stack = event.getItemStack();
+        if (!(stack.getItem() instanceof SettingCard card)) return;
+
+        BlockPos pos = event.getPos();
+        BlockEntity be = level.getBlockEntity(pos);
+
+        if (be instanceof ISettingCard tile) {
+            HolderLookup.Provider provider = level.registryAccess();
+
+            if (!player.isShiftKeyDown() && card.isTag(stack)) {
+                boolean success = tile.loadSetting(provider, card.getData(stack), player);
+
+                if (success){
+                    card.notifyUser(player, SettingCardMessage.SETTINGS_LOADED);
+                } else {
+                    card.notifyUser(player, SettingCardMessage.SETTING_INVALID);
+                }
+
+                event.setCanceled(true);
+                event.setCancellationResult(success ? InteractionResult.SUCCESS : InteractionResult.PASS);
+            } else if (player.isShiftKeyDown()) {
+                card.notifyUser(player, SettingCardMessage.SETTINGS_SAVED);
+                card.setData(stack, tile.saveSetting(provider));
+
+                event.setCanceled(true);
+                event.setCancellationResult(InteractionResult.SUCCESS);
+            }
+        }
     }
 }

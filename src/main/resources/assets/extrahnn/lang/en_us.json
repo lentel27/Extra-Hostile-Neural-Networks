@@ -16,6 +16,7 @@
 	"item.extrahnn.upgrade_speed": "Upgrade: Speed",
 	"item.extrahnn.upgrade_module_stack": "Upgrade: Tier",
 	"item.extrahnn.upgrade_data_kill": "Upgrade: Data",
+	"item.extrahnn.setting_card": "Setting Card",
 
 	"extrahnn.gui.targets": "Sim Targets: ",
 
@@ -62,6 +63,13 @@
 	"extrahnn.merger_camera.run.3": "> Loading models from memory\n",
 	"extrahnn.merger_camera.run.4": "> Models evaluation\n",
 	"extrahnn.merger_camera.run.5": "> Completion of the merger...",
+
+	"extrahnn.player_message.setting_clear": "Setting cleared",
+	"extrahnn.player_message.setting_load": "Setting saved",
+	"extrahnn.player_message.setting_save": "Setting loaded",
+	"extrahnn.player_message.setting_invalid": "Couldn't load the setting",
+
+	"extrahnn.info.setting_card": "Settings saved",
 
 	"extrahnn.info.error": "Error: %s",
 	"extrahnn.info.progress": "Progress: %s/%s",

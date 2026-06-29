@@ -17,6 +17,7 @@
 	"item.extrahnn.upgrade_speed": "Upgrade: Speed",
 	"item.extrahnn.upgrade_module_stack": "Upgrade: Tier",
 	"item.extrahnn.upgrade_data_kill": "Upgrade: Data",
+	"item.extrahnn.setting_card": "Setting Card",
 
 	"extrahnn.gui.targets": "解析対象: ",
 
@@ -56,6 +57,15 @@
 	"extrahnn.fail.model": "データモデルを挿入して、\n合成を開始します",
 	"extrahnn.fail.input": "合成を開始できません。\n不足:\nエクストラ基礎モデル",
 	"extrahnn.fail.count": "解析を開始できません。\n予測素材が足りません。\n最小4必要です",
+
+	"extrahnn.merger_camera.run.0": "> 合成環境の起動 \n",
+	"extrahnn.merger_camera.run.1": "> 合成を試行\n",
+	"extrahnn.merger_camera.run.2": "> 融合に注力\n",
+	"extrahnn.merger_camera.run.3": "> メモリからのモデルのロード\n",
+	"extrahnn.merger_camera.run.4": "> モデル評価\n",
+	"extrahnn.merger_camera.run.5": "> 合成機の冷却: ",
+
+	"extrahnn.info.setting_card": "Settings saved",
 
 	"extrahnn.info.error": "Error: %s",
 	"extrahnn.info.progress": "Progress: %s/%s",
