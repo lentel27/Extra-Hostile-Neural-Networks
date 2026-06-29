@@ -62,41 +62,4 @@ public class ExtraHostileClient {
         e.register(ExtraHostile.Containers.MERGER_CAMERA, MergerCameraScreen::new);
         e.register(ExtraHostile.Containers.SIMULATOR_MODELING, SimulationModelingScreen::new);
     }
-
-    @SubscribeEvent
-    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
-        Player player = event.getEntity();
-        Level level = event.getLevel();
-
-        if (level.isClientSide) return;
-
-        ItemStack stack = event.getItemStack();
-        if (!(stack.getItem() instanceof SettingCard card)) return;
-
-        BlockPos pos = event.getPos();
-        BlockEntity be = level.getBlockEntity(pos);
-
-        if (be instanceof ISettingCard tile) {
-            HolderLookup.Provider provider = level.registryAccess();
-
-            if (!player.isShiftKeyDown() && card.isTag(stack)) {
-                boolean success = tile.loadSetting(provider, card.getData(stack), player);
-
-                if (success){
-                    card.notifyUser(player, SettingCardMessage.SETTINGS_LOADED);
-                } else {
-                    card.notifyUser(player, SettingCardMessage.SETTING_INVALID);
-                }
-
-                event.setCanceled(true);
-                event.setCancellationResult(success ? InteractionResult.SUCCESS : InteractionResult.PASS);
-            } else if (player.isShiftKeyDown()) {
-                card.notifyUser(player, SettingCardMessage.SETTINGS_SAVED);
-                card.setData(stack, tile.saveSetting(provider));
-
-                event.setCanceled(true);
-                event.setCancellationResult(InteractionResult.SUCCESS);
-            }
-        }
-    }
 }
