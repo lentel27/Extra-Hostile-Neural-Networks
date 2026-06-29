@@ -32,7 +32,7 @@ public class ExtraDataModelItem extends Item implements ITabFiller {
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> list, @NotNull TooltipFlag flag) {
         if (Screen.hasShiftDown()) {
-            ExtraDataModelInstance model = new ExtraDataModelInstance(stack, 0);
+            ExtraDataModelInstance model = new ExtraDataModelInstance(stack);
             if (!model.isValid()) {
                 list.add(Component.translatable("extrahnn.info.error", Component.literal("Broke_AF").withStyle(ChatFormatting.OBFUSCATED, ChatFormatting.GRAY)));
                 return;
@@ -87,7 +87,7 @@ public class ExtraDataModelItem extends Item implements ITabFiller {
         }
 
         if (modelName.size() == 1){
-            return Component.translatable("item.extrahnn.extra_data_model.broken", modelName.get(0));
+            return Component.translatable("item.extrahnn.extra_data_model.broken", modelName.getFirst());
         } else {
             return Component.translatable(this.getDescriptionId(stack), modelName.get(0), modelName.get(1), modelName.get(2), modelName.get(3));
         }
@@ -98,7 +98,7 @@ public class ExtraDataModelItem extends Item implements ITabFiller {
     }
     public static List<DynamicHolder<DataModel>> getStoredModels(ItemStack stack) {
         DynamicHolder<DataModel> emptyHolder = DataModelRegistry.INSTANCE.emptyHolder();
-        List<DynamicHolder<DataModel>> emptyHolders = new ArrayList<>(List.of(emptyHolder, emptyHolder, emptyHolder, emptyHolder));
+        List<DynamicHolder<DataModel>> emptyHolders = List.of(emptyHolder, emptyHolder, emptyHolder, emptyHolder);
 
         return stack.getOrDefault(Components.EXTRA_DATA_MODEL, emptyHolders);
     }
@@ -108,7 +108,6 @@ public class ExtraDataModelItem extends Item implements ITabFiller {
         for (DataModel model: models){
             res.add(DataModelRegistry.INSTANCE.holder(model));
         }
-
         setStoredModels(stack, res);
     }
 

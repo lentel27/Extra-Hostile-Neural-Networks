@@ -73,7 +73,7 @@ public class SimulationModelingScreen extends PlaceboContainerScreen<SimulationM
             killIter = Component.translatable("extrahnn.info.iter_count", DataModelItem.getIters(this.menu.getSlot(0).getItem())).getString();
 
         } else if (this.menu.getSlot(0).getItem().getItem() instanceof ExtraDataModelItem){
-            ExtraDataModelInstance cModel = new ExtraDataModelInstance(this.menu.getSlot(0).getItem(), 0);
+            ExtraDataModelInstance cModel = new ExtraDataModelInstance(this.menu.getSlot(0).getItem());
             int dt= cModel.getData();
             int progress = dt - cModel.getTierData();
             int maxProgress = cModel.getNextTierData() - cModel.getTierData();

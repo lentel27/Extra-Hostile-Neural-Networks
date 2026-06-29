@@ -51,7 +51,6 @@ public class UltimateLootFabTileEntity extends BlockEntity implements TickingBlo
     protected final ModifiableEnergyStorage energy;
     @Getter
     protected final Map<DynamicHolder<DataModel>, FabSelection> savedSelections = new HashMap<>();
-    @Getter
     protected final SimpleDataSlots data = new SimpleDataSlots();
     @Getter
     @Setter

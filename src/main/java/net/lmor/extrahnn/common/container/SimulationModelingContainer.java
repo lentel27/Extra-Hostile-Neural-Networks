@@ -36,7 +36,7 @@ public class SimulationModelingContainer extends BlockEntityMenu<SimulationModel
     private boolean checkModelSlot(ItemStack stack){
         return EHNNUtils.allowedTier(stack) && EHNNUtils.allowedBlackListModel(stack) &&
                 ((stack.getItem() instanceof DataModelItem && !new DataModelInstance(stack, 0).getTier().isMax()) ||
-                (stack.getItem() instanceof ExtraDataModelItem && !new ExtraDataModelInstance(stack, 0).getTier().isMax()));
+                (stack.getItem() instanceof ExtraDataModelItem && !new ExtraDataModelInstance(stack).getTier().isMax()));
     }
 
     public boolean stillValid(Player pPlayer) {

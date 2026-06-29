@@ -70,12 +70,12 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
         List<Component> txt = new ArrayList<>();
         if (this.isHovering(211, 73, 7, 87, x, y)) {
             txt.add(Component.translatable("hostilenetworks.gui.energy", this.menu.getEnergyStored(), this.menu.getMaxEnergyStored()));
-            ExtraDataModelInstance cModel = new ExtraDataModelInstance(this.menu.getSlot(0).getItem(), 0);
+            ExtraDataModelInstance cModel = new ExtraDataModelInstance(this.menu.getSlot(0).getItem());
             if (cModel.isValid()) {
                 txt.add(Component.translatable("hostilenetworks.gui.cost", cModel.simCost()));
             }
         } else if (this.isHovering(14, 73, 7, 87, x, y)) {
-            ExtraDataModelInstance cModel = new ExtraDataModelInstance(this.menu.getSlot(0).getItem(), 0);
+            ExtraDataModelInstance cModel = new ExtraDataModelInstance(this.menu.getSlot(0).getItem());
             if (cModel.isValid()) {
                 if (cModel.getTier() != cModel.getTier().next()) {
                     txt.add(Component.translatable("hostilenetworks.gui.data", cModel.getData() - cModel.getTierData(), cModel.getNextTierData() - cModel.getTierData()));
@@ -103,7 +103,7 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
             graphics.drawString(this.font, rTime + "%", 186, 150, 6478079, true);
         }
 
-        ExtraDataModelInstance cModel = new ExtraDataModelInstance(this.menu.getSlot(0).getItem(), 0);
+        ExtraDataModelInstance cModel = new ExtraDataModelInstance(this.menu.getSlot(0).getItem());
         renderModelNames(cModel, graphics, x, y);
 
         this.body.render(graphics, 28, 75);
@@ -175,7 +175,7 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
         graphics.blit(BASE, left + 211, top + 73, 234, 0, 7, energyHeight, 256, 256);
 
         int dataHeight = 87;
-        ExtraDataModelInstance cModel = new ExtraDataModelInstance(this.menu.getSlot(0).getItem(), 0);
+        ExtraDataModelInstance cModel = new ExtraDataModelInstance(this.menu.getSlot(0).getItem());
         if (cModel.isValid()) {
             int data = cModel.getData();
             ExtraModelTier tier = cModel.getTier();

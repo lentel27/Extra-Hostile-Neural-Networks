@@ -59,7 +59,7 @@ public class EHNNUtils {
             itemIndex = validTiersHostile.indexOf(itemTier);
 
         } else if (stack.getItem() instanceof ExtraDataModelItem){
-            String itemTier = new ExtraDataModelInstance(stack, 0).getTier().name.toLowerCase();
+            String itemTier = new ExtraDataModelInstance(stack).getTier().name.toLowerCase();
 
             minIndex = validTiersExtra.indexOf(minimumTierExtra.toLowerCase());
             itemIndex = validTiersExtra.indexOf(itemTier);

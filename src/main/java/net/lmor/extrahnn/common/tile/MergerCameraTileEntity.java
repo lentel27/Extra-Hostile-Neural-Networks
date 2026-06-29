@@ -8,6 +8,7 @@ import dev.shadowsoffire.placebo.cap.InternalItemHandler;
 import dev.shadowsoffire.placebo.cap.ModifiableEnergyStorage;
 import dev.shadowsoffire.placebo.menu.SimpleDataSlots;
 import dev.shadowsoffire.placebo.menu.SimpleDataSlots.IDataAutoRegister;
+import lombok.Getter;
 import net.lmor.extrahnn.ExtraHostile;
 import net.lmor.extrahnn.ExtraHostileConfig;
 import net.lmor.extrahnn.api.IRegTile;
@@ -21,7 +22,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -31,11 +31,15 @@ import java.util.function.Consumer;
 public class MergerCameraTileEntity extends BlockEntity implements TickingBlockEntity, IDataAutoRegister, IRegTile {
 
     private final static int SIZE_SLOTS_MODEL = 4;
+    @Getter
     protected final CameraItemHandler inventory = new CameraItemHandler();
+    @Getter
     protected final ModifiableEnergyStorage energy = new ModifiableEnergyStorage(ExtraHostileConfig.mergerCameraPowerCap, ExtraHostileConfig.mergerCameraPowerCap);
     protected final SimpleDataSlots data = new SimpleDataSlots();
     protected boolean validModels = false;
+    @Getter
     protected FailureState failState = FailureState.NONE;
+    @Getter
     protected int runtime = 0;
 
     protected boolean checkModel = false;
@@ -168,24 +172,8 @@ public class MergerCameraTileEntity extends BlockEntity implements TickingBlockE
         return true;
     }
 
-    public CameraItemHandler getInventory() {
-        return this.inventory;
-    }
-
-    public IEnergyStorage getEnergy() {
-        return energy;
-    }
-
     public int getEnergyStored() {
         return this.energy.getEnergyStored();
-    }
-
-    public int getRuntime() {
-        return this.runtime;
-    }
-
-    public FailureState getFailState() {
-        return this.failState;
     }
 
     public class CameraItemHandler extends InternalItemHandler {

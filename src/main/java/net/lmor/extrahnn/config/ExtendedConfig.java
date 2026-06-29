@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ExtendedConfig extends Configuration {
@@ -28,26 +29,38 @@ public class ExtendedConfig extends Configuration {
     }
 
     public List<String> getStringList(String name, String category, List<String> defaultValues, String comment) {
-        String defaults = toJsonList(defaultValues);
+        return getList(name, category, defaultValues, comment, s -> s, s -> s, true);
+    }
+
+    public List<Integer> getIntList(String name, String category, List<Integer> defaultValues, String comment) {
+        return getList(name, category, defaultValues, comment, String::valueOf, Integer::parseInt, false);
+    }
+
+    private <T> List<T> getList(String name, String category, List<T> defaultValues, String comment,
+                                Function<T, String> serializer, Function<String, T> parser, boolean quoted) {
+        String defaults = toJsonListGeneric(defaultValues, serializer, quoted);
         Property prop = this.get(category, name, defaults);
         prop.setComment(comment + "\nDefault: " + defaults);
-        return parseJsonList(prop.getString());
+        return parseJsonListGeneric(prop.getString(), parser, quoted);
     }
 
-    private static String toJsonList(List<String> list) {
+    private static <T> String toJsonListGeneric(List<T> list, Function<T, String> serializer, boolean quoted) {
         if (list.isEmpty()) return "[]";
-        return "[\"" + String.join("\", \"", list) + "\"]";
+        String q = quoted ? "\"" : "";
+        return "[" + list.stream()
+                .map(v -> q + serializer.apply(v) + q)
+                .collect(Collectors.joining(", ")) + "]";
     }
 
-    private static List<String> parseJsonList(String value) {
+    private static <T> List<T> parseJsonListGeneric(String value, Function<String, T> parser, boolean quoted) {
         value = value.trim();
         if (value.equals("[]") || value.isBlank()) return new ArrayList<>();
-
         value = value.replaceAll("^\\[|]$", "").trim();
-
         return Arrays.stream(value.split(","))
-                .map(s -> s.trim().replaceAll("^\"|\"$", ""))
+                .map(String::trim)
+                .map(s -> quoted ? s.replaceAll("^\"|\"$", "") : s)
                 .filter(s -> !s.isBlank())
+                .map(parser)
                 .collect(Collectors.toList());
     }
 }

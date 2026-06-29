@@ -1,6 +1,6 @@
 package net.lmor.extrahnn.data;
 
-import com.mojang.serialization.Codec;
+import net.lmor.extrahnn.ExtraHostileConfig;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -9,19 +9,19 @@ import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
+import java.util.List;
 
 public enum ExtraModelTier implements StringRepresentable {
-    AUTONOMOUS("autonomous", 0, 20, ChatFormatting.AQUA, 0.1F),
-    INTELLIGENT("intelligent", 1500, 30, ChatFormatting.DARK_AQUA, 0.3F),
-    ADAPTIVE("adaptive", 4500, 50, ChatFormatting.RED, 0.5F),
-    SYNTHETIC("synthetic", 10750, 75, ChatFormatting.DARK_RED, 0.74F),
-    OMNIPOTENT("omnipotent", 22375, 0, ChatFormatting.DARK_PURPLE, 1F);
+    AUTONOMOUS("autonomous", 0, ExtraModelTier.getKillData(0), ChatFormatting.AQUA, 0.1F),
+    INTELLIGENT("intelligent", ExtraModelTier.getReqData(0), ExtraModelTier.getKillData(1), ChatFormatting.DARK_AQUA, 0.3F),
+    ADAPTIVE("adaptive", ExtraModelTier.getReqData(1), ExtraModelTier.getKillData(2), ChatFormatting.RED, 0.5F),
+    SYNTHETIC("synthetic", ExtraModelTier.getReqData(2), ExtraModelTier.getKillData(3), ChatFormatting.DARK_RED, 0.74F),
+    OMNIPOTENT("omnipotent", ExtraModelTier.getReqData(3), 0, ChatFormatting.DARK_PURPLE, 1F);
 
     private static final ExtraModelTier[] VALUES = values();
     public final String name;
     private TierData tierData;
     private final int requiredData;
-    public static final Codec<ExtraModelTier> CODEC = StringRepresentable.fromEnum(() -> VALUES);
 
     ExtraModelTier(String name, int requiredData, int dataPerKill, ChatFormatting color, float accuracy) {
         this(name, requiredData, dataPerKill, TextColor.fromLegacyFormat(color), accuracy, true);
@@ -75,15 +75,11 @@ public enum ExtraModelTier implements StringRepresentable {
     }
 
     public static int[] defaultData() {
-        return Arrays.stream(VALUES).mapToInt((t) -> {
-            return t.data().requiredData;
-        }).toArray();
+        return Arrays.stream(VALUES).mapToInt((t) -> t.data().requiredData).toArray();
     }
 
     public static int[] defaultDataPerKill() {
-        return Arrays.stream(VALUES).mapToInt((t) -> {
-            return t.data().dataPerKill;
-        }).toArray();
+        return Arrays.stream(VALUES).mapToInt((t) -> t.data().dataPerKill).toArray();
     }
 
     public @NotNull String getSerializedName() {
@@ -104,6 +100,18 @@ public enum ExtraModelTier implements StringRepresentable {
 
     void updateData(TierData data) {
         this.tierData = data;
+    }
+
+    static int getReqData(int index){
+        List<Integer> data = ExtraHostileConfig.requiredDataModel;
+        if (index < 0 || index >= data.size()) return 1;
+        return ExtraHostileConfig.requiredDataModel.get(index);
+    }
+
+    static int getKillData(int index){
+        List<Integer> data = ExtraHostileConfig.dataPerKillModel;
+        if (index < 0 || index >= data.size()) return 1;
+        return ExtraHostileConfig.dataPerKillModel.get(index);
     }
 
     public static record TierData(int requiredData, int dataPerKill, TextColor color, float accuracy, boolean canSim){}

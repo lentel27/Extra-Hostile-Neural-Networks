@@ -104,7 +104,7 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         ItemStack model = this.inventory.getStackInSlot(0);
         ExtraDataModelInstance cModel = this.getOrLoadModel(model);
         if (cModel.isValid() && !model.isEmpty()){
-            this.currentModel = new ExtraDataModelInstance(model, 0);
+            this.currentModel = new ExtraDataModelInstance(model);
         }
 
         this.runtime = tag.getInt("runtime");
@@ -252,7 +252,7 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
     }
 
     protected ExtraDataModelInstance getOrLoadModel(ItemStack stack) {
-        return this.currentModel.getSourceStack() == stack ? this.currentModel : new ExtraDataModelInstance(stack, 0);
+        return this.currentModel.getSourceStack() == stack ? this.currentModel : new ExtraDataModelInstance(stack);
     }
 
     public int getEnergyStored() {

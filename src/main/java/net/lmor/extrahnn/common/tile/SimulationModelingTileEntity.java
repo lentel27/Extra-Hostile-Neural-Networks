@@ -8,6 +8,7 @@ import dev.shadowsoffire.placebo.cap.InternalItemHandler;
 import dev.shadowsoffire.placebo.cap.ModifiableEnergyStorage;
 import dev.shadowsoffire.placebo.menu.SimpleDataSlots;
 import dev.shadowsoffire.placebo.menu.SimpleDataSlots.IDataAutoRegister;
+import lombok.Getter;
 import net.lmor.extrahnn.EHNNUtils;
 import net.lmor.extrahnn.ExtraHostile;
 import net.lmor.extrahnn.ExtraHostileConfig;
@@ -25,7 +26,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
@@ -33,13 +33,18 @@ import java.util.function.Consumer;
 public class SimulationModelingTileEntity extends BlockEntity implements TickingBlockEntity, IDataAutoRegister, IRegTile {
 
     private final static int SIZE_SLOTS = 3;
+    @Getter
     protected final SimulatorModelingItemHandler inventory = new SimulatorModelingItemHandler();
+    @Getter
     protected final ModifiableEnergyStorage energy = new ModifiableEnergyStorage(ExtraHostileConfig.simulationModelingPowerCap, ExtraHostileConfig.simulationModelingPowerCap);
     protected final SimpleDataSlots data = new SimpleDataSlots();
+    @Getter
     protected int runtime = ExtraHostileConfig.simulationModelingPowerDuration;
 
+    @Getter
     private int runtimeUpgrade = runtime;
 
+    @Getter
     private int energyCost = ExtraHostileConfig.simulationModelingPowerCost;
 
     private boolean upgradeModuleStack;
@@ -118,7 +123,7 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
         ItemStack item = this.inventory.getStackInSlot(0);
 
         if (( item.getItem() instanceof DataModelItem && new DataModelInstance(item, 0).getTier().isMax()) ||
-                (item.getItem() instanceof ExtraDataModelItem && new ExtraDataModelInstance(item, 0).getTier().isMax())) {
+                (item.getItem() instanceof ExtraDataModelItem && new ExtraDataModelInstance(item).getTier().isMax())) {
             startCraft = false;
             return;
         }
@@ -157,7 +162,7 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
             this.setChanged();
 
         } else if (item.getItem() instanceof ExtraDataModelItem) {
-            ExtraDataModelInstance model = new ExtraDataModelInstance(item, 0);
+            ExtraDataModelInstance model = new ExtraDataModelInstance(item);
 
             ExtraModelTier tier =model.getTier();
             if (!tier.isMax()) {
@@ -174,28 +179,8 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
         }
     }
 
-    public SimulatorModelingItemHandler getInventory() {
-        return this.inventory;
-    }
-
-    public IEnergyStorage getEnergy() {
-        return energy;
-    }
-
     public int getEnergyStored() {
         return this.energy.getEnergyStored();
-    }
-
-    public int getEnergyCost(){
-        return this.energyCost;
-    }
-
-    public int getRuntime() {
-        return this.runtime;
-    }
-
-    public int getRuntimeUpgrade() {
-        return runtimeUpgrade;
     }
 
     public boolean getUpgradeDataKill(){
@@ -215,7 +200,7 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
             if (slot == 0){
                 return (stack.getItem() instanceof DataModelItem && !new DataModelInstance(stack, 0).getTier().isMax()) ||
-                        (stack.getItem() instanceof ExtraDataModelItem && !new ExtraDataModelInstance(stack, 0).getTier().isMax());
+                        (stack.getItem() instanceof ExtraDataModelItem && !new ExtraDataModelInstance(stack).getTier().isMax());
             }
 
             return slot >= 1 && slot < SIZE_SLOTS && stack.getItem() instanceof UpgradeMachine;
@@ -231,7 +216,7 @@ public class SimulationModelingTileEntity extends BlockEntity implements Ticking
                 ItemStack stack = SimulationModelingTileEntity.this.inventory.getStackInSlot(0);
 
                 if ((stack.getItem() instanceof DataModelItem && new DataModelInstance(stack, 0).getTier().isMax()) ||
-                        (stack.getItem() instanceof ExtraDataModelItem && new ExtraDataModelInstance(stack, 0).getTier().isMax()) ){
+                        (stack.getItem() instanceof ExtraDataModelItem && new ExtraDataModelInstance(stack).getTier().isMax()) ){
                     return super.extractItem(slot, amount, simulate);
                 }
             }

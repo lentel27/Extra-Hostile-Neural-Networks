@@ -57,6 +57,9 @@ public class ExtraHostileConfig {
     public static List<String> blackList;
     public static List<String> blackListClick;
 
+    public static List<Integer> requiredDataModel;
+    public static List<Integer> dataPerKillModel;
+
     public ExtraHostileConfig() {
     }
 
@@ -124,6 +127,11 @@ public class ExtraHostileConfig {
         blackList = cfg.getStringList("Black list for Simulation Modeling", "utils", List.of(), "Blacklist of models that cannot be improved during simulation modeling. Please note that you need to write the Hostile Network model identifier\nExample: hostilenetworks:blaze");
         blackListClick = cfg.getStringList("Blacklist for creating a model when clicking on an entity", "utils", List.of(), "Blacklist, which prevents creation of models via right-click on an entity.\nExample: entity.minecraft.blaze");
 
+        cfg.setCategoryRequiresMcRestart("data", true);
+        requiredDataModel = cfg.getIntList("Required data for extra model", "data", List.of(1500, 4500, 10750, 22375), "Required data for the extra model. The first dash is always 0, the remaining 4 are available for input. Minecraft needs to be restarted.");
+        dataPerKillModel = cfg.getIntList("Data per kill for extra model", "data", List.of(20, 30, 50, 75), "Data per kill for an extra model. The last dash is always 0, the remaining 4 are available for input. Minecraft needs to be restarted.");
+
+
         if (cfg.hasChanged()) cfg.save();
         return cfg;
     }
@@ -141,9 +149,13 @@ public class ExtraHostileConfig {
                                 int simulationModelingPowerCap, int simulationModelingPowerCost, int simulationModelingPowerDuration,
 
                                 int upgradeSpeed, float upgradeSpeedEnergy, int upgradeModuleStackCost, int upgradeDataKill,
-                                String minimumTierHostile, String minimumTierExtra, List<String> blackList, List<String> blackListClick) implements CustomPacketPayload {
+                                String minimumTierHostile, String minimumTierExtra,
+                                List<String> blackList, List<String> blackListClick,
+                                List<Integer> mulRequiredDataModel, List<Integer> mulDataPerKillModel
+    ) implements CustomPacketPayload {
 
         static StreamCodec<ByteBuf, List<String>> STRING_LIST = ByteBufCodecs.stringUtf8(32767).apply(ByteBufCodecs.list());
+        static StreamCodec<ByteBuf, List<Integer>> INT_LIST = ByteBufCodecs.INT.apply(ByteBufCodecs.list());
 
         public static final Type<ConfigMessage> TYPE = new Type<>(ExtraHostileNetworks.local("config"));
 
@@ -165,7 +177,7 @@ public class ExtraHostileConfig {
                                 buf.readVarInt(), buf.readVarInt(), buf.readVarInt(),
                                 buf.readVarInt(), buf.readVarInt(), buf.readVarInt(),
                                 buf.readVarInt(), buf.readFloat(), buf.readVarInt(), buf.readVarInt(), buf.readUtf(),
-                                buf.readUtf(), STRING_LIST.decode(buf), STRING_LIST.decode(buf)
+                                buf.readUtf(), STRING_LIST.decode(buf), STRING_LIST.decode(buf), INT_LIST.decode(buf), INT_LIST.decode(buf)
                         );
                     }
 
@@ -205,6 +217,9 @@ public class ExtraHostileConfig {
                         buf.writeUtf(msg.minimumTierExtra());
                         STRING_LIST.encode(buf, msg.blackList());
                         STRING_LIST.encode(buf, msg.blackListClick());
+                        INT_LIST.encode(buf, msg.mulRequiredDataModel());
+                        INT_LIST.encode(buf, msg.mulDataPerKillModel());
+
                     }
                 };
 
@@ -220,7 +235,7 @@ public class ExtraHostileConfig {
 
                     ExtraHostileConfig.mergerCameraPowerCap, ExtraHostileConfig.mergerCameraPowerCost, ExtraHostileConfig.mergerCameraPowerDuration, ExtraHostileConfig.simulationModelingPowerCap, ExtraHostileConfig.simulationModelingPowerCost,
                     ExtraHostileConfig.simulationModelingPowerDuration, ExtraHostileConfig.upgradeSpeed, ExtraHostileConfig.upgradeSpeedEnergy, ExtraHostileConfig.upgradeModuleStackCost, ExtraHostileConfig.upgradeDataKill, ExtraHostileConfig.minimumTierHostile, ExtraHostileConfig.minimumTierExtra,
-                    ExtraHostileConfig.blackList, ExtraHostileConfig.blackListClick);
+                    ExtraHostileConfig.blackList, ExtraHostileConfig.blackListClick, ExtraHostileConfig.requiredDataModel, ExtraHostileConfig.dataPerKillModel);
         }
 
         public static ConfigMessage ConfigMessageSync(
@@ -233,7 +248,7 @@ public class ExtraHostileConfig {
                 int mergerCameraPowerCap, int mergerCameraPowerCost,
                 int mergerCameraPowerDuration, int simulationModelingPowerCap, int simulationModelingPowerCost, int simulationModelingPowerDuration,
                 int upgradeSpeed, float upgradeSpeedEnergy, int upgradeModuleStackCost, int upgradeDataKill, String minimumTierHostile,
-                String minimumTierExtra, List<String> blackList, List<String> blackListClick) {
+                String minimumTierExtra, List<String> blackList, List<String> blackListClick, List<Integer> mulRequiredDataModel, List<Integer> mulDataPerKillModel) {
 
             return new ConfigMessage(
                     ultimateSimV1PowerCap, ultimateSimV1PowerDuration,
@@ -246,7 +261,8 @@ public class ExtraHostileConfig {
                     ultimateFabV4PowerCap, ultimateFabV4PowerCost, ultimateFabV4PowerDuration,
                     mergerCameraPowerCap, mergerCameraPowerCost, mergerCameraPowerDuration,
                     simulationModelingPowerCap, simulationModelingPowerCost, simulationModelingPowerDuration,
-                    upgradeSpeed, upgradeSpeedEnergy, upgradeModuleStackCost, upgradeDataKill, minimumTierHostile, minimumTierExtra, blackList, blackListClick);
+                    upgradeSpeed, upgradeSpeedEnergy, upgradeModuleStackCost, upgradeDataKill, minimumTierHostile, minimumTierExtra,
+                    blackList, blackListClick, mulRequiredDataModel, mulDataPerKillModel);
         }
 
         @Override
@@ -305,6 +321,9 @@ public class ExtraHostileConfig {
 
                 ExtraHostileConfig.blackList = msg.blackList;
                 ExtraHostileConfig.blackListClick = msg.blackListClick;
+
+                ExtraHostileConfig.requiredDataModel = msg.mulRequiredDataModel;
+                ExtraHostileConfig.dataPerKillModel = msg.mulDataPerKillModel;
             }
 
             @Override

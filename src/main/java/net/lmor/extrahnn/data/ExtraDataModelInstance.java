@@ -2,6 +2,7 @@ package net.lmor.extrahnn.data;
 
 import dev.shadowsoffire.hostilenetworks.HostileConfig;
 import dev.shadowsoffire.hostilenetworks.data.DataModel;
+import dev.shadowsoffire.hostilenetworks.data.DataModelRegistry;
 import dev.shadowsoffire.placebo.reload.DynamicHolder;
 import lombok.Getter;
 import net.lmor.extrahnn.common.item.ExtraDataModelItem;
@@ -15,11 +16,9 @@ import java.util.List;
 
 public class ExtraDataModelInstance implements TooltipComponent {
 
-    public static final ExtraDataModelInstance EMPTY = new ExtraDataModelInstance(ItemStack.EMPTY, -1);
+    public static final ExtraDataModelInstance EMPTY = new ExtraDataModelInstance(ItemStack.EMPTY);
 
     protected final ItemStack stack;
-    @Getter
-    protected final int slot;
     @Getter
     protected List<DynamicHolder<DataModel>> models;
 
@@ -28,9 +27,8 @@ public class ExtraDataModelInstance implements TooltipComponent {
     @Getter
     protected ExtraModelTier tier;
 
-    public ExtraDataModelInstance(ItemStack stack, int slot) {
+    public ExtraDataModelInstance(ItemStack stack) {
         this.stack = stack;
-        this.slot = slot;
         this.models = ExtraDataModelItem.getStoredModels(stack);
         this.data = ExtraDataModelItem.getData(stack);
         this.tier = ExtraModelTier.getByData(this.data);
@@ -71,9 +69,7 @@ public class ExtraDataModelInstance implements TooltipComponent {
 
     public void setData(int data) {
         this.data = data;
-        if (this.data >= this.getNextTierData()) {
-            this.tier = this.tier.next();
-        }
+        if (this.data >= this.getNextTierData()) this.tier = this.tier.next();
 
         ExtraDataModelItem.setData(this.stack, data);
     }
@@ -94,36 +90,14 @@ public class ExtraDataModelInstance implements TooltipComponent {
         return getTier().next();
     }
 
-    public int getKillsNeeded() {
-        return Mth.ceil((this.getNextTierData() - this.data) / (float) this.getDataPerKill());
-    }
-
-//    public Entity getEntity(Level level) {
-//        return this.getEntity(level, 0);
-//    }
-//
-//    public Entity getEntity(Level level, int variant) {
-//        EntityType<?> type = variant == 0 ? this.getModel().entity() : this.getModel().variants().get(variant - 1);
-//        return ClientEntityCache.computeIfAbsent(type, level, this.getModel().display().nbt());
-//    }
-
-    public List<ItemStack> getPredictionDrop() {
-        List<ItemStack> stacks = new ArrayList<>();
-        for (DynamicHolder<DataModel> model: this.models){
-            stacks.add(model.get().getPredictionDrop());
-        }
-
-        return stacks;
-    }
-
     public ItemStack getSourceStack() {
         return this.stack;
     }
 
     public boolean isValid() {
         for (DynamicHolder<DataModel> model: this.models){
-            if (!model.isBound()) return false;
+            if (!model.isBound() || model.is(DataModelRegistry.INSTANCE.emptyHolder().getId())) return false;
         }
-        return true;
+        return this.models.size() == 4;
     }
 }
