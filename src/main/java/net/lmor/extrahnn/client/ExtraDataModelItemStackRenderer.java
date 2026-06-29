@@ -71,15 +71,14 @@ public class ExtraDataModelItemStackRenderer extends BlockEntityWithoutLevelRend
         List<DynamicHolder<DataModel>> models = ExtraDataModelItem.getStoredModels(stack);
         int count = 0;
         for (DynamicHolder<DataModel> model: models){
-            if (model.isBound()) {
-                DisplayEntity displayEntity = model.get().displayEntity(Minecraft.getInstance().level);
-                Entity ent = ClientEntityCache.computeIfAbsent(displayEntity, Minecraft.getInstance().level);
-                if (Minecraft.getInstance().player != null) ent.tickCount = Minecraft.getInstance().player.tickCount;
-                if (ent != null) {
-                    this.renderEntityInInventory(matrix, type, ent, model.get(), count);
-                }
-                count++;
-            }
+            if (!model.isBound()) continue;
+
+            DisplayEntity displayEntity = model.get().displayEntity(Minecraft.getInstance().level);
+            Entity ent = ClientEntityCache.computeIfAbsent(displayEntity, Minecraft.getInstance().level);
+            if (Minecraft.getInstance().player != null) ent.tickCount = Minecraft.getInstance().player.tickCount;
+            if (ent != null) this.renderEntityInInventory(matrix, type, ent, model.get(), count);
+
+            count++;
         }
     }
 

@@ -5,8 +5,6 @@ import io.netty.buffer.ByteBuf;
 import net.lmor.extrahnn.config.ExtendedConfig;
 import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.Utf8String;
-import net.minecraft.network.VarInt;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
@@ -14,7 +12,6 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

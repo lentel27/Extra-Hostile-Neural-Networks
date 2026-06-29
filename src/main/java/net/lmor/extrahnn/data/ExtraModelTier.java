@@ -23,11 +23,11 @@ public enum ExtraModelTier implements StringRepresentable {
     private final int requiredData;
     public static final Codec<ExtraModelTier> CODEC = StringRepresentable.fromEnum(() -> VALUES);
 
-    private ExtraModelTier(String name, int requiredData, int dataPerKill, ChatFormatting color, float accuracy) {
+    ExtraModelTier(String name, int requiredData, int dataPerKill, ChatFormatting color, float accuracy) {
         this(name, requiredData, dataPerKill, TextColor.fromLegacyFormat(color), accuracy, true);
     }
 
-    private ExtraModelTier(String name, int requiredData, int dataPerKill, TextColor color, float accuracy, boolean canSim) {
+    ExtraModelTier(String name, int requiredData, int dataPerKill, TextColor color, float accuracy, boolean canSim) {
         this.name = name;
         this.tierData = new TierData(requiredData, dataPerKill, color, accuracy, canSim);
         this.requiredData = requiredData;

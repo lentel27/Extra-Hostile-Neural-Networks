@@ -1,6 +1,5 @@
 package net.lmor.extrahnn.client.screen;
 
-import dev.shadowsoffire.hostilenetworks.item.DataModelItem;
 import dev.shadowsoffire.placebo.screen.PlaceboContainerScreen;
 import dev.shadowsoffire.placebo.screen.TickableTextList;
 import net.lmor.extrahnn.EHNNUtils;

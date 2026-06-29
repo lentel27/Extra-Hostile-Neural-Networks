@@ -1,6 +1,5 @@
 package net.lmor.extrahnn;
 
-
 import net.lmor.extrahnn.ExtraHostileConfig.ConfigMessage;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.neoforged.bus.api.SubscribeEvent;

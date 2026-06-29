@@ -1,6 +1,5 @@
 package net.lmor.extrahnn;
 
-import com.mojang.serialization.Codec;
 import dev.shadowsoffire.hostilenetworks.data.DataModel;
 import dev.shadowsoffire.hostilenetworks.data.DataModelRegistry;
 import dev.shadowsoffire.placebo.block_entity.TickingBlockEntityType.TickSide;
@@ -25,10 +24,8 @@ import net.lmor.extrahnn.common.tile.UltimateSimChamberTileEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -151,11 +148,6 @@ public class ExtraHostile {
                             }
                         })
                 );
-
-        public static final DataComponentType<CompoundTag> SETTING_CARD = R.component("setting_card", b -> b
-                .persistent(CompoundTag.CODEC)
-                .networkSynchronized(ByteBufCodecs.COMPOUND_TAG)
-        );
 
         private static void bootstrap() {}
     }

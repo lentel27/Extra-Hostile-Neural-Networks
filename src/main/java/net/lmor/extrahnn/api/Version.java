@@ -1,5 +1,8 @@
 package net.lmor.extrahnn.api;
 
+import lombok.Getter;
+
+@Getter
 public enum Version {
 
     V1("v1", 1),
@@ -23,13 +26,5 @@ public enum Version {
             case "v4" -> V4;
             default -> V1;
         };
-    }
-
-    public String getId(){
-        return id;
-    }
-
-    public int getMultiplier(){
-        return multiplier;
     }
 }
