@@ -71,5 +71,7 @@
 
 	"extrahnn.info.setting_card": "Settings saved",
 
-	"extrahnn.info.error": "Error: %s"
+	"extrahnn.info.error": "Error: %s",
+
+	"extrahnn.info.not_build": "Building this model is prohibited!"
 }

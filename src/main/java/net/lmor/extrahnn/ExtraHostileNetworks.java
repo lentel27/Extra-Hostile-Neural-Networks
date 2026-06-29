@@ -1,12 +1,12 @@
 package net.lmor.extrahnn;
 
-import dev.shadowsoffire.placebo.config.Configuration;
 import dev.shadowsoffire.placebo.network.PayloadHelper;
 import dev.shadowsoffire.placebo.tabs.TabFillingRegistry;
 import net.lmor.extrahnn.ExtraHostile.Items;
 import net.lmor.extrahnn.ExtraHostile.Tabs;
 import net.lmor.extrahnn.ExtraHostile.TileEntities;
 import net.lmor.extrahnn.api.IRegTile;
+import net.lmor.extrahnn.config.ExtendedConfig;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
@@ -17,8 +17,6 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities.EnergyStorage;
 import net.neoforged.neoforge.capabilities.Capabilities.ItemHandler;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.server.ServerAboutToStartEvent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,7 +26,7 @@ public class ExtraHostileNetworks {
     public static final String MOD_ID = "extrahnn";
     public static final String VERSION = ModList.get().getModContainerById(MOD_ID).get().getModInfo().getVersion().toString();
     public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
-    public static Configuration cfg;
+    public static ExtendedConfig cfg;
 
     public static ResourceLocation local(String id){
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, id);

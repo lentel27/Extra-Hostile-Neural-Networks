@@ -1,18 +1,20 @@
 package net.lmor.extrahnn;
 
-import dev.shadowsoffire.placebo.config.Configuration;
 import dev.shadowsoffire.placebo.network.PayloadProvider;
 import io.netty.buffer.ByteBuf;
+import net.lmor.extrahnn.config.ExtendedConfig;
 import net.minecraft.network.ConnectionProtocol;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.Utf8String;
 import net.minecraft.network.VarInt;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,50 +57,62 @@ public class ExtraHostileConfig {
     public static String minimumTierHostile;
     public static String minimumTierExtra;
 
-    public static String[] blackList;
+    public static List<String> blackList;
+    public static List<String> blackListClick;
 
     public ExtraHostileConfig() {
     }
 
-    public static Configuration load() {
-        Configuration cfg = new Configuration(ExtraHostileNetworks.MOD_ID);
+    public static ExtendedConfig load() {
+        ExtendedConfig cfg = new ExtendedConfig(ExtraHostileNetworks.MOD_ID);
         cfg.setTitle("Extra Hostile Network Config");
         cfg.setComment("All entries in this config file are synced from server to client.");
-        ultimateSimV1PowerCap = cfg.getInt("Ultimate Sim Chamber V1 Power Cap", "version_machines", 10000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V1.");
-        ultimateSimV1PowerDuration = cfg.getInt("Ultimate Sim Chamber V1 Power Duration", "version_machines", 250, 1, Integer.MAX_VALUE, "Ultimate Sim Chamber V1 duration in ticks.");
 
-        ultimateSimV2PowerCap = cfg.getInt("Ultimate Sim Chamber V2 Power Cap", "version_machines", 50000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V2.");
-        ultimateSimV2PowerDuration = cfg.getInt("Ultimate Sim Chamber V2 Power Duration", "version_machines", 200, 1, Integer.MAX_VALUE, "Ultimate Sim Chamber V2 duration in ticks.");
+        cfg.setCategoryComment("machine.version_machines.sim_chamber_v1", "Setting Ultimate Sim Chamber V1");
+        ultimateSimV1PowerCap = cfg.getInt("Capacity", "machine.version_machines.sim_chamber_v1", 10000000, 1, Integer.MAX_VALUE);
+        ultimateSimV1PowerDuration = cfg.getInt("Duration", "machine.version_machines.sim_chamber_v1", 250, 1, Integer.MAX_VALUE);
+        
+        cfg.setCategoryComment("machine.version_machines.sim_chamber_v2", "Setting Ultimate Sim Chamber V2");
+        ultimateSimV2PowerCap = cfg.getInt("Capacity", "machine.version_machines.sim_chamber_v2", 50000000, 1, Integer.MAX_VALUE);
+        ultimateSimV2PowerDuration = cfg.getInt("Duration", "machine.version_machines.sim_chamber_v2", 200, 1, Integer.MAX_VALUE);
+        
+        cfg.setCategoryComment("machine.version_machines.sim_chamber_v3", "Setting Ultimate Sim Chamber V3");
+        ultimateSimV3PowerCap = cfg.getInt("Capacity", "machine.version_machines.sim_chamber_v3", 100000000, 1, Integer.MAX_VALUE);
+        ultimateSimV3PowerDuration = cfg.getInt("Duration", "machine.version_machines.sim_chamber_v3", 150, 1, Integer.MAX_VALUE);
+        
+        cfg.setCategoryComment("machine.version_machines.sim_chamber_v4", "Setting Ultimate Sim Chamber V4");
+        ultimateSimV4PowerCap = cfg.getInt("Capacity", "machine.version_machines.sim_chamber_v4", 200000000, 1, Integer.MAX_VALUE);
+        ultimateSimV4PowerDuration = cfg.getInt("Duration", "machine.version_machines.sim_chamber_v4", 100, 1, Integer.MAX_VALUE);
 
-        ultimateSimV3PowerCap = cfg.getInt("Ultimate Sim Chamber V3 Power Cap", "version_machines", 100000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V3.");
-        ultimateSimV3PowerDuration = cfg.getInt("Ultimate Sim Chamber V3 Power Duration", "version_machines", 150, 1, Integer.MAX_VALUE, "Ultimate Sim Chamber V3 duration in ticks.");
+        cfg.setCategoryComment("machine.version_machines.loot_fab_v1", "Setting Ultimate Loot Fab V1");
+        ultimateFabV1PowerCap = cfg.getInt("Capacity", "machine.version_machines.loot_fab_v1", 10000000, 1, Integer.MAX_VALUE);
+        ultimateFabV1PowerCost = cfg.getInt("Power Cost", "machine.version_machines.loot_fab_v1", 4096, 0, Integer.MAX_VALUE);
+        ultimateFabV1PowerDuration = cfg.getInt("Duration", "machine.version_machines.loot_fab_v1", 50, 1, Integer.MAX_VALUE);
 
-        ultimateSimV4PowerCap = cfg.getInt("Ultimate Sim Chamber V4 Power Cap", "version_machines", 200000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Simulation Chamber V4.");
-        ultimateSimV4PowerDuration = cfg.getInt("Ultimate Sim Chamber V4 Power Duration", "version_machines", 100, 1, Integer.MAX_VALUE, "Ultimate Sim Chamber V4 duration in ticks.");
+        cfg.setCategoryComment("machine.version_machines.loot_fab_v2", "Setting Ultimate Loot Fab V2");
+        ultimateFabV2PowerCap = cfg.getInt("Capacity", "machine.version_machines.loot_fab_v2", 50000000, 1, Integer.MAX_VALUE);
+        ultimateFabV2PowerCost = cfg.getInt("Power Cost", "machine.version_machines.loot_fab_v2", 16384, 0, Integer.MAX_VALUE);
+        ultimateFabV2PowerDuration = cfg.getInt("Duration", "machine.version_machines.loot_fab_v2", 40, 1, Integer.MAX_VALUE);
 
-        ultimateFabV1PowerCap = cfg.getInt("Ultimate Loot Fab V1 Power Cap", "version_machines", 10000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Loot Fabricator V1.");
-        ultimateFabV1PowerCost = cfg.getInt("Ultimate Loot Fab V1 Power Cost", "version_machines", 4096, 0, Integer.MAX_VALUE, "The FE/t cost of the Ultimate Loot Fabricator V1.");
-        ultimateFabV1PowerDuration = cfg.getInt("Ultimate Loot Fab V1 Power Duration", "version_machines", 50, 1, Integer.MAX_VALUE, "Ultimate Loot Fab V1 duration in ticks.");
+        cfg.setCategoryComment("machine.version_machines.loot_fab_v3", "Setting Ultimate Loot Fab V3");
+        ultimateFabV3PowerCap = cfg.getInt("Capacity", "machine.version_machines.loot_fab_v3", 100000000, 1, Integer.MAX_VALUE);
+        ultimateFabV3PowerCost = cfg.getInt("Power Cost", "machine.version_machines.loot_fab_v3", 65536, 0, Integer.MAX_VALUE);
+        ultimateFabV3PowerDuration = cfg.getInt("Duration", "machine.version_machines.loot_fab_v3", 30, 1, Integer.MAX_VALUE);
 
-        ultimateFabV2PowerCap = cfg.getInt("Ultimate Loot Fab V2 Power Cap", "version_machines", 50000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Loot Fabricator V2.");
-        ultimateFabV2PowerCost = cfg.getInt("Ultimate Loot Fab V2 Power Cost", "version_machines", 16384, 0, Integer.MAX_VALUE, "The FE/t cost of the Ultimate Loot Fabricator V2.");
-        ultimateFabV2PowerDuration = cfg.getInt("Ultimate Loot Fab V2 Power Duration", "version_machines", 40, 1, Integer.MAX_VALUE, "Ultimate Loot Fab V2 duration in ticks.");
+        cfg.setCategoryComment("machine.version_machines.loot_fab_v4", "Setting Ultimate Loot Fab V4");
+        ultimateFabV4PowerCap = cfg.getInt("Capacity", "machine.version_machines.loot_fab_v4", 200000000, 1, Integer.MAX_VALUE);
+        ultimateFabV4PowerCost = cfg.getInt("Power Cost", "machine.version_machines.loot_fab_v4", 262144, 0, Integer.MAX_VALUE);
+        ultimateFabV4PowerDuration = cfg.getInt("Duration", "machine.version_machines.loot_fab_v4", 20, 1, Integer.MAX_VALUE);
 
-        ultimateFabV3PowerCap = cfg.getInt("Ultimate Loot Fab V3 Power Cap", "version_machines", 100000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Loot Fabricator V3.");
-        ultimateFabV3PowerCost = cfg.getInt("Ultimate Loot Fab V3 Power Cost", "version_machines", 65536, 0, Integer.MAX_VALUE, "The FE/t cost of the Ultimate Loot Fabricator V3.");
-        ultimateFabV3PowerDuration = cfg.getInt("Ultimate Loot Fab V3 Power Duration", "version_machines", 30, 1, Integer.MAX_VALUE, "Ultimate Loot Fab V3 duration in ticks.");
+        cfg.setCategoryComment("machine.merger_camera", "Setting Merger Camera");
+        mergerCameraPowerCap = cfg.getInt("Capacity", "machine.merger_camera", 100000000, 1, Integer.MAX_VALUE);
+        mergerCameraPowerCost = cfg.getInt("Power Cost", "machine.merger_camera", 25000, 0, Integer.MAX_VALUE);
+        mergerCameraPowerDuration = cfg.getInt("Duration", "machine.merger_camera", 500, 1, Integer.MAX_VALUE);
 
-        ultimateFabV4PowerCap = cfg.getInt("Ultimate Loot Fab V4 Power Cap", "version_machines", 200000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Ultimate Loot Fabricator V4.");
-        ultimateFabV4PowerCost = cfg.getInt("Ultimate Loot Fab V4 Power Cost", "version_machines", 262144, 0, Integer.MAX_VALUE, "The FE/t cost of the Ultimate Loot Fabricator V4.");
-        ultimateFabV4PowerDuration = cfg.getInt("Ultimate Loot Fab V4 Power Duration", "version_machines", 20, 1, Integer.MAX_VALUE, "Ultimate Loot Fab V4 duration in ticks.");
-
-        mergerCameraPowerCap = cfg.getInt("Merger Camera Power Cap", "power", 100000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Merger Camera.");
-        mergerCameraPowerCost = cfg.getInt("Merger Camera Power Cost", "power", 25000, 0, Integer.MAX_VALUE, "Total RF required to fuse data models in a Merger Camera.");
-        mergerCameraPowerDuration = cfg.getInt("Merger Camera Power Duration", "power", 500, 1, Integer.MAX_VALUE, "Merger Camera duration in ticks.");
-
-        simulationModelingPowerCap = cfg.getInt("Simulation Modeling Power Cap", "power", 100000000, 1, Integer.MAX_VALUE, "The maximum FE stored in the Simulation Modeling.");
-        simulationModelingPowerCost = cfg.getInt("Simulation Modeling Power Cost", "power", 100000, 0, Integer.MAX_VALUE, "The FE/t cost of the Ultimate Simulation Modeling.");
-        simulationModelingPowerDuration = cfg.getInt("Simulation Modeling Power Duration", "power", 100, 1, Integer.MAX_VALUE, "Simulation Modeling duration in ticks.");
+        cfg.setCategoryComment("machine.sim_model", "Setting Simulation Modeling");
+        simulationModelingPowerCap = cfg.getInt("Capacity", "machine.sim_model", 100000000, 1, Integer.MAX_VALUE);
+        simulationModelingPowerCost = cfg.getInt("Power Cost", "machine.sim_model", 100000, 0, Integer.MAX_VALUE);
+        simulationModelingPowerDuration = cfg.getInt("Duration", "machine.sim_model", 100, 1, Integer.MAX_VALUE);
 
         upgradeSpeed = cfg.getInt("Upgrade Speed", "upgrade", 50, 1, 100, "Acceleration of mechanisms with a speed map");
         upgradeSpeedEnergy = cfg.getFloat("Upgrade Speed Energy", "upgrade", 2.0f, 0.0f, Float.MAX_VALUE, "How many times will energy consumption increase?");
@@ -110,7 +124,8 @@ public class ExtraHostileConfig {
         minimumTierHostile = cfg.getString("Minimum Upgrade tier - Hostile", "utils", "FAULTY", "What is the minimum entry threshold required for a model to start leveling up?\nSELF_AWARE > SUPERIOR > ADVANCED > BASIC > FAULTY");
         minimumTierExtra = cfg.getString("Minimum Upgrade tier - Extra Hostile", "utils", "AUTONOMOUS", "What is the minimum entry threshold required for a model to start leveling up?\nOMNIPOTENT > SYNTHETIC > ADAPTIVE > INTELLIGENT > AUTONOMOUS");
 
-        blackList = cfg.getStringList("Black list for Simulation Modeling", "utils", new String[0], "Blacklist of models that cannot be improved during simulation modeling. Please note that you need to write the Hostile Network model identifier, for example: hostilenetworks:blaze etc.");
+        blackList = cfg.getStringList("Black list for Simulation Modeling", "utils", List.of(), "Blacklist of models that cannot be improved during simulation modeling. Please note that you need to write the Hostile Network model identifier\nExample: hostilenetworks:blaze");
+        blackListClick = cfg.getStringList("Blacklist for creating a model when clicking on an entity", "utils", List.of(), "Blacklist, which prevents creation of models via right-click on an entity.\nExample: entity.minecraft.blaze");
 
         if (cfg.hasChanged()) cfg.save();
         return cfg;
@@ -129,29 +144,9 @@ public class ExtraHostileConfig {
                                 int simulationModelingPowerCap, int simulationModelingPowerCost, int simulationModelingPowerDuration,
 
                                 int upgradeSpeed, float upgradeSpeedEnergy, int upgradeModuleStackCost, int upgradeDataKill,
-                                String minimumTierHostile, String minimumTierExtra, String[] blackList) implements CustomPacketPayload {
+                                String minimumTierHostile, String minimumTierExtra, List<String> blackList, List<String> blackListClick) implements CustomPacketPayload {
 
-        static StreamCodec<ByteBuf, String[]> STRING_LIST = new StreamCodec<>() {
-            private static final int maxLength = 32767;
-
-            @Override
-            public String @NotNull [] decode(@NotNull ByteBuf buffer) {
-                int size = VarInt.read(buffer);
-                String[] list = new String[size];
-                for (int i = 0; i < size; i++) {
-                    list[i] = Utf8String.read(buffer, maxLength);
-                }
-                return list;
-            }
-
-            @Override
-            public void encode(@NotNull ByteBuf buffer, String[] value) {
-                VarInt.write(buffer, value.length);
-                for (String s : value) {
-                    Utf8String.write(buffer, s, maxLength);
-                }
-            }
-        };
+        static StreamCodec<ByteBuf, List<String>> STRING_LIST = ByteBufCodecs.stringUtf8(32767).apply(ByteBufCodecs.list());
 
         public static final Type<ConfigMessage> TYPE = new Type<>(ExtraHostileNetworks.local("config"));
 
@@ -173,7 +168,7 @@ public class ExtraHostileConfig {
                                 buf.readVarInt(), buf.readVarInt(), buf.readVarInt(),
                                 buf.readVarInt(), buf.readVarInt(), buf.readVarInt(),
                                 buf.readVarInt(), buf.readFloat(), buf.readVarInt(), buf.readVarInt(), buf.readUtf(),
-                                buf.readUtf(), STRING_LIST.decode(buf)
+                                buf.readUtf(), STRING_LIST.decode(buf), STRING_LIST.decode(buf)
                         );
                     }
 
@@ -212,6 +207,7 @@ public class ExtraHostileConfig {
                         buf.writeUtf(msg.minimumTierHostile());
                         buf.writeUtf(msg.minimumTierExtra());
                         STRING_LIST.encode(buf, msg.blackList());
+                        STRING_LIST.encode(buf, msg.blackListClick());
                     }
                 };
 
@@ -226,7 +222,8 @@ public class ExtraHostileConfig {
                     ExtraHostileConfig.ultimateFabV4PowerCap, ExtraHostileConfig.ultimateFabV4PowerCost, ExtraHostileConfig.ultimateFabV4PowerDuration,
 
                     ExtraHostileConfig.mergerCameraPowerCap, ExtraHostileConfig.mergerCameraPowerCost, ExtraHostileConfig.mergerCameraPowerDuration, ExtraHostileConfig.simulationModelingPowerCap, ExtraHostileConfig.simulationModelingPowerCost,
-                    ExtraHostileConfig.simulationModelingPowerDuration, ExtraHostileConfig.upgradeSpeed, ExtraHostileConfig.upgradeSpeedEnergy, ExtraHostileConfig.upgradeModuleStackCost, ExtraHostileConfig.upgradeDataKill, ExtraHostileConfig.minimumTierHostile, ExtraHostileConfig.minimumTierExtra, ExtraHostileConfig.blackList);
+                    ExtraHostileConfig.simulationModelingPowerDuration, ExtraHostileConfig.upgradeSpeed, ExtraHostileConfig.upgradeSpeedEnergy, ExtraHostileConfig.upgradeModuleStackCost, ExtraHostileConfig.upgradeDataKill, ExtraHostileConfig.minimumTierHostile, ExtraHostileConfig.minimumTierExtra,
+                    ExtraHostileConfig.blackList, ExtraHostileConfig.blackListClick);
         }
 
         public static ConfigMessage ConfigMessageSync(
@@ -239,7 +236,7 @@ public class ExtraHostileConfig {
                 int mergerCameraPowerCap, int mergerCameraPowerCost,
                 int mergerCameraPowerDuration, int simulationModelingPowerCap, int simulationModelingPowerCost, int simulationModelingPowerDuration,
                 int upgradeSpeed, float upgradeSpeedEnergy, int upgradeModuleStackCost, int upgradeDataKill, String minimumTierHostile,
-                String minimumTierExtra, String[] blackList) {
+                String minimumTierExtra, List<String> blackList, List<String> blackListClick) {
 
             return new ConfigMessage(
                     ultimateSimV1PowerCap, ultimateSimV1PowerDuration,
@@ -252,7 +249,7 @@ public class ExtraHostileConfig {
                     ultimateFabV4PowerCap, ultimateFabV4PowerCost, ultimateFabV4PowerDuration,
                     mergerCameraPowerCap, mergerCameraPowerCost, mergerCameraPowerDuration,
                     simulationModelingPowerCap, simulationModelingPowerCost, simulationModelingPowerDuration,
-                    upgradeSpeed, upgradeSpeedEnergy, upgradeModuleStackCost, upgradeDataKill, minimumTierHostile, minimumTierExtra, blackList);
+                    upgradeSpeed, upgradeSpeedEnergy, upgradeModuleStackCost, upgradeDataKill, minimumTierHostile, minimumTierExtra, blackList, blackListClick);
         }
 
         @Override
@@ -308,7 +305,9 @@ public class ExtraHostileConfig {
                 ExtraHostileConfig.upgradeDataKill = msg.upgradeDataKill;
                 ExtraHostileConfig.minimumTierHostile = msg.minimumTierHostile;
                 ExtraHostileConfig.minimumTierExtra = msg.minimumTierExtra;
+
                 ExtraHostileConfig.blackList = msg.blackList;
+                ExtraHostileConfig.blackListClick = msg.blackListClick;
             }
 
             @Override

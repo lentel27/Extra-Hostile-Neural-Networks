@@ -71,5 +71,7 @@
 
 	"extrahnn.info.setting_card": "设定已保存",
 
-	"extrahnn.info.error": "错误：%s"
+	"extrahnn.info.error": "错误：%s",
+
+	"extrahnn.info.not_build": "Building this model is prohibited!"
 }

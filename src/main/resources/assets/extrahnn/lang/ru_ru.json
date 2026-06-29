@@ -71,5 +71,7 @@
 
 	"extrahnn.info.setting_card": "Настройки сохранены",
 
-	"extrahnn.info.error": "Ошибка: %s"
+	"extrahnn.info.error": "Ошибка: %s",
+
+	"extrahnn.info.not_build": "Построение данной модели запрещено!"
 }

@@ -73,7 +73,7 @@ public class EHNNUtils {
     public static boolean allowedBlackListModel(ItemStack stack){
         if (validTiersHostile.isEmpty() || validTiersExtra.isEmpty()) initTiers();
 
-        List<String> blackListedTiers = Arrays.stream(ExtraHostileConfig.blackList).toList();
+        List<String> blackListedTiers = ExtraHostileConfig.blackList;
         if (blackListedTiers.isEmpty()) return true;
 
         List<DynamicHolder<DataModel>> allEntities = new ArrayList<>();
