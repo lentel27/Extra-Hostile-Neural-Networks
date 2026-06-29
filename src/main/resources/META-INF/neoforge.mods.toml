@@ -35,13 +35,6 @@ config="${mod_id}.mixins.json"
     side="BOTH"
 
 [[dependencies.${mod_id}]]
-    modId="jei"
-    type="optional"
-    versionRange="${jei_version}"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.${mod_id}]]
     modId="placebo"
     type="required"
     versionRange="${placebo_version_id}"

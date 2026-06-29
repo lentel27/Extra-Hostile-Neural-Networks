@@ -64,13 +64,13 @@ dependencies {
     implementation "curse.maven:hostile-neural-networks-552574:${hostileneuralnetworks_version_id}"
     implementation "curse.maven:placebo-283644:${placebo_version_id}"
 
-  // Just Enough Items
-  compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
-  runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
-  implementation("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+    // Just Enough Items
+    compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
+    runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+    implementation("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
     //Curios
-    runtimeOnly "curse.maven:curios-continuation-1037991:5888964"
+    runtimeOnly "curse.maven:curios-309927:6529130"
 
 
     //region For testing
