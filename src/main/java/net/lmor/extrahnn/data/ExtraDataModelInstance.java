@@ -3,8 +3,10 @@ package net.lmor.extrahnn.data;
 import dev.shadowsoffire.hostilenetworks.HostileConfig;
 import dev.shadowsoffire.hostilenetworks.data.DataModel;
 import dev.shadowsoffire.placebo.reload.DynamicHolder;
+import lombok.Getter;
 import net.lmor.extrahnn.common.item.ExtraDataModelItem;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 
@@ -16,10 +18,14 @@ public class ExtraDataModelInstance implements TooltipComponent {
     public static final ExtraDataModelInstance EMPTY = new ExtraDataModelInstance(ItemStack.EMPTY, -1);
 
     protected final ItemStack stack;
+    @Getter
     protected final int slot;
+    @Getter
     protected List<DynamicHolder<DataModel>> models;
 
+    @Getter
     protected int data;
+    @Getter
     protected ExtraModelTier tier;
 
     public ExtraDataModelInstance(ItemStack stack, int slot) {
@@ -30,12 +36,11 @@ public class ExtraDataModelInstance implements TooltipComponent {
         this.tier = ExtraModelTier.getByData(this.data);
     }
 
-    public int getData() {
-        return this.data;
-    }
-
-    public List<DynamicHolder<DataModel>> getModels(){
-        return this.models;
+    public int rollAllPredictions(RandomSource random){
+        float accuracy = this.getAccuracy();
+        int floor = (int) accuracy;
+        float frac = accuracy - floor;
+        return floor + (random.nextFloat() < frac ? 1 : 0);
     }
 
     public int simCost() {
@@ -46,10 +51,6 @@ public class ExtraDataModelInstance implements TooltipComponent {
             }
         }
         return cost;
-    }
-
-    public ExtraModelTier getTier() {
-        return this.tier;
     }
 
     public int getDataPerKill() {
@@ -75,10 +76,6 @@ public class ExtraDataModelInstance implements TooltipComponent {
         }
 
         ExtraDataModelItem.setData(this.stack, data);
-    }
-
-    public int getSlot() {
-        return this.slot;
     }
 
     public float getAccuracy() {

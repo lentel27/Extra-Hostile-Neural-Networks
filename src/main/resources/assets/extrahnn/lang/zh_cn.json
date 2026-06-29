@@ -64,14 +64,8 @@
 	"extrahnn.merger_camera.run.4": "> 正在评估模型\n",
 	"extrahnn.merger_camera.run.5": "> 融合完成……",
 
-	"extrahnn.player_message.setting_clear": "设定已清除",
-	"extrahnn.player_message.setting_load": "设定已保存",
-	"extrahnn.player_message.setting_save": "设定已加载",
-	"extrahnn.player_message.setting_invalid": "无法加载该设定",
-
-	"extrahnn.info.setting_card": "设定已保存",
-
 	"extrahnn.info.error": "错误：%s",
+	"extrahnn.info.progress": "Progress: %s/%s",
 
 	"extrahnn.info.not_build": "Building this model is prohibited!"
 }

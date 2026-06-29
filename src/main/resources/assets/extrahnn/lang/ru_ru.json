@@ -64,14 +64,8 @@
 	"extrahnn.merger_camera.run.4": "> Оценка моделей\n",
 	"extrahnn.merger_camera.run.5": "> Завершение слияния...",
 
-	"extrahnn.player_message.setting_clear": "Настройки очищены",
-	"extrahnn.player_message.setting_load": "Настройки загружены",
-	"extrahnn.player_message.setting_save": "Настройки сохранены",
-	"extrahnn.player_message.setting_invalid": "Не удалось загрузить настройку",
-
-	"extrahnn.info.setting_card": "Настройки сохранены",
-
 	"extrahnn.info.error": "Ошибка: %s",
+	"extrahnn.info.progress": "Прогресс: %s/%s",
 
 	"extrahnn.info.not_build": "Построение данной модели запрещено!"
 }

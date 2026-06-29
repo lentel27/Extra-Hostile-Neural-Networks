@@ -68,7 +68,7 @@ public class UltimateSimChamberContainer extends BlockEntityMenu<UltimateSimCham
     }
 
     public boolean isPredictionSucceed() {
-        return this.tile.isPredictionSucceed();
+        return this.tile.didPredictionSucceed();
     }
 
     public FailureState getFailState() {
@@ -90,8 +90,7 @@ public class UltimateSimChamberContainer extends BlockEntityMenu<UltimateSimCham
     @Override
     public boolean clickMenuButton(@NotNull Player player, int id) {
         if (id >= 0 && id <= 2) {
-            RedstoneState state = RedstoneState.values()[id];
-            this.setRedstoneState(state);
+            this.setRedstoneState(RedstoneState.values()[id]);
             return true;
         }
         if (id == 100){

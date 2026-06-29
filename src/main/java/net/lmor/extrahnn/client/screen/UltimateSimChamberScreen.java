@@ -35,8 +35,7 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
     public static final int WIDTH = 232;
     public static final int HEIGHT = 256;
     public static final int MAX_TEXT_WIDTH = 178;
-
-    private static final Component ERROR = Component.literal("ERROR").withStyle(ChatFormatting.OBFUSCATED);
+    public static final float RUNTIME_TEXT_SPEED = 0.65F;
 
     DecimalFormat DECIMAL_FORMAT = new DecimalFormat("##.##%");
 

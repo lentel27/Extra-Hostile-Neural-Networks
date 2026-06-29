@@ -3,9 +3,7 @@
     "package": "net.lmor.extrahnn.mixin",
     "compatibilityLevel": "JAVA_21",
     "mixins": [
-        "MixinHostileEvents",
-        "SettingLootFabTileEntity",
-        "SettingSimChamberTileEntity"
+        "MixinHostileEvents"
     ],
     "injectors": {
         "defaultRequire": 1

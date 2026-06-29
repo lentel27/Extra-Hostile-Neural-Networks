@@ -51,8 +51,7 @@ public class ExtraHostileNetworks {
                     Items.BLANK_EXTRA_DATA_MODEL,
                     Items.UPGRADE_SPEED,
                     Items.UPGRADE_MODULE_STACK,
-                    Items.UPGRADE_DATA_KILL,
-                    Items.SETTING_CARD
+                    Items.UPGRADE_DATA_KILL
             );
         });
     }

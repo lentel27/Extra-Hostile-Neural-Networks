@@ -8,9 +8,10 @@ import dev.shadowsoffire.placebo.cap.ModifiableEnergyStorage;
 import dev.shadowsoffire.placebo.menu.SimpleDataSlots;
 import dev.shadowsoffire.placebo.menu.SimpleDataSlots.IDataAutoRegister;
 import dev.shadowsoffire.placebo.reload.DynamicHolder;
+import lombok.Getter;
+import lombok.Setter;
 import net.lmor.extrahnn.ExtraHostileConfig;
 import net.lmor.extrahnn.api.IRegTile;
-import net.lmor.extrahnn.api.ISettingCard;
 import net.lmor.extrahnn.api.Version;
 import net.lmor.extrahnn.common.item.ExtraDataModelItem;
 import net.lmor.extrahnn.data.ExtraDataModelInstance;
@@ -19,34 +20,36 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
-public class UltimateSimChamberTileEntity extends BlockEntity implements TickingBlockEntity, IDataAutoRegister, IRegTile, ISettingCard {
+public class UltimateSimChamberTileEntity extends BlockEntity implements TickingBlockEntity, IDataAutoRegister, IRegTile {
 
+    @Getter
     protected final SimItemHandler inventory = new SimItemHandler();
+    @Getter
     protected final ModifiableEnergyStorage energy;
+    @Getter
     protected final SimpleDataSlots data = new SimpleDataSlots();
 
-    protected ExtraDataModelInstance currentModel = ExtraDataModelInstance.EMPTY;
+    @Getter
     protected int runtime = 0;
+    @Getter
     protected int predictionSuccess = 0;
+    @Getter
     protected FailureState failState = FailureState.NONE;
+    @Getter @Setter
     protected RedstoneState redstoneState = RedstoneState.IGNORED;
 
+    protected ExtraDataModelInstance currentModel = ExtraDataModelInstance.EMPTY;
     private boolean checkOutput = true;
 
     private Version version;
@@ -67,7 +70,7 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         this.data.addData(() -> this.predictionSuccess, v -> this.predictionSuccess = v);
         this.data.addData(() -> this.failState.ordinal(), v -> this.failState = FailureState.values()[v]);
         this.data.addData(() -> this.redstoneState.ordinal(), v -> this.redstoneState = RedstoneState.values()[v]);
-        this.data.addData(() -> this.extractDataModel ? 1 : 0, v -> this.extractDataModel = v == 1);
+        this.data.addData(() -> this.extractDataModel, v -> this.extractDataModel = v);
         this.data.addEnergy(this.energy);
         this.energy.setMaxExtract(0);
     }
@@ -89,7 +92,6 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         tag.putInt("redstoneState", this.redstoneState.ordinal());
 
         tag.putBoolean("extractModel", extractDataModel);
-
         tag.putString("versionBlockEntity", this.version.getId());
     }
 
@@ -121,51 +123,60 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
             this.failState = FailureState.MODEL;
             this.runtime = 0;
             return;
-        } else if (this.inventory.getStackInSlot(1).isEmpty() && this.runtime == 0){
+        }
+
+        if (this.inventory.getStackInSlot(1).isEmpty() && this.runtime == 0){
             this.failState = FailureState.INPUT;
             return;
         }
 
         ItemStack model = this.inventory.getStackInSlot(0);
-        if (!model.isEmpty()) {
-            ExtraDataModelInstance oldModel = this.currentModel;
-            this.currentModel = this.getOrLoadModel(model);
-            if (oldModel != this.currentModel) {
-                this.runtime = 0;
+        if (model.isEmpty()) {
+            this.failState = FailureState.MODEL;
+            this.runtime = 0;
+            return;
+        }
+
+        ExtraDataModelInstance oldModel = this.currentModel;
+        this.currentModel = this.getOrLoadModel(model);
+        if (oldModel != this.currentModel) this.runtime = 0;
+        if (!this.currentModel.isValid()) return;
+
+        if (!this.currentModel.getTier().data().canSim()) {
+            this.failState = FailureState.FAULTY;
+            this.runtime = 0;
+            return;
+        }
+
+        startWork(level, model);
+    }
+
+    public void startWork(Level level, ItemStack model){
+        if (this.runtime == 0) {
+            if (this.canStartSimulation()) {
+                this.runtime = DURATION;
+                this.predictionSuccess = this.currentModel.rollAllPredictions(level.random);
+                this.inventory.getStackInSlot(1).shrink(version.getMultiplier() * 4);
+                this.setChanged();
             }
+            return;
 
-            if (this.currentModel.isValid()) {
-                if (!this.currentModel.getTier().data().canSim()) {
-                    this.failState = FailureState.FAULTY;
-                    this.runtime = 0;
-                    return;
-                }
-
-                if (this.runtime == 0) {
-                    if (this.canStartSimulation()) {
-                        this.runtime = DURATION;
-
-                        float accuracy = this.currentModel.getAccuracy();
-                        this.predictionSuccess = (int) accuracy + (Objects.requireNonNull(this.level).random.nextFloat() <= this.currentModel.getAccuracy() % 1 ? 1 : 0);
-                        this.inventory.getStackInSlot(1).shrink(version.getMultiplier() * 4);
-                        this.setChanged();
-                    }
-                } else if (this.hasPowerFor(this.currentModel)) {
-                    if (this.getRedstoneState().matches(level.hasNeighborSignal(worldPosition))) {
-                        this.failState = FailureState.NONE;
-                        if (--this.runtime == 0) setResult(model);
-                        else {
-                            this.energy.setEnergy(this.energy.getEnergyStored() - this.currentModel.simCost());
-                            this.setChanged();
-                        }
-                    } else this.failState = FailureState.REDSTONE;
-                }
-                else this.failState = FailureState.ENERGY_MID_CYCLE;
+        } else if (this.hasPowerFor(this.currentModel)) {
+            if (!this.getRedstoneState().matches(level.hasNeighborSignal(worldPosition))){
+                this.failState = FailureState.REDSTONE;
                 return;
             }
+
+            this.failState = FailureState.NONE;
+            if (--this.runtime == 0) setResult(model);
+            else {
+                this.energy.setEnergy(this.energy.getEnergyStored() - this.currentModel.simCost());
+                this.setChanged();
+            }
+            return;
         }
-        this.failState = FailureState.MODEL;
-        this.runtime = 0;
+
+        this.failState = FailureState.ENERGY_MID_CYCLE;
     }
 
     public boolean canStartSimulation() {
@@ -179,149 +190,61 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         if (this.inventory.getStackInSlot(1).getCount() < 4 * version.getMultiplier()){
             this.failState = FailureState.COUNT;
             return false;
-        } else if (this.energy.getEnergyStored() < this.currentModel.simCost()){
+        }
+
+        if (this.energy.getEnergyStored() < this.currentModel.simCost()){
             this.failState = FailureState.ENERGY;
             return false;
-        } else {
-            checkOutput = false;
-
-            ItemStack[] baseDropSlots = new ItemStack[4];
-            ItemStack[] basePredicateSlots = new ItemStack[4];
-            for (int i = 2; i < 6; i++) {
-                baseDropSlots[i - 2] = inventory.getStackInSlot(i).copy();
-                basePredicateSlots[i - 2] = inventory.getStackInSlot(i + 4).copy();
-            }
-
-            List<ItemStack> predicateDrop = new ArrayList<>();
-            List<ItemStack> baseDrop = new ArrayList<>();
-            for (DynamicHolder<DataModel> model: this.currentModel.getModels()){
-                predicateDrop.add(model.get().getPredictionDrop());
-                baseDrop.add(model.get().baseDrop());
-            }
-
-            boolean dropSet = setItemEmulate(baseDropSlots, baseDrop);
-            boolean predicateSet = setItemEmulate(basePredicateSlots, predicateDrop);
-            if (predicateSet && dropSet){
-                this.failState = FailureState.NONE;
-                return true;
-            } else {
-                this.failState = FailureState.OUTPUT;
-                return false;
-            }
         }
+
+        checkOutput = false;
+
+        Map<DropType, List<ItemStack>> dropData = Map.of(DropType.BASE, List.of(), DropType.PREDICATE, List.of());
+        for (DynamicHolder<DataModel> model: this.currentModel.getModels()) {
+            dropData.get(DropType.BASE).add(model.get().baseDrop());
+            dropData.get(DropType.PREDICATE).add(model.get().getPredictionDrop());
+        }
+
+        boolean dropSet = setItem(dropData, true);
+        this.failState = dropSet ? FailureState.NONE: FailureState.OUTPUT;
+        return dropSet;
     }
 
     public void setResult(ItemStack itemModel) {
-        List<ItemStack> predicateDrop = new ArrayList<>();
-        List<ItemStack> baseDrop = new ArrayList<>();
+        Map<DropType, List<ItemStack>> dropData = Map.of(DropType.BASE, List.of(), DropType.PREDICATE, List.of());
+
         for (DynamicHolder<DataModel> model: this.currentModel.getModels()){
             var predDrop = model.get().getPredictionDrop();
             predDrop.setCount(version.getMultiplier());
-            predicateDrop.add(predDrop);
+            dropData.get(DropType.BASE).add(predDrop);
 
-            var base = model.get().baseDrop();
-            base.setCount(version.getMultiplier());
-            baseDrop.add(base);
+            var baseDrop = model.get().baseDrop();
+            baseDrop.setCount(version.getMultiplier());
+            dropData.get(DropType.PREDICATE).add(baseDrop);
         }
 
-        setItem(baseDrop, 2, 6);
-        if (isPredictionSucceed()) setItem(predicateDrop, 6, 10);
+        setItem(dropData, false);
 
         ExtraModelTier tier = this.currentModel.getTier();
         if (!tier.isMax()) {
             int newData = this.currentModel.getData() + this.currentModel.getDataPerKill();
-            if (newData <= this.currentModel.getNextTierData()) {
-                this.currentModel.setData(newData);
-            }
+            if (newData <= this.currentModel.getNextTierData()) this.currentModel.setData(newData);
         }
         ExtraDataModelItem.setIters(itemModel, ExtraDataModelItem.getIters(itemModel) + 1);
         this.setChanged();
     }
 
-    public void setItem(List<ItemStack> itemsToAdd, int startSlot, int endSlot){
-        for (ItemStack item : itemsToAdd) {
-            int remainingCount = item.getCount();
-            for (int i = startSlot; i < endSlot; i++) {
-                ItemStack slot = inventory.getStackInSlot(i);
+    public boolean setItem(Map<DropType, List<ItemStack>> dropData, boolean simulate){
+        List<Boolean> isAdd = new ArrayList<>();
+        for (var entry: dropData.entrySet()){
+            DropType type = entry.getKey();
+            List<ItemStack> listDrops = entry.getValue();
+            if (listDrops.isEmpty()) continue;
 
-                if (!slot.isEmpty() && canStack(slot, item)){
-                    int spaceLeft = slot.getMaxStackSize() - slot.getCount();
-                    if (spaceLeft > 0) {
-                        int toAdd = Math.min(spaceLeft, remainingCount);
-                        slot.grow(toAdd);
-                        remainingCount -= toAdd;
-
-                        if (remainingCount <= 0) {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (remainingCount > 0) {
-                for (int i = startSlot; i < endSlot; i++) {
-                    ItemStack slot = inventory.getStackInSlot(i);
-
-                    if (slot.isEmpty()) {
-                        int toPlace = Math.min(item.getMaxStackSize(), remainingCount);
-                        ItemStack newItem = item.copy();
-                        newItem.setCount(toPlace);
-                        inventory.setStackInSlot(i, newItem);
-                        remainingCount -= toPlace;
-
-                        if (remainingCount <= 0) {
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    public boolean setItemEmulate(ItemStack[] slots, List<ItemStack> itemsToAdd){
-        for (ItemStack item : itemsToAdd) {
-            int remainingCount = item.getCount();
-
-            for (ItemStack slot : slots) {
-                if (!slot.isEmpty() && canStack(slot, item)) {
-                    int spaceLeft = slot.getMaxStackSize() - slot.getCount();
-                    if (spaceLeft > 0) {
-                        int toAdd = Math.min(spaceLeft, remainingCount);
-                        slot.grow(toAdd);
-                        remainingCount -= toAdd;
-
-                        if (remainingCount <= 0) {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (remainingCount > 0) {
-                for (int i = 0; i < slots.length; i++) {
-                    if (slots[i].isEmpty()) {
-                        int toPlace = Math.min(item.getMaxStackSize(), remainingCount);
-                        slots[i] = item.copy();
-                        remainingCount -= toPlace;
-
-                        if (remainingCount <= 0) {
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (remainingCount > 0) {
-                return false;
-            }
+            isAdd.add(type.setItemDrop(listDrops, inventory, simulate));
         }
 
-        return true;
-    }
-
-    public boolean canStack(ItemStack a, ItemStack b) {
-        if (a.isEmpty()) return true;
-        return ItemStack.isSameItemSameComponents(a, b) && a.getCount() < a.getMaxStackSize();
+        return isAdd.stream().allMatch(b -> b);
     }
 
     public boolean hasPowerFor(ExtraDataModelInstance model) {
@@ -332,77 +255,14 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         return this.currentModel.getSourceStack() == stack ? this.currentModel : new ExtraDataModelInstance(stack, 0);
     }
 
-    public SimItemHandler getInventory() {
-        return this.inventory;
-    }
-
-    public IEnergyStorage getEnergy() {
-        return energy;
-    }
-
     public int getEnergyStored() {
         return this.energy.getEnergyStored();
     }
 
-    public int getRuntime() {
-        return this.runtime;
-    }
-
-    public boolean isPredictionSucceed() {
+    public boolean didPredictionSucceed() {
         return this.predictionSuccess > 0;
     }
 
-    public FailureState getFailState() {
-        return this.failState;
-    }
-
-    public void setRedstoneState(RedstoneState state) {
-        this.redstoneState = state;
-    }
-
-    public RedstoneState getRedstoneState() {
-        return this.redstoneState;
-    }
-
-    @Override
-    public CompoundTag saveSetting(HolderLookup.Provider regs) {
-        CompoundTag tag = new CompoundTag();
-
-        ItemStack item = this.inventory.getStackInSlot(0);
-        if (!item.isEmpty()){
-            CompoundTag saveTag = new CompoundTag();
-            tag.put("dataModel", item.save(regs, saveTag));
-        }
-        tag.putString("config", "UltimateSimChamberTileEntity");
-        return tag;
-    }
-
-    @Override
-    public boolean loadSetting(HolderLookup.@NotNull Provider regs, CompoundTag tag, Player player) {
-        if (!tag.contains("config") || !tag.getString("config").equals("UltimateSimChamberTileEntity")) return false;
-        if (!tag.contains("dataModel")) return false;
-
-        CompoundTag saveTag = tag.getCompound("dataModel");
-        Inventory playerInv = player.getInventory();
-
-        ItemStack item = ItemStack.parseOptional(regs, saveTag);
-        int inventoryIndexItem = playerInv.findSlotMatchingItem(item);
-        ItemStack machineItem = this.inventory.getStackInSlot(0);
-
-        if (machineItem == item) return false;
-
-        if (!item.isEmpty() && inventoryIndexItem != -1){
-            playerInv.removeItem(inventoryIndexItem, 1);
-            if (!this.inventory.getStackInSlot(0).isEmpty()){
-                playerInv.add(this.inventory.getStackInSlot(0));
-                this.inventory.setStackInSlot(0, ItemStack.EMPTY);
-            }
-
-            this.inventory.setStackInSlot(0, item);
-        }
-
-        return true;
-    }
     public class SimItemHandler extends InternalItemHandler {
 
         public SimItemHandler() {
@@ -445,8 +305,8 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         MODEL("hostilenetworks.fail.model"),
         FAULTY("hostilenetworks.fail.faulty"),
         ENERGY_MID_CYCLE("hostilenetworks.fail.energy_mid_cycle"),
-        COUNT("extrahnn.fail.count"),
-        REDSTONE("hostilenetworks.fail.redstone");
+        REDSTONE("hostilenetworks.fail.redstone"),
+        COUNT("extrahnn.fail.count");
 
         private final String id;
 
@@ -478,5 +338,33 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
                 DURATION = ExtraHostileConfig.ultimateSimV1PowerDuration;
             }
         }
+    }
+
+    public enum DropType {
+        BASE(new int[]{2, 3, 4, 5}), PREDICATE(new int[]{6, 7, 7, 9});
+
+        final int[] outputSlots;
+        DropType(int[] slots){
+            outputSlots = slots;
+        }
+
+        public boolean setItemDrop(List<ItemStack> listDrops, SimItemHandler inventory, boolean simulate){
+            return insertDropsIntoSlots(listDrops, inventory, outputSlots, simulate);
+        }
+
+        private boolean insertDropsIntoSlots(List<ItemStack> listDrops, SimItemHandler inventory, int[] slots, boolean simulate) {
+            for (ItemStack drop : listDrops) {
+                ItemStack remaining = drop.copy();
+
+                for (int slot : slots) {
+                    if (remaining.isEmpty()) break;
+                    remaining = inventory.insertItem(slot, remaining, simulate);
+                }
+
+                if (!remaining.isEmpty()) return false;
+            }
+            return true;
+        }
+
     }
 }
