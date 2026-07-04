@@ -259,8 +259,12 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
 
         checkOutput = false;
 
-        Map<DropType, List<ItemStack>> dropData = Map.of(DropType.BASE, List.of(), DropType.PREDICATE, List.of());
-        for (DynamicHolder<DataModel> model: this.currentModel.getModels()) {
+        Map<DropType, List<ItemStack>> dropData = Map.of(
+                DropType.BASE, new ArrayList<>(),
+                DropType.PREDICATE, new ArrayList<>()
+        );
+
+        for (DynamicHolder<DataModel> model : this.currentModel.getModels()) {
             if (!model.isBound()) continue;
 
             ItemStack baseDrop = model.get().baseDrop();
@@ -276,16 +280,24 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
     }
 
     public void setResult(ItemStack itemModel) {
-        Map<DropType, List<ItemStack>> dropData = Map.of(DropType.BASE, List.of(), DropType.PREDICATE, List.of());
+        Map<DropType, List<ItemStack>> dropData = Map.of(
+                DropType.BASE, new ArrayList<>(),
+                DropType.PREDICATE, new ArrayList<>()
+        );
 
         for (DynamicHolder<DataModel> model: this.currentModel.getModels()){
-            var predDrop = model.get().getPredictionDrop();
-            predDrop.setCount(version.getMultiplier());
-            dropData.get(DropType.BASE).add(predDrop);
+            if (!model.isBound()) continue;
 
             var baseDrop = model.get().baseDrop();
-            baseDrop.setCount(version.getMultiplier());
-            dropData.get(DropType.PREDICATE).add(baseDrop);
+            if (baseDrop != null && !baseDrop.isEmpty()){
+                baseDrop.setCount(version.getMultiplier());
+                dropData.get(DropType.BASE).add(baseDrop);
+            }
+
+            // not checked, its getPredictionDrop() always not null ItemStack and not empty ItemStack
+            var predDrop = model.get().getPredictionDrop();
+            predDrop.setCount(version.getMultiplier());
+            dropData.get(DropType.PREDICATE).add(predDrop);
         }
 
         setItem(dropData, false);
@@ -345,6 +357,10 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
             return slot >= 2 ? stack : super.insertItem(slot, stack, simulate);
         }
 
+        public ItemStack insertDropInternal(int slot, ItemStack stack, boolean simulate) {
+            return super.insertItem(slot, stack, simulate);
+        }
+
         @Override
         public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
             if (slot <= 1 && !extractDataModel) return ItemStack.EMPTY;
@@ -359,6 +375,16 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
 
         public NonNullList<ItemStack> getItems() {
             return this.stacks;
+        }
+
+        public SimItemHandler copy(){
+            SimItemHandler copyInv = new SimItemHandler();
+            NonNullList<ItemStack> source = this.getItems();
+            NonNullList<ItemStack> target = copyInv.getItems();
+
+            for (int i = 0; i < source.size(); i++) target.set(i, source.get(i).copy());
+
+            return copyInv;
         }
     }
 
@@ -406,7 +432,7 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
     }
 
     public enum DropType {
-        BASE(new int[]{2, 3, 4, 5}), PREDICATE(new int[]{6, 7, 7, 9});
+        BASE(new int[]{2, 3, 4, 5}), PREDICATE(new int[]{6, 7, 8, 9});
 
         final int[] outputSlots;
         DropType(int[] slots){
@@ -418,18 +444,19 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         }
 
         private boolean insertDropsIntoSlots(List<ItemStack> listDrops, SimItemHandler inventory, int[] slots, boolean simulate) {
+            SimItemHandler target = simulate ? inventory.copy() : inventory;
+
             for (ItemStack drop : listDrops) {
                 ItemStack remaining = drop.copy();
 
                 for (int slot : slots) {
                     if (remaining.isEmpty()) break;
-                    remaining = inventory.insertItem(slot, remaining, simulate);
+                    remaining = target.insertDropInternal(slot, remaining, false);
                 }
 
                 if (!remaining.isEmpty()) return false;
             }
             return true;
         }
-
     }
 }
