@@ -261,7 +261,12 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
 
         Map<DropType, List<ItemStack>> dropData = Map.of(DropType.BASE, List.of(), DropType.PREDICATE, List.of());
         for (DynamicHolder<DataModel> model: this.currentModel.getModels()) {
-            dropData.get(DropType.BASE).add(model.get().baseDrop());
+            if (!model.isBound()) continue;
+
+            ItemStack baseDrop = model.get().baseDrop();
+            if (baseDrop != null && !baseDrop.isEmpty()) dropData.get(DropType.BASE).add(baseDrop);
+
+            // not checked, its getPredictionDrop() always not null ItemStack and not empty ItemStack
             dropData.get(DropType.PREDICATE).add(model.get().getPredictionDrop());
         }
 
