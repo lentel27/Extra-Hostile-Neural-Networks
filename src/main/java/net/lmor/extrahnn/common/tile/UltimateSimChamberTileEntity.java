@@ -271,7 +271,9 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
             if (baseDrop != null && !baseDrop.isEmpty()) dropData.get(DropType.BASE).add(baseDrop);
 
             // not checked, its getPredictionDrop() always not null ItemStack and not empty ItemStack
+            if (this.didPredictionSucceed()){
             dropData.get(DropType.PREDICATE).add(model.get().getPredictionDrop());
+            }
         }
 
         boolean dropSet = setItem(dropData, true);
@@ -294,10 +296,12 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
                 dropData.get(DropType.BASE).add(baseDrop);
             }
 
-            // not checked, its getPredictionDrop() always not null ItemStack and not empty ItemStack
-            var predDrop = model.get().getPredictionDrop();
-            predDrop.setCount(version.getMultiplier());
-            dropData.get(DropType.PREDICATE).add(predDrop);
+            // only add prediction drop if prediction succeeded
+            if (this.didPredictionSucceed()) {
+                var predDrop = model.get().getPredictionDrop();
+                predDrop.setCount(version.getMultiplier());
+                dropData.get(DropType.PREDICATE).add(predDrop);
+            }
         }
 
         setItem(dropData, false);
