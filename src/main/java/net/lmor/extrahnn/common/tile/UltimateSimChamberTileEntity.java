@@ -309,7 +309,7 @@ public class UltimateSimChamberTileEntity extends BlockEntity implements Ticking
         ExtraModelTier tier = this.currentModel.getTier();
         if (!tier.isMax()) {
             int newData = this.currentModel.getData() + this.currentModel.getDataPerKill();
-            if (newData <= this.currentModel.getNextTierData()) this.currentModel.setData(newData);
+            this.currentModel.setData(newData);
         }
         ExtraDataModelItem.setIters(itemModel, ExtraDataModelItem.getIters(itemModel) + 1);
         this.setChanged();

@@ -294,8 +294,9 @@ public class UltimateSimChamberScreen extends PlaceboContainerScreen<UltimateSim
 
             float color = extract ? 1 : 0.5f;
             guiGraphics.setColor(color, color, color, 1.0F);
-
             guiGraphics.blit(EXTRACT_MODEL, this.getX() + 1, this.getY() + 1, 0, 0, 16, 16, 16, 16);
+
+            guiGraphics.setColor(1, 1, 1, 1.0F);
         }
     }
 
