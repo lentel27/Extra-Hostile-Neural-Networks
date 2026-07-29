@@ -191,7 +191,7 @@ public class UltimateLootFabScreen extends PlaceboContainerScreen<UltimateLootFa
     private void drawItemGrid(@NotNull GuiGraphics graphics, int x, int y, List<ItemStack> drops, boolean queue){
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
-                if (i * 3 + j < Math.min(drops.size() - this.currentPage * 9, 9) && this.isHovering(18 + 18 * j, 10 + 18 * i, 16, 16, x, y)) {
+                if (i * 3 + j < Math.min(drops.size() - this.currentPage * 9, 9) && this.isHovering(18 + 18 * j, QUEUE_Y + 18 * i, 16, 16, x, y)) {
                     List<Component> tip = new ArrayList<>(getTooltipFromItem(this.minecraft, drops.get(this.currentPage * 9 + i * 3 + j)));
                     if (queue) tip.add(Component.translatable("hostilenetworks.gui.queue_add"));
 
